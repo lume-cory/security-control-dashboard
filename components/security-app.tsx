@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
@@ -14,9 +13,8 @@ import { DecentralizedProvisioningDetailsComponent } from './decentralized-provi
 export function SecurityAppComponent() {
   const [activeTab, setActiveTab] = useState("themes")
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null)
-  const router = useRouter()
 
-const securityThemes = [
+  const securityThemes = [
     { 
       name: "Access Management", 
       effectiveness: 75,
@@ -125,27 +123,58 @@ const securityThemes = [
   }
 
   const handleCardClick = (themeName: string) => {
-    switch (themeName) {
+    setSelectedTheme(themeName)
+  }
+
+  const renderThemeDetails = () => {
+    switch (selectedTheme) {
       case "Endpoint Protection":
-        router.push('/endpoint-protection')
-        break
+        return <EndpointProtectionDetailsComponent />
       case "Access Management":
-        router.push('/access-management')
-        break
+        return <AccessManagementDetailsComponent />
       case "Data Storage":
-        router.push('/data-storage')
-        break
+        return <DataStorageDetailsComponent />
       case "Provisioning":
-        router.push('/provisioning')
-        break
+        return <DecentralizedProvisioningDetailsComponent />
       default:
-        setSelectedTheme(themeName)
+        return null
     }
+  }
+
+  const renderBreadcrumbs = () => {
+    return (
+      <nav className="flex mb-4" aria-label="Breadcrumb">
+        <ol className="inline-flex items-center space-x-1 md:space-x-3">
+          <li className="inline-flex items-center">
+            <a href="#" className="text-gray-700 hover:text-blue-600" onClick={() => setActiveTab("themes")}>
+              Security Dashboard
+            </a>
+          </li>
+          <li>
+            <div className="flex items-center">
+              <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
+              <a href="#" className="ml-1 text-gray-700 hover:text-blue-600 md:ml-2" onClick={() => setSelectedTheme(null)}>
+                Security Themes
+              </a>
+            </div>
+          </li>
+          {selectedTheme && (
+            <li aria-current="page">
+              <div className="flex items-center">
+                <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
+                <span className="ml-1 text-gray-500 md:ml-2 font-medium">{selectedTheme}</span>
+              </div>
+            </li>
+          )}
+        </ol>
+      </nav>
+    )
   }
 
   return (
     <div className="container mx-auto p-4 min-h-screen overflow-y-auto">
       <h1 className="text-2xl font-bold mb-4">AMCE Inc. Security Control Effectiveness</h1>
+      {renderBreadcrumbs()}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="themes">Security Themes</TabsTrigger>
@@ -153,43 +182,49 @@ const securityThemes = [
           <TabsTrigger value="resources">Security Resources</TabsTrigger>
         </TabsList>
         <TabsContent value="themes">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {securityThemes.map((theme, index) => (
-              <Card key={index} className="flex flex-col cursor-pointer" onClick={() => handleCardClick(theme.name)}>
-                <CardHeader className="flex-grow pb-0">
-                  <CardTitle className="text-lg">{theme.name}</CardTitle>
-                  <Progress 
-                    value={theme.effectiveness} 
-                    className={cn(
-                      "w-full h-2 bg-gray-200",
-                      "border border-gray-300 rounded-full",
-                      "[&>div]:transition-all",
-                      `[&>div]:${getProgressColor(theme.effectiveness)}`
-                    )}
-                  />
-                  <CardDescription className={cn("font-semibold", getEffectivenessColor(theme.effectiveness))}>
-                    Effectiveness: {theme.effectiveness}%
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="text-sm my-2 p-2 bg-gray-100 rounded grid grid-cols-1 gap-2">
-                    <p><span className="font-semibold">NIST CSF Controls:</span> {theme.controls}</p>
-                    <p><span className="font-semibold">Security Resources:</span> {theme.resources}</p>
-                    <p><span className="font-semibold">Metrics:</span> {theme.metrics}</p>
-                    <p><span className="font-semibold">Findings & Responses:</span> {theme.findings}</p>
-                  </div>
-                  <div className="text-sm mt-2 p-2 bg-gray-100 rounded">
-                    <p className="font-semibold">Finding:</p>
-                    <p>{theme.criticalFinding}</p>
-                    <p className={cn("font-semibold", getImpactColor(theme.impact))}>
-                      Impact: {theme.impact}
-                    </p>
-                    <p className="font-semibold hover:underline">see more...</p>
-                  </div>
-                </CardContent>              
-              </Card>
-            ))}
-          </div>
+          {selectedTheme ? (
+            <div>
+              {renderThemeDetails()}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {securityThemes.map((theme, index) => (
+                <Card key={index} className="flex flex-col cursor-pointer" onClick={() => handleCardClick(theme.name)}>
+                  <CardHeader className="flex-grow pb-0">
+                    <CardTitle className="text-lg">{theme.name}</CardTitle>
+                    <Progress 
+                      value={theme.effectiveness} 
+                      className={cn(
+                        "w-full h-2 bg-gray-200",
+                        "border border-gray-300 rounded-full",
+                        "[&>div]:transition-all",
+                        `[&>div]:${getProgressColor(theme.effectiveness)}`
+                      )}
+                    />
+                    <CardDescription className={cn("font-semibold", getEffectivenessColor(theme.effectiveness))}>
+                      Effectiveness: {theme.effectiveness}%
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="text-sm my-2 p-2 bg-gray-100 rounded grid grid-cols-1 gap-2">
+                      <p><span className="font-semibold">NIST CSF Controls:</span> {theme.controls}</p>
+                      <p><span className="font-semibold">Security Resources:</span> {theme.resources}</p>
+                      <p><span className="font-semibold">Metrics:</span> {theme.metrics}</p>
+                      <p><span className="font-semibold">Findings & Responses:</span> {theme.findings}</p>
+                    </div>
+                    <div className="text-sm mt-2 p-2 bg-gray-100 rounded">
+                      <p className="font-semibold">Finding:</p>
+                      <p>{theme.criticalFinding}</p>
+                      <p className={cn("font-semibold", getImpactColor(theme.impact))}>
+                        Impact: {theme.impact}
+                      </p>
+                      <p className="font-semibold hover:underline">see more...</p>
+                    </div>
+                  </CardContent>              
+                </Card>
+              ))}
+            </div>
+          )}
         </TabsContent>
         <TabsContent value="controls">
           <p>Security Controls content will go here.</p>
@@ -198,32 +233,6 @@ const securityThemes = [
           <p>Security Resources content will go here.</p>
         </TabsContent>
       </Tabs>
-      {selectedTheme && (
-        <button
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          onClick={() => setSelectedTheme(null)}
-        >
-          Back to Themes
-        </button>
-      )}
-      {/* Remove or comment out these sections */}
-      {/*
-      {selectedTheme === "Data Storage" && (
-        <div className="mt-4">
-          <DataStorageDetailsComponent />
-        </div>
-      )}
-      {selectedTheme === "Access Management" && (
-        <div className="mt-4">
-          <AccessManagementDetailsComponent />
-        </div>
-      )}
-      {selectedTheme === "Provisioning" && (
-        <div className="mt-4">
-          <DecentralizedProvisioningDetailsComponent />
-        </div>
-      )}
-      */}
     </div>
   )
 }

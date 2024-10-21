@@ -116,9 +116,15 @@ export function AccessManagementDetailsComponent() {
 
   const analysis = [
     {
-      title: "Increase in After-Hours Access Attempts",
-      finding: "25% increase in unauthorized access attempts during weekends and non-business hours.",
-      response: "Implement stricter access controls during off-hours by requiring additional authentication steps.",
+      title: "Low Multi-Factor Authentication Adoption",
+      finding: "Only 60% of users in the sales and marketing team have enabled Multi-Factor Authentication (MFA). The company average is 92% for other business units.",
+      response: "Mandate MFA enrollment for all users, prioritizing high-risk and privileged accounts.",
+      impact: "Critical"
+    },
+    {
+      title: "Delayed De-Provisioning of Access",
+      finding: "Average of 7 days to revoke access for terminated employees. It appears this is largely due to a delay between the HR team's submission of termination requests and the IAM team's revocation of access.",
+      response: "Check with the IT team to see what their ticketing and de-provisioning process is and if there is any way to automate it.",
       impact: "High"
     },
     {
@@ -126,18 +132,6 @@ export function AccessManagementDetailsComponent() {
       finding: "18% of user accounts have not been accessed in over 90 days.",
       response: "Conduct an audit to identify and disable inactive accounts; establish an automated review process.",
       impact: "Medium"
-    },
-    {
-      title: "Low Multi-Factor Authentication Adoption",
-      finding: "Only 60% of users have enabled Multi-Factor Authentication (MFA).",
-      response: "Mandate MFA enrollment for all users, prioritizing high-risk and privileged accounts.",
-      impact: "Critical"
-    },
-    {
-      title: "Delayed De-Provisioning of Access",
-      finding: "Average of 7 days to revoke access for terminated employees.",
-      response: "Integrate HR systems with IAM tools to automate the de-provisioning process.",
-      impact: "High"
     },
     {
       title: "Privileged Accounts Without Regular Review",
@@ -149,6 +143,12 @@ export function AccessManagementDetailsComponent() {
       title: "Excessive Privileges Granted",
       finding: "22% of users have access permissions exceeding their job requirements.",
       response: "Implement role-based access controls (RBAC) to align user permissions with job functions.",
+      impact: "High"
+    },
+    {
+      title: "Increase in After-Hours Access Attempts",
+      finding: "25% increase in unauthorized access attempts during weekends and non-business hours.",
+      response: "Implement stricter access controls during off-hours by requiring additional authentication steps.",
       impact: "High"
     }
   ]

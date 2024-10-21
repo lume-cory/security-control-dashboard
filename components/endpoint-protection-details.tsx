@@ -89,6 +89,42 @@ const nistControls = [
 
   const analysis = [
     {
+      title: "MTTR/MTTD by Region or Country",
+      finding: "The Asia-Pacific region has a Mean Time to Detect (MTTD) of 72 hours, which is 50% higher than the global average.",
+      response: "Investigate regional disparities by assessing local security team capabilities and resource allocations. Provide additional training or augment staff in underperforming regions to improve detection times. Consider centralizing monitoring efforts or implementing standardized processes across all regions.",
+      impact: "High"
+    },
+    {
+      title: "Incident Frequency by Location",
+      finding: "There is a higher incident frequency in the Phillipines, accounting for 35% of total incidents.",
+      response: "Assess the local regulatory environment and compliance requirements that may impact security measures. Enhance security protocols in that location, and adapt policies to align with regional regulations. Engage with local authorities if necessary to improve compliance.",
+      impact: "High"
+    },
+    {
+      title: "Incident Rates by Department",
+      finding: "The Finance Department experiences 40% more security incidents compared to other departments.",
+      response: "Provide targeted security awareness training to the Finance team, emphasizing phishing and malware threats. Review and adjust access privileges to ensure they align with the principle of least privilege. Standardize operational practices by aligning them with organizational security policies.",
+      impact: "High"
+    },
+    {
+      title: "Incidents Over Time and Seasonal Patterns",
+      finding: "There is a spike in incidents during holiday seasons, with incidents increasing by 50%.",
+      response: "Adjust staffing schedules to ensure adequate coverage during peak times, including holidays. Increase monitoring efforts during these periods. Conduct pre-holiday security briefings to heighten awareness among remaining staff.",
+      impact: "Medium"
+    },
+    {
+      title: "Incidents by Network Segment",
+      finding: "The Demilitarized Zone (DMZ) network segment accounts for 60% of detected threats.",
+      response: "Assess and enhance network segmentation to contain threats more effectively. Implement additional access controls and security measures in the DMZ. Regularly review firewall and IDS/IPS configurations to ensure they are up to date and effective.",
+      impact: "Critical"
+    },
+    {
+      title: "Incidents Linked to Third Parties",
+      finding: "15% of security incidents are linked to the Akaunting accounting software tool.",
+      response: "Strengthen vendor management practices by incorporating stringent security requirements into contracts and SLAs. Conduct regular security audits of third-party vendors. Limit vendor access to necessary systems and monitor their activities closely.",
+      impact: "High"
+    }, 
+    {
       title: "Increase in Ransomware Attempts",
       finding: "20% increase in ransomware attempts targeting endpoint devices in the last quarter.",
       response: "Implement advanced EDR solutions with AI-powered threat detection and automated response capabilities.",
@@ -164,42 +200,6 @@ const nistControls = [
       title: "Ineffective Endpoint Backup Procedures",
       finding: "25% of endpoints have not completed successful backups in the past month.",
       response: "Deploy centralized backup solutions to ensure regular and successful backups, monitor backup logs, and address failures promptly to prevent data loss.",
-      impact: "High"
-    },
-    {
-      title: "MTTR/MTTD by Region or Country",
-      finding: "The Asia-Pacific region has a Mean Time to Detect (MTTD) of 72 hours, which is 50% higher than the global average.",
-      response: "Investigate regional disparities by assessing local security team capabilities and resource allocations. Provide additional training or augment staff in underperforming regions to improve detection times. Consider centralizing monitoring efforts or implementing standardized processes across all regions.",
-      impact: "High"
-    },
-    {
-      title: "Incident Frequency by Location",
-      finding: "There is a higher incident frequency in the Phillipines, accounting for 35% of total incidents.",
-      response: "Assess the local regulatory environment and compliance requirements that may impact security measures. Enhance security protocols in that location, and adapt policies to align with regional regulations. Engage with local authorities if necessary to improve compliance.",
-      impact: "High"
-    },
-    {
-      title: "Incident Rates by Department",
-      finding: "The Finance Department experiences 40% more security incidents compared to other departments.",
-      response: "Provide targeted security awareness training to the Finance team, emphasizing phishing and malware threats. Review and adjust access privileges to ensure they align with the principle of least privilege. Standardize operational practices by aligning them with organizational security policies.",
-      impact: "High"
-    },
-    {
-      title: "Incidents Over Time and Seasonal Patterns",
-      finding: "There is a spike in incidents during holiday seasons, with incidents increasing by 50%.",
-      response: "Adjust staffing schedules to ensure adequate coverage during peak times, including holidays. Increase monitoring efforts during these periods. Conduct pre-holiday security briefings to heighten awareness among remaining staff.",
-      impact: "Medium"
-    },
-    {
-      title: "Incidents by Network Segment",
-      finding: "The Demilitarized Zone (DMZ) network segment accounts for 60% of detected threats.",
-      response: "Assess and enhance network segmentation to contain threats more effectively. Implement additional access controls and security measures in the DMZ. Regularly review firewall and IDS/IPS configurations to ensure they are up to date and effective.",
-      impact: "Critical"
-    },
-    {
-      title: "Incidents Linked to Third Parties",
-      finding: "15% of security incidents are linked to the Akaunting accounting software tool.",
-      response: "Strengthen vendor management practices by incorporating stringent security requirements into contracts and SLAs. Conduct regular security audits of third-party vendors. Limit vendor access to necessary systems and monitor their activities closely.",
       impact: "High"
     }
   ]
