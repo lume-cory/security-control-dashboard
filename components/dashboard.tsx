@@ -1256,9 +1256,11 @@ function DashboardWithAnalytics() {
         {isDrawerOpen && selectedTheme && (
           <div
             ref={drawerRef}
-            className="fixed inset-y-0 right-0 w-1/3 bg-white shadow-lg transform translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto"
+            className="fixed inset-y-0 right-0 w-1/2 bg-white shadow-lg transform translate-x-0 transition-transform duration-300 ease-in-out flex flex-col"
           >
-            {renderThemeDetails()}
+            <div className="flex-grow overflow-y-auto p-6">
+              {renderThemeDetails()}
+            </div>
           </div>
         )}
       </div>

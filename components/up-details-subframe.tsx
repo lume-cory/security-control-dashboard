@@ -220,7 +220,7 @@ const ProvisioningDetailsView: React.FC<DetailViewWithActivityProps> = ({ onClos
             <Tabs.Item>Compliance (3)</Tabs.Item> */}
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList>
-                <TabsTrigger value="compliance">Compliance</TabsTrigger>
+                <TabsTrigger value="compliance">Frameworks</TabsTrigger>
                 <TabsTrigger value="resources">Security Resources</TabsTrigger>
                 <TabsTrigger value="metrics">Metrics</TabsTrigger>
                 <TabsTrigger value="analysis">Analysis</TabsTrigger>
@@ -296,6 +296,9 @@ const ProvisioningDetailsView: React.FC<DetailViewWithActivityProps> = ({ onClos
                         }`}>
                           Impact: {item.impact}
                         </p>
+                        <Button className="w-full mt-4 px-4 py-2" variant="brand-secondary">
+                          Take Action
+                        </Button>
                       </CardContent>
                     </Card>
                   ))}
