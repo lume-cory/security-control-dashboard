@@ -2,6 +2,7 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
     darkMode: ["class"],
+	presets: [require("./components/ui/subframe/tailwind.config.js")],
     content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",

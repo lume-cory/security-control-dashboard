@@ -1,5 +1,5 @@
-import { SecurityAppComponent } from "@/components/security-app"
+import { ControlGroupsComponent } from "@/components/control-groups"
 
 export default function Page() {
-  return <SecurityAppComponent />
+  return <ControlGroupsComponent />
 }

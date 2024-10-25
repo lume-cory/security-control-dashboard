@@ -9,8 +9,9 @@ import { EndpointProtectionDetailsComponent } from './endpoint-protection-detail
 import { DataStorageDetailsComponent } from './data-storage-details'
 import { AccessManagementDetailsComponent } from './access-management-details'
 import { DecentralizedProvisioningDetailsComponent } from './decentralized-provisioning-details'
+import DetailViewWithActivity from './am-details-subframe'
 
-export function SecurityAppComponent() {
+export function ControlGroupsComponent() {
   const [activeTab, setActiveTab] = useState("themes")
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null)
 
@@ -136,6 +137,8 @@ export function SecurityAppComponent() {
         return <DataStorageDetailsComponent />
       case "Provisioning":
         return <DecentralizedProvisioningDetailsComponent />
+      case "Data Protection":
+        return <DetailViewWithActivity onClose={() => setSelectedTheme(null)} />
       default:
         return null
     }
@@ -173,7 +176,7 @@ export function SecurityAppComponent() {
 
   return (
     <div className="container mx-auto p-4 min-h-screen overflow-y-auto">
-      <h1 className="text-2xl font-bold mb-4">AMCE Inc. Security Control Effectiveness</h1>
+      <h1 className="text-2xl font-bold mb-4">ACME Inc. Security Control Effectiveness</h1>
       {renderBreadcrumbs()}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
