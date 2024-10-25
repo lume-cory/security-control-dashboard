@@ -138,15 +138,18 @@ function DashboardWithAnalytics() {
           </div>
           <div className="flex grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
             <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color">
-              Controls with least coverage
+              Assets with least coverage
             </span>
             <div className="flex w-full flex-col items-start gap-2">
-              <span className="text-heading-2 font-heading-2 text-default-font">
-                $1,540
+              <span className="text-heading-3 font-heading-3 text-default-font">
+                Point of sale systems
               </span>
-              <Badge variant="success" icon="FeatherArrowUp">
+              <span className="text-heading-3 font-heading-3 text-default-font">
+                Personal mobile devices
+              </span>
+              {/* <Badge variant="warning" icon="FeatherArrowUp">
                 25%
-              </Badge>
+              </Badge> */}
             </div>
           </div>
           <div className="flex grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
@@ -155,7 +158,7 @@ function DashboardWithAnalytics() {
             </span>
             <div className="flex w-full flex-col items-start gap-2">
               <span className="text-heading-2 font-heading-2 text-default-font">
-                $253,200
+                $2.1M
               </span>
               <Badge variant="success" icon="FeatherArrowDown">
                 33%
