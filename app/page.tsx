@@ -1,5 +1,5 @@
-import { ControlGroupsComponent } from "@/components/control-groups"
+import { redirect } from 'next/navigation'
 
 export default function Page() {
-  return <ControlGroupsComponent />
+  redirect('./dashboard')
 }

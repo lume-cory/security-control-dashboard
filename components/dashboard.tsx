@@ -129,7 +129,7 @@ function DashboardWithAnalytics() {
             </span>
             <div className="flex w-full flex-col items-start gap-2">
               <span className="text-heading-2 font-heading-2 text-default-font">
-                $10.3M
+                $319M
               </span>
               <Badge variant="success" icon="FeatherArrowUp">
                 13%
@@ -158,7 +158,7 @@ function DashboardWithAnalytics() {
             </span>
             <div className="flex w-full flex-col items-start gap-2">
               <span className="text-heading-2 font-heading-2 text-default-font">
-                $2.1M
+                $63.8M
               </span>
               <Badge variant="success" icon="FeatherArrowDown">
                 33%
@@ -213,11 +213,14 @@ function DashboardWithAnalytics() {
             <BarChart
               className="h-64 w-full flex-none"
               stacked={true}
-              categories={["N/A", "Insurance", "Residual", "Audit", "3P Pentests", "Operating Costs", "MSSP", "Headcount", "R&D", "Licensing", "Tooling"]}
+              categories={[
+                "N/A", "Insurance", "Audit", "3P Pentests", "Op. Costs", 
+                "MSSP", "Headcount", "R&D", "License", "Tooling"
+              ]}
               data={[
-                { Year: "2022", "N/A": 38, Insurance: 3, Audit: 3, "3P Pentests": 3, "Operating Costs": 4, MSSP: 2, Headcount: 15, "R&D": 6, Licensing: 1, Tooling: 25 },
-                { Year: "2023", "N/A": 30, Insurance: 9, Audit: 3, "3P Pentests": 3, "Operating Costs": 5, MSSP: 3, Headcount: 16, "R&D": 6, Licensing: 1, Tooling: 25 },
-                { Year: "2024", "N/A": 20, Insurance: 8, Audit: 4, "3P Pentests": 5, "Operating Costs": 5, MSSP: 3, Headcount: 17, "R&D": 6, Licensing: 1, Tooling: 31 },
+                { Year: "2022", "N/A": 38, Insurance: 3, Audit: 3, "3P Pentests": 3, "Op. Costs": 4, MSSP: 2, Headcount: 15, "R&D": 6, Licensing: 1, Tooling: 25 },
+                { Year: "2023", "N/A": 30, Insurance: 9, Audit: 3, "3P Pentests": 3, "Op. Costs": 5, MSSP: 3, Headcount: 16, "R&D": 6, Licensing: 1, Tooling: 25 },
+                { Year: "2024", "N/A": 20, Insurance: 8, Audit: 4, "3P Pentests": 5, "Op. Costs": 5, MSSP: 3, Headcount: 17, "R&D": 6, Licensing: 1, Tooling: 31 },
               ]}
               index={"Year"}
               colors={distinctColors}
@@ -240,10 +243,9 @@ function DashboardWithAnalytics() {
                     { Type: "R&D", Cost: 38.70 },
                     { Type: "Headcount", Cost: 38.70 },
                     { Type: "MSSP", Cost: 17.00 },
-                    { Type: "Operating Costs", Cost: 19.75 },
+                    { Type: "Op. Costs", Cost: 19.75 },
                     { Type: "3P Pentests", Cost: 9.38 },
                     { Type: "Audit", Cost: 15.25 },
-                    { Type: "Residual", Cost: 12.75 },
                     { Type: "Insurance", Cost: 23.00 },
                     { Type: "N/A", Cost: 0.00 },
                   ]}
@@ -330,20 +332,23 @@ function DashboardWithAnalytics() {
             </div>
             <LineChart
               className="h-64 w-full flex-none mobile:h-auto mobile:w-full mobile:flex-none"
-              categories={["N/A", "Insurance", "Residual", "Audit", "3P Pentests", "Operating Costs", "MSSP", "Headcount", "R&D", "Licensing", "Tooling"]}
+              categories={[
+                "Insurance", "Audit", "3P Pentests", "Op. Costs", 
+                "MSSP", "Headcount", "R&D", "License", "Tooling"
+              ]}
               data={[
-                { Month: "Jan 2022", Insurance: 68, Audit: 71, "3P Pentests": 65, "Operating Costs": 83, MSSP: 84, Headcount: 86, "R&D": 88, Licensing: 76, Tooling: 55 },
-                { Month: "Apr 2022", Insurance: 69, Audit: 72, "3P Pentests": 66, "Operating Costs": 84, MSSP: 85, Headcount: 87, "R&D": 89, Licensing: 77, Tooling: 56 },
-                { Month: "Jul 2022", Insurance: 70, Audit: 73, "3P Pentests": 67, "Operating Costs": 85, MSSP: 85, Headcount: 87, "R&D": 89, Licensing: 78, Tooling: 57 },
-                { Month: "Oct 2022", Insurance: 72, Audit: 74, "3P Pentests": 69, "Operating Costs": 86, MSSP: 86, Headcount: 88, "R&D": 90, Licensing: 79, Tooling: 59 },
-                { Month: "Jan 2023", Insurance: 75, Audit: 76, "3P Pentests": 72, "Operating Costs": 85, MSSP: 83, Headcount: 88, "R&D": 90, Licensing: 80, Tooling: 62 },
-                { Month: "Apr 2023", Insurance: 78, Audit: 77, "3P Pentests": 75, "Operating Costs": 86, MSSP: 82, Headcount: 89, "R&D": 91, Licensing: 81, Tooling: 65 },
-                { Month: "Jul 2023", Insurance: 80, Audit: 78, "3P Pentests": 78, "Operating Costs": 86, MSSP: 82, Headcount: 89, "R&D": 91, Licensing: 82, Tooling: 67 },
-                { Month: "Oct 2023", Insurance: 79, Audit: 80, "3P Pentests": 81, "Operating Costs": 87, MSSP: 83, Headcount: 90, "R&D": 92, Licensing: 83, Tooling: 70 },
-                { Month: "Jan 2024", Insurance: 77, Audit: 82, "3P Pentests": 85, "Operating Costs": 86, MSSP: 83, Headcount: 91, "R&D": 91, Licensing: 84, Tooling: 75 },
-                { Month: "Apr 2024", Insurance: 76, Audit: 84, "3P Pentests": 89, "Operating Costs": 86, MSSP: 83, Headcount: 92, "R&D": 90, Licensing: 85, Tooling: 80 },
-                { Month: "Jul 2024", Insurance: 75, Audit: 85, "3P Pentests": 93, "Operating Costs": 86, MSSP: 83, Headcount: 93, "R&D": 90, Licensing: 85, Tooling: 85 },
-                { Month: "Oct 2024", Insurance: 74, Audit: 86, "3P Pentests": 95, "Operating Costs": 87, MSSP: 84, Headcount: 94, "R&D": 91, Licensing: 86, Tooling: 88 },
+                { Month: "Jan 2022", Insurance: 68, Audit: 71, "3P Pentests": 65, "Op. Costs": 83, MSSP: 84, Headcount: 86, "R&D": 88, Licensing: 76, Tooling: 55 },
+                { Month: "Apr 2022", Insurance: 69, Audit: 72, "3P Pentests": 66, "Op. Costs": 84, MSSP: 85, Headcount: 87, "R&D": 89, Licensing: 77, Tooling: 56 },
+                { Month: "Jul 2022", Insurance: 70, Audit: 73, "3P Pentests": 67, "Op. Costs": 85, MSSP: 85, Headcount: 87, "R&D": 89, Licensing: 78, Tooling: 57 },
+                { Month: "Oct 2022", Insurance: 72, Audit: 74, "3P Pentests": 69, "Op. Costs": 86, MSSP: 86, Headcount: 88, "R&D": 90, Licensing: 79, Tooling: 59 },
+                { Month: "Jan 2023", Insurance: 75, Audit: 76, "3P Pentests": 72, "Op. Costs": 85, MSSP: 83, Headcount: 88, "R&D": 90, Licensing: 80, Tooling: 62 },
+                { Month: "Apr 2023", Insurance: 78, Audit: 77, "3P Pentests": 75, "Op. Costs": 86, MSSP: 82, Headcount: 89, "R&D": 91, Licensing: 81, Tooling: 65 },
+                { Month: "Jul 2023", Insurance: 80, Audit: 78, "3P Pentests": 78, "Op. Costs": 86, MSSP: 82, Headcount: 89, "R&D": 91, Licensing: 82, Tooling: 67 },
+                { Month: "Oct 2023", Insurance: 79, Audit: 80, "3P Pentests": 81, "Op. Costs": 87, MSSP: 83, Headcount: 90, "R&D": 92, Licensing: 83, Tooling: 70 },
+                { Month: "Jan 2024", Insurance: 77, Audit: 82, "3P Pentests": 85, "Op. Costs": 86, MSSP: 83, Headcount: 91, "R&D": 91, Licensing: 84, Tooling: 75 },
+                { Month: "Apr 2024", Insurance: 76, Audit: 84, "3P Pentests": 89, "Op. Costs": 86, MSSP: 83, Headcount: 92, "R&D": 90, Licensing: 85, Tooling: 80 },
+                { Month: "Jul 2024", Insurance: 75, Audit: 85, "3P Pentests": 93, "Op. Costs": 86, MSSP: 83, Headcount: 93, "R&D": 90, Licensing: 85, Tooling: 85 },
+                { Month: "Oct 2024", Insurance: 74, Audit: 86, "3P Pentests": 95, "Op. Costs": 87, MSSP: 84, Headcount: 94, "R&D": 91, Licensing: 86, Tooling: 88 },
               ]}
               index={"Month"}
               colors={distinctColors}
@@ -368,20 +373,23 @@ function DashboardWithAnalytics() {
             </div>
             <LineChart
               className="h-64 w-full flex-none"
-              categories={["N/A", "Insurance", "Residual", "Audit", "3P Pentests", "Operating Costs", "MSSP", "Headcount", "R&D", "Licensing", "Tooling"]}
+              categories={[
+                "Insurance", "Audit", "3P Pentests", "Op. Costs", 
+                "MSSP", "Headcount", "R&D", "License", "Tooling"
+              ]}
               data={[
-                { Month: "Jan 2022", Insurance: 62, Audit: 68, "3P Pentests": 70, "Operating Costs": 79, MSSP: 81, Headcount: 83, "R&D": 85, Licensing: 72, Tooling: 58 },
-                { Month: "Apr 2022", Insurance: 64, Audit: 70, "3P Pentests": 72, "Operating Costs": 80, MSSP: 82, Headcount: 84, "R&D": 86, Licensing: 73, Tooling: 60 },
-                { Month: "Jul 2022", Insurance: 65, Audit: 71, "3P Pentests": 73, "Operating Costs": 81, MSSP: 83, Headcount: 85, "R&D": 87, Licensing: 74, Tooling: 61 },
-                { Month: "Oct 2022", Insurance: 67, Audit: 72, "3P Pentests": 75, "Operating Costs": 82, MSSP: 84, Headcount: 86, "R&D": 88, Licensing: 75, Tooling: 63 },
-                { Month: "Jan 2023", Insurance: 70, Audit: 74, "3P Pentests": 78, "Operating Costs": 83, MSSP: 85, Headcount: 87, "R&D": 89, Licensing: 76, Tooling: 66 },
-                { Month: "Apr 2023", Insurance: 73, Audit: 75, "3P Pentests": 80, "Operating Costs": 84, MSSP: 86, Headcount: 88, "R&D": 90, Licensing: 77, Tooling: 69 },
-                { Month: "Jul 2023", Insurance: 75, Audit: 76, "3P Pentests": 82, "Operating Costs": 85, MSSP: 87, Headcount: 89, "R&D": 91, Licensing: 78, Tooling: 71 },
-                { Month: "Oct 2023", Insurance: 77, Audit: 78, "3P Pentests": 84, "Operating Costs": 86, MSSP: 88, Headcount: 90, "R&D": 92, Licensing: 79, Tooling: 74 },
-                { Month: "Jan 2024", Insurance: 79, Audit: 80, "3P Pentests": 86, "Operating Costs": 87, MSSP: 89, Headcount: 91, "R&D": 93, Licensing: 80, Tooling: 77 },
-                { Month: "Apr 2024", Insurance: 80, Audit: 82, "3P Pentests": 88, "Operating Costs": 88, MSSP: 90, Headcount: 92, "R&D": 94, Licensing: 81, Tooling: 80 },
-                { Month: "Jul 2024", Insurance: 81, Audit: 83, "3P Pentests": 90, "Operating Costs": 89, MSSP: 91, Headcount: 93, "R&D": 95, Licensing: 82, Tooling: 82 },
-                { Month: "Oct 2024", Insurance: 82, Audit: 84, "3P Pentests": 91, "Operating Costs": 90, MSSP: 92, Headcount: 94, "R&D": 96, Licensing: 83, Tooling: 84 },
+                { Month: "Jan 2022", Insurance: 62, Audit: 68, "3P Pentests": 70, "Op. Costs": 79, MSSP: 81, Headcount: 83, "R&D": 85, Licensing: 72, Tooling: 58 },
+                { Month: "Apr 2022", Insurance: 64, Audit: 70, "3P Pentests": 72, "Op. Costs": 80, MSSP: 82, Headcount: 84, "R&D": 86, Licensing: 73, Tooling: 60 },
+                { Month: "Jul 2022", Insurance: 65, Audit: 71, "3P Pentests": 73, "Op. Costs": 81, MSSP: 83, Headcount: 85, "R&D": 87, Licensing: 74, Tooling: 61 },
+                { Month: "Oct 2022", Insurance: 67, Audit: 72, "3P Pentests": 75, "Op. Costs": 82, MSSP: 84, Headcount: 86, "R&D": 88, Licensing: 75, Tooling: 63 },
+                { Month: "Jan 2023", Insurance: 70, Audit: 74, "3P Pentests": 78, "Op. Costs": 83, MSSP: 85, Headcount: 87, "R&D": 89, Licensing: 76, Tooling: 66 },
+                { Month: "Apr 2023", Insurance: 73, Audit: 75, "3P Pentests": 80, "Op. Costs": 84, MSSP: 86, Headcount: 88, "R&D": 90, Licensing: 77, Tooling: 69 },
+                { Month: "Jul 2023", Insurance: 75, Audit: 76, "3P Pentests": 82, "Op. Costs": 85, MSSP: 87, Headcount: 89, "R&D": 91, Licensing: 78, Tooling: 71 },
+                { Month: "Oct 2023", Insurance: 77, Audit: 78, "3P Pentests": 84, "Op. Costs": 86, MSSP: 88, Headcount: 90, "R&D": 92, Licensing: 79, Tooling: 74 },
+                { Month: "Jan 2024", Insurance: 79, Audit: 80, "3P Pentests": 86, "Op. Costs": 87, MSSP: 89, Headcount: 91, "R&D": 93, Licensing: 80, Tooling: 77 },
+                { Month: "Apr 2024", Insurance: 80, Audit: 82, "3P Pentests": 88, "Op. Costs": 88, MSSP: 90, Headcount: 92, "R&D": 94, Licensing: 81, Tooling: 80 },
+                { Month: "Jul 2024", Insurance: 81, Audit: 83, "3P Pentests": 90, "Op. Costs": 89, MSSP: 91, Headcount: 93, "R&D": 95, Licensing: 82, Tooling: 82 },
+                { Month: "Oct 2024", Insurance: 82, Audit: 84, "3P Pentests": 91, "Op. Costs": 90, MSSP: 92, Headcount: 94, "R&D": 96, Licensing: 83, Tooling: 84 },
               ]}
               index={"Month"}
               colors={distinctColors}

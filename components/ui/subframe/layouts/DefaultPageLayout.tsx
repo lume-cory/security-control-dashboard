@@ -12,6 +12,8 @@ import * as SubframeCore from "@subframe/core";
 import { SidebarRailWithLabels } from "../components/SidebarRailWithLabels";
 import { DropdownMenu } from "../components/DropdownMenu";
 import { Avatar } from "../components/Avatar";
+import { useRouter } from "next/navigation";
+import { usePathname } from 'next/navigation';
 
 interface DefaultPageLayoutRootProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -26,6 +28,9 @@ const DefaultPageLayoutRoot = React.forwardRef<
   { children, className, ...otherProps }: DefaultPageLayoutRootProps,
   ref
 ) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   return (
     <div
       className={SubframeCore.twClassNames(
@@ -84,32 +89,54 @@ const DefaultPageLayoutRoot = React.forwardRef<
         <SidebarRailWithLabels.NavItem
           className="h-auto min-h-[44px] w-full flex-none"
           icon="FeatherSun"
-          selected={true}
+          selected={pathname === '/dashboard'}
+          onClick={() => router.push('/dashboard')}
         >
           Insights
         </SidebarRailWithLabels.NavItem>
         <SidebarRailWithLabels.NavItem
           className="h-auto min-h-[44px] w-full flex-none"
           icon="FeatherLayers"
+          selected={pathname === '/controls'}
+          onClick={() => router.push('/controls')}
         >
           Controls
         </SidebarRailWithLabels.NavItem>
         <SidebarRailWithLabels.NavItem
           className="h-auto min-h-[44px] w-full flex-none"
           icon="FeatherShapes"
+          selected={pathname === '/resources'}
+          onClick={() => router.push('/resources')}
         >
           Resources
         </SidebarRailWithLabels.NavItem>
         <SidebarRailWithLabels.NavItem
           className="h-auto min-h-[44px] w-full flex-none"
           icon="FeatherShield"
+          selected={pathname === '/defenses'}
+          onClick={() => router.push('/defenses')}
         >
           Defenses
         </SidebarRailWithLabels.NavItem>
-        <SidebarRailWithLabels.NavItem icon="FeatherRefreshCw">
+        <SidebarRailWithLabels.NavItem 
+          icon="FeatherTestTube"
+          selected={pathname === '/tests'}
+          onClick={() => router.push('/tests')}
+        >
           Tests
         </SidebarRailWithLabels.NavItem>
-        <SidebarRailWithLabels.NavItem icon="FeatherBarChart2">
+        <SidebarRailWithLabels.NavItem 
+          icon="FeatherRefreshCw"
+          selected={pathname === '/agents'}
+          onClick={() => router.push('/agents')}
+        >
+          Agents
+        </SidebarRailWithLabels.NavItem>
+        <SidebarRailWithLabels.NavItem 
+          icon="FeatherBarChart2" 
+          selected={pathname === '/reports'}
+          onClick={() => router.push('/reports')}
+        >
           Reports
         </SidebarRailWithLabels.NavItem>
       </SidebarRailWithLabels>
