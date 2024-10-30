@@ -3,8 +3,10 @@ import SecurityHelpDeskAgent from "./SecurityHelpDeskAgent";
 
 function AgentsPage() {
   return (
-    // <EngineeringSecurityReviewAgent />
-    <SecurityHelpDeskAgent />
+    <div>
+      <EngineeringSecurityReviewAgent />
+      <SecurityHelpDeskAgent />
+    </div>
   )
 }
 

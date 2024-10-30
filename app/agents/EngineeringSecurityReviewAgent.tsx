@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { QuestionsTable } from '@/components/questions-table'
+import { QuestionsTable } from '@/components/questions-table-eng-security-review'
 import { ExternalLink } from 'lucide-react'
 
 // Import the SuggestedModifications component
