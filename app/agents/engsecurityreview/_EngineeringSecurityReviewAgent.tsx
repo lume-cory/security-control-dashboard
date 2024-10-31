@@ -107,15 +107,17 @@ export default function EngineeringSecurityReviewAgent() {
           </Breadcrumbs>
         </div>
 
-        <Button onClick={() => setShowModifications(!showModifications)}>
-          {showModifications ? 'Back to Review Requests' : 'View Suggested Modifications'}
-        </Button>
+        <div>
+          <Button size="medium" onClick={() => setShowModifications(!showModifications)}>
+            {showModifications ? 'Back to Review Requests' : 'View Suggested Modifications'}
+          </Button>
+        </div>
 
 
         {showModifications ? (
           <SuggestedModifications onBack={() => setShowModifications(false)} />
         ) : (
-          <div>
+          <div className="flex w-full flex-col gap-4">
             <IntegrationsAndDataSources integrations={integrations} addIntegration={handleDialogOpen} />
             <EngSecurityReviewQuestionsTable />
           </div>
