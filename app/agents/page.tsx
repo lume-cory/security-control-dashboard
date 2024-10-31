@@ -1,11 +1,9 @@
-import EngineeringSecurityReviewAgent from "./EngineeringSecurityReviewAgent";
-import SecurityHelpDeskAgent from "./SecurityHelpDeskAgent";
+import AgentsLandingPage from "./AgentsLanding";
 
 function AgentsPage() {
   return (
     <div>
-      <EngineeringSecurityReviewAgent />
-      <SecurityHelpDeskAgent />
+      <AgentsLandingPage />
     </div>
   )
 }
