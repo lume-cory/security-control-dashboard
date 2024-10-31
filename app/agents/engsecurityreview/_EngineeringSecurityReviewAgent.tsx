@@ -2,7 +2,8 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { Button } from "@/components/ui/button"
+import { Button } from "@/subframe/components/Button"
+import * as SubframeCore from "@subframe/core";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -12,16 +13,51 @@ import { ExternalLink } from 'lucide-react'
 
 // Import the SuggestedModifications component
 import { SuggestedModifications } from '@/components/suggested-modifications'
+import { DefaultPageLayout } from '@/components/ui/subframe/layouts/DefaultPageLayout'
+import { IconWithBackground } from '@/components/ui/subframe/components/IconWithBackground'
+import { Breadcrumbs } from '@/components/ui/subframe/components/Breadcrumbs'
+import IntegrationsAndDataSources from './IntegrationsAndDataSources';
+import AddIntegrationDialog from './AddIntegrationDialog';
 
 export default function EngineeringSecurityReviewAgent() {
   const router = useRouter()
   const [integrations, setIntegrations] = useState([
-    { name: "Prior security design review docs", link: "#" },
-    { name: "Slack #ask-security channel questions and responses", link: "#" },
-    { name: "Security policy docs", link: "#" },
-    { name: "Design review meeting notes and transcripts", link: "#" },
-    { name: "Release approval checklists and associated docs", link: "#" },
-    { name: "Security ticket threads and associated docs", link: "#" }
+    {
+      name: "Prior security design review docs",
+      subtitle: "75 files",
+      icon: "FeatherFile",
+      link: "#"
+    },
+    {
+      name: "Slack #ask-security channel questions and responses",
+      subtitle: "3k + messages",
+      icon: "FeatherSlack",
+      link: "#"
+    },
+    {
+      name: "Security policy docs",
+      subtitle: "150 files",
+      icon: "FeatherFile",
+      link: "#"
+    },
+    {
+      name: "Design review meeting notes and transcripts",
+      subtitle: "35 docs",
+      icon: "FeatherFile",
+      link: "#"
+    },
+    {
+      name: "Release approval checklists and associated docs",
+      subtitle: "315 docs",
+      icon: "FeatherFile",
+      link: "#"
+    },
+    {
+      name: "Security ticket threads and associated docs",
+      subtitle: "500 links",
+      icon: "FeatherSlack",
+      link: "#"
+    }
   ])
   const [newIntegration, setNewIntegration] = useState('')
   const [newFile, setNewFile] = useState<File | null>(null)
@@ -30,7 +66,7 @@ export default function EngineeringSecurityReviewAgent() {
 
   const addIntegration = () => {
     if (newIntegration) {
-      setIntegrations([...integrations, { name: newIntegration, link: "#" }])
+      setIntegrations([...integrations, { name: newIntegration, icon: 'FeatherFile', subtitle: '', link: "#" }])
       setNewIntegration('')
       setIsAddDialogOpen(false)
     }
@@ -42,95 +78,67 @@ export default function EngineeringSecurityReviewAgent() {
     const file = files[0]
     if (file) {
       setNewFile(file)
-      setIntegrations([...integrations, { name: `Uploaded: ${file.name}`, link: "#" }])
+      setIntegrations([...integrations, { name: `Uploaded: ${file.name}`, icon: 'FeatherFile', subtitle: '', link: "#" }])
       setIsAddDialogOpen(false)
     }
   }
 
-  return (
-    <div className="container mx-auto p-4 space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Engineering Security Review Agent</h1>
-        <Button onClick={() => setShowModifications(!showModifications)}>
-          {showModifications ? 'Back to Review Requests' : 'View Suggested Modifications'}
-        </Button>
-      </div>
+  const handleDialogOpen = () => {
+    setIsAddDialogOpen(!isAddDialogOpen);
+  }
 
-      {showModifications ? (
-        <SuggestedModifications onBack={() => setShowModifications(false)} />
-      ) : (
-        <>
-          <div className="bg-gray-100 p-4 rounded-lg">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold">Integrations and Data Sources</h2>
-              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button>Add New</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Add New Integration or Upload File</DialogTitle>
-                    <DialogDescription>Choose to add a new integration app or upload a file.</DialogDescription>
-                  </DialogHeader>
-                  <Tabs defaultValue="integration">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="integration">New Integration</TabsTrigger>
-                      <TabsTrigger value="file">Upload File</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="integration">
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="new-integration" className="text-right">
-                            Integration Name
-                          </Label>
-                          <Input
-                            id="new-integration"
-                            value={newIntegration}
-                            onChange={(e) => setNewIntegration(e.target.value)}
-                            className="col-span-3"
-                          />
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button onClick={addIntegration}>Add Integration</Button>
-                      </DialogFooter>
-                    </TabsContent>
-                    <TabsContent value="file">
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="file-upload" className="text-right">
-                            Choose File
-                          </Label>
-                          <Input
-                            id="file-upload"
-                            type="file"
-                            onChange={handleFileUpload}
-                            className="col-span-3"
-                          />
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button onClick={() => setIsAddDialogOpen(false)}>Upload File</Button>
-                      </DialogFooter>
-                    </TabsContent>
-                  </Tabs>
-                </DialogContent>
-              </Dialog>
-            </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              {integrations.map((integration, index) => (
-                <div key={index} className="flex items-center justify-between bg-white p-2 rounded">
-                  <span>{integration.name}</span>
-                  <a href={integration.link} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="h-5 w-5 text-gray-500 hover:text-gray-700" />
-                  </a>
-                </div>
-              ))}
-            </div>
+  return (
+    <DefaultPageLayout>
+      <div className="flex h-full w-full flex-col items-start gap-6 px-6 py-6" >
+        <div className="flex w-full items-start gap-4 mobile:flex-col mobile:items-center mobile:justify-start mobile:gap-6" >
+          <IconWithBackground size="medium" icon="FeatherRocket" />
+          <span className="text-heading-2 font-heading-2 text-default-font mobile:text-center" >
+            Acme Inc
+          </span>
+        </div>
+        < div className="flex w-full items-center justify-between" >
+          <Breadcrumbs>
+            <Breadcrumbs.Item onClick={() => router.push('/agents')}>Agents </Breadcrumbs.Item>
+            < Breadcrumbs.Divider />
+            <Breadcrumbs.Item active={true}>
+              Engineering Security Review
+            </Breadcrumbs.Item>
+          </Breadcrumbs>
+        </div>
+
+        <IntegrationsAndDataSources integrations={integrations} addIntegration={handleDialogOpen} />
+
+
+        <div className="container mx-auto p-4 space-y-8">
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold">Engineering Security Review Agent</h1>
+            <Button onClick={() => setShowModifications(!showModifications)}>
+              {showModifications ? 'Back to Review Requests' : 'View Suggested Modifications'}
+            </Button>
           </div>
-          <QuestionsTable />
-        </>
-      )}
-    </div>
+
+          {showModifications ? (
+            <SuggestedModifications onBack={() => setShowModifications(false)} />
+          ) : (
+            <>
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-semibold">Integrations and Data Sources</h2>
+                  <AddIntegrationDialog
+                    isAddDialogOpen={isAddDialogOpen}
+                    newIntegration={newIntegration}
+                    handleFileUpload={handleFileUpload}
+                    setIsAddDialogOpen={setIsAddDialogOpen}
+                    setNewIntegration={setNewIntegration}
+                    addIntegration={addIntegration}
+                  />
+                </div>
+              </div>
+              <QuestionsTable />
+            </>
+          )}
+        </div>
+      </div>
+    </DefaultPageLayout>
   )
 }
