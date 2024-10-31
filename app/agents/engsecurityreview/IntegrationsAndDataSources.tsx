@@ -2,18 +2,17 @@ import * as SubframeCore from '@subframe/core'
 import { Button } from "@/subframe/components/Button"
 import { Dispatch, SetStateAction } from 'react';
 
-type FeatherIcon = 'FeatherFile' | 'FeatherSlack' | 'FeatherTicket';
 
 type Integration = {
   name: string;
   link: string;
-  icon: FeatherIcon;
+  icon: any;
   subtitle: string;
 }
 
 type IntegrationAndDataSourcesProps = {
   integrations: Integration[];
-  addIntegration: () => {};
+  addIntegration: any;
 }
 
 export default function IntegrationsAndDataSources({

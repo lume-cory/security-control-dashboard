@@ -7,10 +7,10 @@ import { Label } from "@/components/ui/label"
 type AddIntegrationDialogProps = {
   isAddDialogOpen: boolean;
   newIntegration: any;
-  setIsAddDialogOpen: (b: boolean) => {};
-  addIntegration: () => {};
-  setNewIntegration: (s: string) => {};
-  handleFileUpload: () => {};
+  setIsAddDialogOpen: any;
+  addIntegration: any;
+  setNewIntegration: any;
+  handleFileUpload: any;
 }
 
 export default function AddIntegrationDialog({

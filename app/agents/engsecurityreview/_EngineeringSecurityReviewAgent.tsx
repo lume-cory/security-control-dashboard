@@ -61,7 +61,7 @@ export default function EngineeringSecurityReviewAgent() {
     }
   ])
   const [newIntegration, setNewIntegration] = useState('')
-  const [newFile, setNewFile] = useState<File | null>(null)
+  const [, setNewFile] = useState<File | null>(null)
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [showModifications, setShowModifications] = useState(false)
 
@@ -107,6 +107,10 @@ export default function EngineeringSecurityReviewAgent() {
           </Breadcrumbs>
         </div>
 
+        <Button onClick={() => setShowModifications(!showModifications)}>
+          {showModifications ? 'Back to Review Requests' : 'View Suggested Modifications'}
+        </Button>
+
         <IntegrationsAndDataSources integrations={integrations} addIntegration={handleDialogOpen} />
 
         {showModifications ? (
@@ -114,39 +118,6 @@ export default function EngineeringSecurityReviewAgent() {
         ) : (
           <EngSecurityReviewQuestionsTable />
         )}
-
-
-        <div className="container mx-auto p-4 space-y-8">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold">Engineering Security Review Agent</h1>
-            <Button onClick={() => setShowModifications(!showModifications)}>
-              {showModifications ? 'Back to Review Requests' : 'View Suggested Modifications'}
-            </Button>
-          </div>
-
-          {showModifications ? (
-            <SuggestedModifications onBack={() => setShowModifications(false)} />
-          ) : (
-            <>
-              <div className="bg-gray-100 p-4 rounded-lg">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl font-semibold">Integrations and Data Sources</h2>
-                  <AddIntegrationDialog
-                    isAddDialogOpen={isAddDialogOpen}
-                    newIntegration={newIntegration}
-                    handleFileUpload={handleFileUpload}
-                    setIsAddDialogOpen={setIsAddDialogOpen}
-                    setNewIntegration={setNewIntegration}
-                    addIntegration={addIntegration}
-                  />
-                </div>
-              </div>
-              <QuestionsTable />
-
-
-            </>
-          )}
-        </div>
       </div>
     </DefaultPageLayout>
   )
