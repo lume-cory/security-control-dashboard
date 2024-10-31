@@ -123,6 +123,14 @@ export default function EngineeringSecurityReviewAgent() {
           </div>
         )}
       </div>
+      <AddIntegrationDialog
+        isAddDialogOpen={isAddDialogOpen}
+        newIntegration={newIntegration}
+        handleFileUpload={handleFileUpload}
+        setIsAddDialogOpen={setIsAddDialogOpen}
+        setNewIntegration={setNewIntegration}
+        addIntegration={addIntegration}
+      />
     </DefaultPageLayout>
   )
 }
