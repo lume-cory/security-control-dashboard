@@ -18,6 +18,7 @@ import { IconWithBackground } from '@/components/ui/subframe/components/IconWith
 import { Breadcrumbs } from '@/components/ui/subframe/components/Breadcrumbs'
 import IntegrationsAndDataSources from './IntegrationsAndDataSources';
 import AddIntegrationDialog from './AddIntegrationDialog';
+import EngSecurityReviewQuestionsTable from './QuestionsTable';
 
 export default function EngineeringSecurityReviewAgent() {
   const router = useRouter()
@@ -108,6 +109,12 @@ export default function EngineeringSecurityReviewAgent() {
 
         <IntegrationsAndDataSources integrations={integrations} addIntegration={handleDialogOpen} />
 
+        {showModifications ? (
+          <SuggestedModifications onBack={() => setShowModifications(false)} />
+        ) : (
+          <EngSecurityReviewQuestionsTable />
+        )}
+
 
         <div className="container mx-auto p-4 space-y-8">
           <div className="flex justify-between items-center">
@@ -135,6 +142,8 @@ export default function EngineeringSecurityReviewAgent() {
                 </div>
               </div>
               <QuestionsTable />
+
+
             </>
           )}
         </div>
