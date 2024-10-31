@@ -270,9 +270,9 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
   )
 
   return (
-    <div className="container mx-auto p-4 space-y-8">
+    <div className="flex w-full flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Suggested Modifications to Security Documentation</h1>
+        <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">Suggested Modifications to Security Documentation</span>
       </div>
 
       <Tabs defaultValue="lack-of-documentation">

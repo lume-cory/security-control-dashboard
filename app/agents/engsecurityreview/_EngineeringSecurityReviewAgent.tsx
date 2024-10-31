@@ -111,12 +111,14 @@ export default function EngineeringSecurityReviewAgent() {
           {showModifications ? 'Back to Review Requests' : 'View Suggested Modifications'}
         </Button>
 
-        <IntegrationsAndDataSources integrations={integrations} addIntegration={handleDialogOpen} />
 
         {showModifications ? (
           <SuggestedModifications onBack={() => setShowModifications(false)} />
         ) : (
-          <EngSecurityReviewQuestionsTable />
+          <div>
+            <IntegrationsAndDataSources integrations={integrations} addIntegration={handleDialogOpen} />
+            <EngSecurityReviewQuestionsTable />
+          </div>
         )}
       </div>
     </DefaultPageLayout>
