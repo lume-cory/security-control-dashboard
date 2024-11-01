@@ -518,11 +518,12 @@ function ReportsPage() {
               </div>
             </div>
           </div>
-          <div className="flex grow shrink-0 basis-0 flex-col items-start gap-6 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm">
+          <div className="flex grow shrink-0 basis-0 flex-col items-start gap-6 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm cursor-pointer hover:bg-neutral-hover"
+            onClick={() => router.push('/reports/security-ticket-triage')}>
             <div className="flex w-full items-center gap-2">
               <div className="flex grow shrink-0 basis-0 items-start gap-2">
                 <span className="grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">
-                  Security Resource Metrics 
+                  Security Ticket Triage 
                 </span>
                 <IconButton
                   disabled={false}
@@ -535,28 +536,23 @@ function ReportsPage() {
               </div>
             </div>
             <BarChart
-              categories={["Revenue Covered", "Cost"]}
-              data={[
-                { Type: "N/A", "Revenue Covered": 20, Cost: 0},
-                { Type: "Insurance", "Revenue Covered": 8, Cost: 2.3},
-                { Type: "Audit", "Revenue Covered": 4, Cost: 1.525},
-                { Type: "3P Pentests", "Revenue Covered": 5, Cost: .938},
-                { Type: "Op. Costs", "Revenue Covered": 5, Cost: 1.975},
-                { Type: "MSSP", "Revenue Covered": 3, Cost: 1.700},
-                { Type: "Headcount", "Revenue Covered": 17, Cost: 1.500},
-                { Type: "R&D", "Revenue Covered": 6, Cost: 3.870},
-                { Type: "Licensing", "Revenue Covered": 1, Cost: .543},
-                { Type: "Tooling", "Revenue Covered": 32, Cost: 3.950},
-              ]}
-              index={"Type"}
-              colors={distinctColors}
-            />
+            stacked={true}
+            categories={["Urgent", "High", "Medium", "Low"]}
+            data={[
+              { Year: "May", Urgent: 120, High: 110, Medium: 100, Low: 90 },
+              { Year: "June", Urgent: 130, High: 95, Medium: 105, Low: 115 },
+              { Year: "July", Urgent: 115, High: 105, Medium: 110, Low: 120 },
+              { Year: "Aug", Urgent: 125, High: 120, Medium: 90, Low: 130 },
+              { Year: "Sep", Urgent: 110, High: 130, Medium: 85, Low: 140 },
+              { Year: "Oct", Urgent: 135, High: 100, Medium: 95, Low: 150 },
+            ]}
+            index={"Year"}
+          />
             <div className="flex w-full items-start gap-2">
               <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
                 <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-2">
                   <span className="text-caption font-caption text-subtext-color">
-                    Shows coverage the security program provides across revenue
-                    driving assets
+                    Metrics for resolved security tickets from engineering design reviews and security help desk inquiries.
                   </span>
                 </div>
                 <div className="flex w-full grow shrink-0 basis-0 items-start gap-4">
