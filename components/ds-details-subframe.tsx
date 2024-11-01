@@ -114,6 +114,7 @@ const DataStorageDetailsView: React.FC<DetailViewWithActivityProps> = ({ onClose
   ]
 
   const resources = [
+    { category: "Cloud Security Posture Management (CSPM) Solutions", tools: ["Wiz"], details: "Automates detection and remediation across cloud resources." },
     { category: "Data Loss Prevention (DLP) Solutions", tools: ["Symantec DLP"], details: "Prevents unauthorized data transfers and leaks." },
     { category: "Cloud Access Security Brokers (CASB)", tools: ["Microsoft Cloud App Security"], details: "Provides visibility and control over data in cloud storage." },
     { category: "Endpoint Protection Platforms (EPP)", tools: ["CrowdStrike Falcon"], details: "Protects endpoints where data may be stored or accessed." },

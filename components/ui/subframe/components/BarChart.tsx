@@ -24,12 +24,16 @@ const BarChartRoot = React.forwardRef<HTMLElement, BarChartRootProps>(
         ref={ref as any}
         stacked={stacked}
         colors={[
-          "#14b8a6",
-          "#99f6e4",
-          "#0d9488",
-          "#5eead4",
-          "#0f766e",
-          "#2dd4bf",
+          "#f24596",
+          "#a16ae8",
+          "#6257e3",
+          "#9aedb6",
+          "#00eded",
+          "#2ee2ab",
+          "#FB7185",
+          "#22D3EE",
+          "#E879F9",
+          "#67E8F9",
         ]}
         {...otherProps}
       />
