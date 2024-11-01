@@ -5,7 +5,7 @@ import { DefaultPageLayout } from "@/subframe/layouts/DefaultPageLayout";
 import { IconWithBackground } from "@/subframe/components/IconWithBackground";
 import { Breadcrumbs } from "@/subframe/components/Breadcrumbs";
 import { TextField } from "@/subframe/components/TextField";
-import { Select } from "@/subframe/components/Select";
+import { Select } from "@/subframe/components/Select-singleton";
 import { FilterBadge } from "@/subframe/components/FilterBadge";
 import { Badge } from "@/subframe/components/Badge";
 import { BarChart } from "@/subframe/components/BarChart";
@@ -47,7 +47,7 @@ function SecurityTicketReport() {
             <TextField.Input
               placeholder="Search"
               value=""
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => { }}
             />
           </TextField>
           <Select
@@ -56,7 +56,7 @@ function SecurityTicketReport() {
             placeholder="6 months"
             helpText=""
             value={undefined}
-            onValueChange={(value: string) => {}}
+            onValueChange={(value: string) => { }}
           >
             <Select.Item value="1 month">1 month</Select.Item>
             <Select.Item value="3 months">3 months</Select.Item>
@@ -185,7 +185,7 @@ function SecurityTicketReport() {
               icon={null}
               iconRight={null}
               loading={false}
-              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
             >
               See All
             </Button>
@@ -312,7 +312,7 @@ function SecurityTicketReport() {
               icon={null}
               iconRight={null}
               loading={false}
-              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
             >
               See All
             </Button>
@@ -420,7 +420,7 @@ function SecurityTicketReport() {
               icon={null}
               iconRight={null}
               loading={false}
-              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
             >
               See All
             </Button>
@@ -447,7 +447,7 @@ function SecurityTicketReport() {
                 </span>
                 <Button
                   variant="brand-secondary"
-                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
                 >
                   See Examples
                 </Button>
@@ -474,7 +474,7 @@ function SecurityTicketReport() {
                 </span>
                 <Button
                   variant="brand-secondary"
-                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
                 >
                   See Examples
                 </Button>
@@ -501,7 +501,7 @@ function SecurityTicketReport() {
                 </span>
                 <Button
                   variant="brand-secondary"
-                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
                 >
                   See Examples
                 </Button>
@@ -523,7 +523,7 @@ function SecurityTicketReport() {
               icon={null}
               iconRight={null}
               loading={false}
-              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
             >
               See All
             </Button>
@@ -551,7 +551,7 @@ function SecurityTicketReport() {
                 </span>
                 <Button
                   variant="brand-secondary"
-                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
                 >
                   See Examples
                 </Button>
@@ -578,7 +578,7 @@ function SecurityTicketReport() {
                 </span>
                 <Button
                   variant="brand-secondary"
-                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
                 >
                   See Examples
                 </Button>
@@ -605,7 +605,7 @@ function SecurityTicketReport() {
                 </span>
                 <Button
                   variant="brand-secondary"
-                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
                 >
                   See Examples
                 </Button>
