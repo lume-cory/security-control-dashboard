@@ -1,16 +1,22 @@
 "use client";
 
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { DefaultPageLayout } from "@/subframe/layouts/DefaultPageLayout";
 import { IconWithBackground } from "@/subframe/components/IconWithBackground";
 import { Button } from "@/subframe/components/Button";
 import { IconButton } from "@/subframe/components/IconButton";
 import { BarChart } from "@/subframe/components/BarChart";
 import * as SubframeCore from "@subframe/core";
+import { DialogLayout } from "@/subframe/layouts/DialogLayout";
+import { DropdownMenu } from "@/subframe/components/DropdownMenu";
+import { TextField } from "@/subframe/components/TextField";
+import { TextArea } from "@/subframe/components/TextArea";
 import { LineChart } from "@/subframe/components/LineChart";
 import { TimelineDivider } from "@/subframe/components/TimelineDivider";
 import { useRouter } from 'next/navigation';
 import { Badge } from "@/subframe/components/Badge";
+import { Accordion, AccordionTrigger, AccordionItem, AccordionContent } from "@radix-ui/react-accordion";
+import { CardContent } from "./ui/card";
 
 
 const distinctColors = [
@@ -21,6 +27,59 @@ const distinctColors = [
 
 function ReportsPage() {
   const router = useRouter();
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [reportName, setReportName] = useState('');
+
+  const profileControls = {
+    protect: [
+      {
+        id: "PR.AC-01.01",
+        name: "Access Control Policy",
+        description: "Develop and implement an access control policy that restricts access to information systems and data based on the principle of least privilege.",
+        status: "Compliant",
+        progress: "100%",
+        risk: "Low",
+        mitigation: "Regular review of access rights, implementation of multi-factor authentication.",
+        evidence: "Access control policy document, access logs, audit trails"
+      },
+      {
+        id: "PR.IP-01.01",
+        name: "Security Awareness and Training",
+        description: "Establish a security awareness and training program to ensure personnel are aware of and adhere to security policies and procedures.",
+        status: "Partially Compliant",
+        progress: "70%",
+        risk: "Moderate",
+        mitigation: "Developing comprehensive training program with regular updates and assessments.",
+        evidence: "Training materials, attendance records, assessment results"
+      }
+    ],
+    detect: [
+      {
+        id: "DE.CM-01.01",
+        name: "Continuous Monitoring",
+        description: "Implement continuous monitoring to detect anomalous activities and potential cybersecurity events.",
+        status: "Compliant",
+        progress: "100%",
+        risk: "Low",
+        mitigation: "24/7 security operations center, automated alert system.",
+        evidence: "Monitoring logs, incident reports, system configuration documentation"
+      }
+    ],
+    respond: [
+      {
+        id: "RS.RP-01.01",
+        name: "Incident Response Plan",
+        description: "Develop and maintain an incident response plan to guide the organization in responding to and recovering from cybersecurity incidents.",
+        status: "Compliant",
+        progress: "100%",
+        risk: "Low",
+        mitigation: "Regular updates to the incident response plan, conduct of tabletop exercises.",
+        evidence: "Incident response plan document, exercise reports, post-incident reviews"
+      }
+    ]
+  }
+
 
   return (
     <DefaultPageLayout>
@@ -41,8 +100,8 @@ function ReportsPage() {
             size="medium"
             icon="FeatherPlus"
             loading={false}
-            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-          >
+            onClick={() => setIsDialogOpen(true)}
+            >
             Create
           </Button>
         </div>
@@ -310,7 +369,7 @@ function ReportsPage() {
           <div 
             className="flex grow shrink-0 basis-0 flex-col items-start gap-6 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm cursor-pointer hover:bg-neutral-hover"
             onClick={() => router.push('/reports/vulnerability-resolution')}
-          >
+           >
             <div className="flex w-full items-center gap-2">
               <div className="flex grow shrink-0 basis-0 items-start gap-2">
                 <span className="grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">
@@ -417,11 +476,14 @@ function ReportsPage() {
           </div>
         </div>
         <div className="flex w-full items-center gap-4">
-          <div className="flex grow shrink-0 basis-0 flex-col items-center gap-4 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm">
+        <div 
+            className="flex grow shrink-0 basis-0 flex-col items-start gap-6 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm cursor-pointer hover:bg-neutral-hover"
+            onClick={() => router.push('/reports/cri-compliance')}
+           >
             <div className="flex w-full items-center gap-2">
               <div className="flex grow shrink-0 basis-0 items-start gap-2">
                 <span className="grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">
-                  External Risk Feed
+                  CRI Regulatory Compliance
                 </span>
                 <IconButton
                   disabled={false}
@@ -433,66 +495,45 @@ function ReportsPage() {
                 />
               </div>
             </div>
-            <div className="flex w-full flex-col items-start pb-2">
-              <TimelineDivider>Today</TimelineDivider>
-              <div className="flex w-full items-start gap-4">
-                <div className="flex flex-col items-center self-stretch pb-2.5">
-                  <div className="flex h-0.5 w-0.5 flex-none flex-col items-center gap-2 bg-default-background" />
-                  <div className="flex h-4 w-4 flex-none flex-col items-start gap-2 rounded-full border-2 border-solid border-brand-600" />
-                  <div className="flex w-0.5 grow shrink-0 basis-0 flex-col items-center gap-2 bg-brand-600" />
+            <CardContent className="space-y-6">
+              <section>
+              <h2 className="text-xl font-body mb-2">Profile Controls</h2>
+              {Object.entries(profileControls).map(([type, controls]) => (
+              <div key={type} className="mb-4">
+                <h3 className="text-lg font-body capitalize mb-2">{type}</h3>
+                <Accordion type="single" collapsible className="w-full">
+                  {controls.map((control, index) => (
+                    <AccordionItem value={`${type}-${index}`} key={index}>
+                      <AccordionTrigger className="flex justify-between">
+                        <span className="font-body">{control.id}: {control.name}</span>
+                        <span className={`px-2 py-1 text-xs rounded-full ${
+                          control.status === 'Compliant' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {control.status}
+                        </span>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-2">
+                          <p><strong>Description:</strong> {control.description}</p>
+                          <p><strong>Compliance Status:</strong> {control.status}</p>
+                          <p><strong>Progress:</strong> {control.progress}</p>
+                          <p><strong>Risk Assessment:</strong> {control.risk}</p>
+                          <p><strong>Mitigation Strategies:</strong> {control.mitigation}</p>
+                          <p><strong>Supporting Evidence:</strong> {control.evidence}</p>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                  </Accordion>
                 </div>
-                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2 pb-2.5">
-                  <span className="w-full text-body-bold font-body-bold text-default-font">
-                    New CVE affects Windows devices 
-                  </span>
-                  <span className="text-caption font-caption text-subtext-color">
-                    3:00 AM GMT
-                  </span>
-                  <Button
-                    variant="neutral-secondary"
-                    size="small"
-                    iconRight="FeatherChevronRight"
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  >
-                    View details
-                  </Button>
-                </div>
-              </div>
-            </div>
-            <div className="flex w-full flex-col items-start">
-              <div className="flex w-full flex-col items-start pb-2">
-                <TimelineDivider>Yesterday</TimelineDivider>
-              </div>
-              <div className="flex w-full items-start gap-4">
-                <div className="flex flex-col items-center self-stretch pb-2.5">
-                  <div className="flex h-0.5 w-0.5 flex-none flex-col items-center gap-2 bg-default-background" />
-                  <div className="flex h-4 w-4 flex-none flex-col items-start gap-2 rounded-full border-2 border-solid border-brand-600" />
-                  <div className="flex w-0.5 grow shrink-0 basis-0 flex-col items-center gap-2 bg-brand-600" />
-                </div>
-                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2 pb-2.5">
-                  <span className="w-full text-body-bold font-body-bold text-default-font">
-                    New CVE affects Veeam data backups
-                  </span>
-                  <span className="text-caption font-caption text-subtext-color">
-                    3:00 AM GMT
-                  </span>
-                  <Button
-                    variant="neutral-secondary"
-                    size="small"
-                    iconRight="FeatherChevronRight"
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  >
-                    View details
-                  </Button>
-                </div>
-              </div>
-            </div>
+              ))}
+              </section>
+            </CardContent>
             <div className="flex w-full items-start gap-2">
               <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
                 <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-2">
                   <span className="text-caption font-caption text-subtext-color">
-                    Shows coverage the security program provides across revenue
-                    driving assets
+                    Shows coverage the security program provides for the CRI Profile v2.0
                   </span>
                 </div>
                 <div className="flex w-full grow shrink-0 basis-0 items-start gap-4">
@@ -580,6 +621,185 @@ function ReportsPage() {
           </div>
         </div>
       </div>
+      <DialogLayout open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <div className="flex h-full w-full flex-col items-start bg-default-background">
+          <div className="flex w-full flex-col items-start px-6 py-6">
+            <div className="flex w-full flex-col items-start">
+                <IconButton
+                  icon="FeatherX"
+                  onClick={() => setIsDialogOpen(false)}
+                />
+              </div>
+              <div className="flex w-full flex-col items-start gap-8 px-4 py-4">
+                <div className="flex w-full items-center justify-between">
+                  <div className="flex flex-col items-start gap-2">
+                    <span className="text-heading-2 font-heading-2 text-default-font">
+                      Create New Report
+                    </span>
+                    <span className="text-body font-body text-default-font">
+                      Create a report to suit your needs. Fill out the fields below
+                      and click Generate.
+                    </span>              
+                    <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2">
+                    <span className="text-heading-3 font-heading-3 text-default-font">
+                      Report Name
+                    </span>
+                    <TextField
+                      disabled={false}
+                      error={false}
+                      variant="outline"
+                      label=""
+                      helpText=""
+                      icon={null}
+                      iconRight={null}
+                    >
+                      <TextField.Input
+                        placeholder=""
+                        value={reportName}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                          setReportName(event.target.value);
+                        }}
+                        />
+                      </TextField>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2">
+                    <span className="text-heading-3 font-heading-3 text-default-font">
+                      Audience
+                    </span>
+                    <SubframeCore.DropdownMenu.Root>
+                      <SubframeCore.DropdownMenu.Trigger asChild={true}>
+                        <Button
+                          variant="neutral-secondary"
+                          iconRight="FeatherChevronDown"
+                          onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                        >
+                          Select an Audience
+                        </Button>
+                      </SubframeCore.DropdownMenu.Trigger>
+                      <SubframeCore.DropdownMenu.Portal>
+                        <SubframeCore.DropdownMenu.Content
+                          side="bottom"
+                          align="start"
+                          sideOffset={4}
+                          asChild={true}
+                        >
+                          <DropdownMenu>
+                            <DropdownMenu.DropdownItem icon={null}>
+                              Board of Directors
+                            </DropdownMenu.DropdownItem>
+                            <DropdownMenu.DropdownItem icon={null}>
+                              Regulator
+                            </DropdownMenu.DropdownItem>
+                            <DropdownMenu.DropdownItem icon={null}>
+                              Audit
+                            </DropdownMenu.DropdownItem>
+                            <DropdownMenu.DropdownItem icon={null}>
+                              Company Leadership
+                            </DropdownMenu.DropdownItem>
+                            <DropdownMenu.DropdownItem icon={null}>
+                              Security Team
+                            </DropdownMenu.DropdownItem>
+                            <DropdownMenu.DropdownItem icon={null}>
+                              Development Team
+                            </DropdownMenu.DropdownItem>
+                          </DropdownMenu>
+                        </SubframeCore.DropdownMenu.Content>
+                      </SubframeCore.DropdownMenu.Portal>
+                    </SubframeCore.DropdownMenu.Root>
+                  </div>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2">
+                    <span className="text-heading-3 font-heading-3 text-default-font">
+                      Report Format
+                    </span>
+                    <SubframeCore.DropdownMenu.Root>
+                      <SubframeCore.DropdownMenu.Trigger asChild={true}>
+                        <Button
+                          variant="neutral-secondary"
+                          iconRight="FeatherChevronDown"
+                          onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                        >
+                          Choose a Format
+                        </Button>
+                      </SubframeCore.DropdownMenu.Trigger>
+                      <SubframeCore.DropdownMenu.Portal>
+                        <SubframeCore.DropdownMenu.Content
+                          side="bottom"
+                          align="start"
+                          sideOffset={4}
+                          asChild={true}
+                        >
+                          <DropdownMenu>
+                            <DropdownMenu.DropdownItem icon={null}>
+                              Text / Doc
+                            </DropdownMenu.DropdownItem>
+                            <DropdownMenu.DropdownItem icon={null}>
+                              Visual
+                            </DropdownMenu.DropdownItem>
+                            <DropdownMenu.DropdownItem icon={null}>
+                              Mixed Mode
+                            </DropdownMenu.DropdownItem>
+                          </DropdownMenu>
+                        </SubframeCore.DropdownMenu.Content>
+                      </SubframeCore.DropdownMenu.Portal>
+                    </SubframeCore.DropdownMenu.Root>
+                  </div>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2">
+                    <span className="text-heading-3 font-heading-3 text-default-font">
+                      Describe Report Content
+                    </span>
+                    <TextArea
+                      className="h-auto w-full flex-none"
+                      error={false}
+                      variant="outline"
+                      label=""
+                      helpText=""
+                    >
+                      <TextArea.Input
+                        className="h-auto min-h-[96px] w-full flex-none"
+                        placeholder=""
+                        value=""
+                        onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {}}
+                      />
+                    </TextArea>
+                  </div>
+                </div>
+                <div className="flex w-full items-center gap-4">
+                  <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2">
+                    <span className="text-heading-3 font-heading-3 text-default-font">
+                      Report Template (optional)
+                    </span>
+                    <span className="text-caption font-caption text-subtext-color">
+                      For best results, upload a template of a prior report that can be
+                      used as a reference
+                    </span>
+                    <Button
+                      variant="neutral-secondary"
+                      icon="FeatherUpload"
+                      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                    >
+                      Upload
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <Button
+                className="h-10 w-full flex-none"
+                size="large"
+                icon="FeatherSparkles"
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+              >
+                Generate Report
+              </Button>
+            </div>
+          </div>
+        </DialogLayout>
     </DefaultPageLayout>
   );
 }
