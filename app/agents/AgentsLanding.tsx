@@ -277,7 +277,7 @@ function AgentsLandingPage() {
               <div className="flex w-full flex-col items-start gap-2">
                 <div className="flex w-full items-center justify-between">
                   <span className="text-body-bold font-body-bold text-default-font">
-                    Security Policy &amp; Doc Suggestions
+                    Customer Security Inquiry Agent
                   </span>
                   <div className="flex items-center gap-2">
                     <IconButton
@@ -298,9 +298,8 @@ function AgentsLandingPage() {
                 </div>
                 <div className="flex flex-col items-start gap-2">
                   <span className="line-clamp-3 text-body font-body text-subtext-color">
-                    This agent is continuously reviewing policy and
-                    documentation to find gaps or conflicts, recommending and
-                    automatically updating content after approval
+                    This agent is designed to aggregate questions from customers
+                    about the organization's security posture and suggest responses
                   </span>
                 </div>
               </div>

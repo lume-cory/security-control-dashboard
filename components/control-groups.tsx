@@ -5,10 +5,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
-import { EndpointProtectionDetailsComponent } from './endpoint-protection-details'
-import { DataStorageDetailsComponent } from './data-storage-details'
-import { AccessManagementDetailsComponent } from './access-management-details'
-import { DecentralizedProvisioningDetailsComponent } from './decentralized-provisioning-details'
+import EndpointProtectionDetailsComponent from './ep-details-subframe'
+import DataStorageDetailsComponent from './ds-details-subframe'
+import AccessManagementDetailsComponent from './am-details-subframe'
+import DecentralizedProvisioningDetailsComponent from './up-details-subframe'
 import DetailViewWithActivity from './am-details-subframe'
 
 export function ControlGroupsComponent() {
@@ -130,13 +130,13 @@ export function ControlGroupsComponent() {
   const renderThemeDetails = () => {
     switch (selectedTheme) {
       case "Endpoint Protection":
-        return <EndpointProtectionDetailsComponent />
+        return <EndpointProtectionDetailsComponent onClose={() => setSelectedTheme(null)}/>
       case "Access Management":
-        return <AccessManagementDetailsComponent />
+        return <AccessManagementDetailsComponent onClose={() => setSelectedTheme(null)}/>
       case "Data Storage":
-        return <DataStorageDetailsComponent />
+        return <DataStorageDetailsComponent onClose={() => setSelectedTheme(null)}/>
       case "Provisioning":
-        return <DecentralizedProvisioningDetailsComponent />
+        return <DecentralizedProvisioningDetailsComponent onClose={() => setSelectedTheme(null)}/>
       case "Data Protection":
         return <DetailViewWithActivity onClose={() => setSelectedTheme(null)} />
       default:

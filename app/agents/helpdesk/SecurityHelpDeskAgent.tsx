@@ -10,6 +10,7 @@ import { FilterBadge } from "@/subframe/components/FilterBadge";
 import { Badge } from "@/subframe/components/Badge";
 import { Table } from "@/subframe/components/Table";
 import { useRouter } from "next/navigation";
+import { QuestionsTable } from './questions-table'
 
 function SecurityHelpDeskAgent() {
   const router = useRouter();
@@ -198,144 +199,7 @@ function SecurityHelpDeskAgent() {
           </div>
         </div>
         < div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm" >
-          <div className="flex w-full items-center gap-2" >
-            <span className="grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font" >
-              Downtime
-            </span>
-            < div className="flex grow shrink-0 basis-0 items-center justify-end gap-2" >
-              <Button
-                className="h-auto w-auto flex-none self-stretch"
-                variant="brand-secondary"
-                icon="FeatherCheck"
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
-              >
-                Oustanding
-              </Button>
-              < Button
-                className="h-auto w-auto flex-none self-stretch"
-                variant="neutral-secondary"
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
-              >
-                Resolved
-              </Button>
-            </div>
-          </div>
-          < div className="flex w-full flex-col items-start gap-6 overflow-hidden overflow-auto" >
-            <Table
-              header={
-                <Table.HeaderRow>
-                  <Table.HeaderCell>Time period </Table.HeaderCell>
-                  < Table.HeaderCell > Availability </Table.HeaderCell>
-                  < Table.HeaderCell > Downtime </Table.HeaderCell>
-                  < Table.HeaderCell > Status </Table.HeaderCell>
-                </Table.HeaderRow>
-              }
-            >
-              <Table.Row>
-                <Table.Cell>
-                  <span className="text-body-bold font-body-bold text-neutral-700" >
-                    Last 24 hours
-                  </span>
-                </Table.Cell>
-                < Table.Cell >
-                  <span className="text-body font-body text-neutral-500" >
-                    100.00 %
-                  </span>
-                </Table.Cell>
-                < Table.Cell >
-                  <span className="text-body font-body text-neutral-500" >
-                    0s
-                  </span>
-                </Table.Cell>
-                < Table.Cell >
-                  <Badge>Active </Badge>
-                </Table.Cell>
-              </Table.Row>
-              < Table.Row >
-                <Table.Cell>
-                  <span className="text-body-bold font-body-bold text-neutral-700" >
-                    Last 7 days
-                  </span>
-                </Table.Cell>
-                < Table.Cell >
-                  <span className="text-body font-body text-neutral-500" >
-                    99.99 %
-                  </span>
-                </Table.Cell>
-                < Table.Cell >
-                  <span className="text-body font-body text-neutral-500" >
-                    1m 10s
-                  </span>
-                </Table.Cell>
-                < Table.Cell >
-                  <Badge>Active </Badge>
-                </Table.Cell>
-              </Table.Row>
-              < Table.Row >
-                <Table.Cell>
-                  <span className="text-body-bold font-body-bold text-neutral-700" >
-                    Last 30 days
-                  </span>
-                </Table.Cell>
-                < Table.Cell >
-                  <span className="text-body font-body text-neutral-500" >
-                    99.95 %
-                  </span>
-                </Table.Cell>
-                < Table.Cell >
-                  <span className="text-body font-body text-neutral-500" >
-                    2m 30s
-                  </span>
-                </Table.Cell>
-                < Table.Cell >
-                  <Badge>Active </Badge>
-                </Table.Cell>
-              </Table.Row>
-              < Table.Row >
-                <Table.Cell>
-                  <span className="text-body-bold font-body-bold text-neutral-700" >
-                    Last 365 days
-                  </span>
-                </Table.Cell>
-                < Table.Cell >
-                  <span className="text-body font-body text-neutral-500" >
-                    99.94 %
-                  </span>
-                </Table.Cell>
-                < Table.Cell >
-                  <span className="text-body font-body text-neutral-500" >
-                    4m 20s
-                  </span>
-                </Table.Cell>
-                < Table.Cell >
-                  <Badge>Active </Badge>
-                </Table.Cell>
-              </Table.Row>
-            </Table>
-          </div>
-          < div className="flex w-full items-center justify-center gap-4" >
-            <span className="grow shrink-0 basis-0 text-body font-body text-subtext-color" >
-              Showing 1 – 4 of 8
-            </span>
-            < div className="flex items-center justify-center gap-2" >
-              <Button
-                variant="neutral-secondary"
-                size="medium"
-                icon={null}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
-              >
-                Prev
-              </Button>
-              < Button
-                variant="neutral-secondary"
-                size="medium"
-                iconRight={null}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
-              >
-                Next
-              </Button>
-            </div>
-          </div>
+          <QuestionsTable />
         </div>
       </div>
     </DefaultPageLayout>
