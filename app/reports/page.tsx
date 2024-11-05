@@ -1,4 +1,4 @@
-import ReportsPage from '@/components/reports-page';
+import ReportsPage from '@/app/reports/reports-page';
 
 export default function Page() {
   return <ReportsPage />;

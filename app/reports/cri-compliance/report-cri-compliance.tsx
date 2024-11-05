@@ -4,22 +4,12 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Download, Share2 } from "lucide-react"
 import React, { useState, useMemo } from "react";
 import { DefaultPageLayout } from "@/subframe/layouts/DefaultPageLayout";
 import { IconWithBackground } from "@/subframe/components/IconWithBackground";
 import { Breadcrumbs } from "@/subframe/components/Breadcrumbs";
 import { Button } from "@/subframe/components/Button";
-import { FilterBadge } from "@/subframe/components/FilterBadge";
-import { Badge } from "@/subframe/components/Badge";
-import { LineChart } from "@/subframe/components/LineChart";
-import { DropdownMenu } from "@/subframe/components/DropdownMenu";
-import * as SubframeCore from "@subframe/core";
-import { Table } from "@/subframe/components/Table";
 import { useRouter } from "next/navigation";
-import { DialogLayout } from "@/subframe/layouts/DialogLayout";
-import { IconButton } from "@/subframe/components/IconButton";
-import { TextArea } from "@/subframe/components/TextArea";
 
 export default function CriComplianceReport() {
   const router = useRouter();
@@ -243,12 +233,12 @@ export default function CriComplianceReport() {
             <h2 className="text-xl font-semibold mb-2">Profile Controls</h2>
             {Object.entries(profileControls).map(([type, controls]) => (
               <div key={type} className="mb-4">
-                <h3 className="text-lg font-semibold capitalize mb-2">{type}</h3>
+                <h3 className="text-lg font-body capitalize mb-2">{type}</h3>
                 <Accordion type="single" collapsible className="w-full">
                   {controls.map((control, index) => (
                     <AccordionItem value={`${type}-${index}`} key={index}>
                       <AccordionTrigger className="flex justify-between">
-                        <span className="font-semibold">{control.id}: {control.name}</span>
+                        <span className="font-body">{control.id}: {control.name}</span>
                         <span className={`px-2 py-1 text-xs rounded-full ${
                           control.status === 'Compliant' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                         }`}>
@@ -280,7 +270,7 @@ export default function CriComplianceReport() {
               {outstandingVulnerabilities.map((vulnerability, index) => (
                 <AccordionItem value={`vuln-${index}`} key={index}>
                   <AccordionTrigger>
-                    <span className="font-semibold">{vulnerability.type} ({vulnerability.id})</span>
+                    <span className="font-body">{vulnerability.type} ({vulnerability.id})</span>
                   </AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-2">

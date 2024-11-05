@@ -16,7 +16,9 @@ import { TimelineDivider } from "@/subframe/components/TimelineDivider";
 import { useRouter } from 'next/navigation';
 import { Badge } from "@/subframe/components/Badge";
 import { Accordion, AccordionTrigger, AccordionItem, AccordionContent } from "@radix-ui/react-accordion";
-import { CardContent } from "./ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
 
 
 const distinctColors = [
@@ -79,7 +81,27 @@ function ReportsPage() {
       }
     ]
   }
+  // Mock data for Eng Vuln Report
+  // Generate mock data for the past 12 months
+const generateMockTrendData = () => {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  const currentMonth = new Date().getMonth()
+  const data = []
 
+  for (let i = 11; i >= 0; i--) {
+    const monthIndex = (currentMonth - i + 12) % 12
+    data.push({
+      name: months[monthIndex],
+      Critical: Math.floor(Math.random() * 5),
+      High: Math.floor(Math.random() * 8),
+      Medium: Math.floor(Math.random() * 12),
+      Low: Math.floor(Math.random() * 20),
+    })
+  }
+
+  return data
+}
+const mockTrendData = generateMockTrendData()
 
   return (
     <DefaultPageLayout>
@@ -476,7 +498,7 @@ function ReportsPage() {
           </div>
         </div>
         <div className="flex w-full items-center gap-4">
-        <div 
+         <div 
             className="flex grow shrink-0 basis-0 flex-col items-start gap-6 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm cursor-pointer hover:bg-neutral-hover"
             onClick={() => router.push('/reports/cri-compliance')}
            >
@@ -588,12 +610,171 @@ function ReportsPage() {
               { Year: "Oct", Urgent: 135, High: 100, Medium: 95, Low: 150 },
             ]}
             index={"Year"}
-          />
+            />
             <div className="flex w-full items-start gap-2">
               <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
                 <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-2">
                   <span className="text-caption font-caption text-subtext-color">
                     Metrics for resolved security tickets from engineering design reviews and security help desk inquiries.
+                  </span>
+                </div>
+                <div className="flex w-full grow shrink-0 basis-0 items-start gap-4">
+                  <div className="flex items-center gap-1">
+                    <SubframeCore.Icon
+                      className="text-caption font-caption text-subtext-color"
+                      name="FeatherClock"
+                    />
+                    <span className="text-caption font-caption text-subtext-color">
+                      1 hour ago
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <SubframeCore.Icon
+                      className="text-caption font-caption text-subtext-color"
+                      name="FeatherEye"
+                    />
+                    <span className="text-caption font-caption text-subtext-color">
+                      253
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex w-full items-center gap-4">
+          <div className="flex grow shrink-0 basis-0 flex-col items-center gap-4 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm">
+            <div className="flex w-full items-center gap-2">
+              <div className="flex grow shrink-0 basis-0 items-start gap-2">
+                <span className="grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">
+                  External Risk Feed
+                </span>
+                <IconButton
+                  disabled={false}
+                  variant="neutral-tertiary"
+                  size="medium"
+                  icon="FeatherMoreHorizontal"
+                  loading={false}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                />
+              </div>
+            </div>
+            <div className="flex w-full flex-col items-start pb-2">
+              <TimelineDivider>Today</TimelineDivider>
+              <div className="flex w-full items-start gap-4">
+                <div className="flex flex-col items-center self-stretch pb-2.5">
+                  <div className="flex h-0.5 w-0.5 flex-none flex-col items-center gap-2 bg-default-background" />
+                  <div className="flex h-4 w-4 flex-none flex-col items-start gap-2 rounded-full border-2 border-solid border-brand-600" />
+                  <div className="flex w-0.5 grow shrink-0 basis-0 flex-col items-center gap-2 bg-brand-600" />
+                </div>
+                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2 pb-2.5">
+                  <span className="w-full text-body-bold font-body-bold text-default-font">
+                    New CVE affects Windows devices 
+                  </span>
+                  <span className="text-caption font-caption text-subtext-color">
+                    3:00 AM GMT
+                  </span>
+                  <Button
+                    variant="neutral-secondary"
+                    size="small"
+                    iconRight="FeatherChevronRight"
+                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                  >
+                    View details
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div className="flex w-full flex-col items-start">
+              <div className="flex w-full flex-col items-start pb-2">
+                <TimelineDivider>Yesterday</TimelineDivider>
+              </div>
+              <div className="flex w-full items-start gap-4">
+                <div className="flex flex-col items-center self-stretch pb-2.5">
+                  <div className="flex h-0.5 w-0.5 flex-none flex-col items-center gap-2 bg-default-background" />
+                  <div className="flex h-4 w-4 flex-none flex-col items-start gap-2 rounded-full border-2 border-solid border-brand-600" />
+                  <div className="flex w-0.5 grow shrink-0 basis-0 flex-col items-center gap-2 bg-brand-600" />
+                </div>
+                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2 pb-2.5">
+                  <span className="w-full text-body-bold font-body-bold text-default-font">
+                    New CVE affects Veeam data backups
+                  </span>
+                  <span className="text-caption font-caption text-subtext-color">
+                    3:00 AM GMT
+                  </span>
+                  <Button
+                    variant="neutral-secondary"
+                    size="small"
+                    iconRight="FeatherChevronRight"
+                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                  >
+                    View details
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div className="flex w-full items-start gap-2">
+              <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
+                <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-2">
+                  <span className="text-caption font-caption text-subtext-color">
+                    Shows coverage the security program provides across revenue
+                    driving assets
+                  </span>
+                </div>
+                <div className="flex w-full grow shrink-0 basis-0 items-start gap-4">
+                  <div className="flex items-center gap-1">
+                    <SubframeCore.Icon
+                      className="text-caption font-caption text-subtext-color"
+                      name="FeatherClock"
+                    />
+                    <span className="text-caption font-caption text-subtext-color">
+                      1 hour ago
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <SubframeCore.Icon
+                      className="text-caption font-caption text-subtext-color"
+                      name="FeatherEye"
+                    />
+                    <span className="text-caption font-caption text-subtext-color">
+                      253
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex grow shrink-0 basis-0 flex-col items-start gap-6 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm cursor-pointer hover:bg-neutral-hover"
+            onClick={() => router.push('/reports/eng-vuln-report')}>
+            <div className="flex w-full items-center gap-2">
+              <div className="flex grow shrink-0 basis-0 items-start gap-2">
+                <span className="grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">
+                  Engineering Team Vulnerabilities
+                </span>
+                <IconButton
+                  disabled={false}
+                  variant="neutral-tertiary"
+                  size="medium"
+                  icon="FeatherMoreHorizontal"
+                  loading={false}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                />
+              </div>
+            </div>
+              <LineChart
+              className="h-64 w-full flex-none"
+              categories={[
+                "Critical", "High", "Medium", "Low"
+              ]}
+              data={mockTrendData}
+              index={"Month"}
+              colors={distinctColors}
+              />
+            <div className="flex w-full items-start gap-2">
+              <div className="flex grow shrink-0 basis-0 flex-col items-start gap-2 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
+                <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-2">
+                  <span className="text-caption font-caption text-subtext-color">
+                    Outstanding vulnerabilities for each engineering team.
                   </span>
                 </div>
                 <div className="flex w-full grow shrink-0 basis-0 items-start gap-4">
