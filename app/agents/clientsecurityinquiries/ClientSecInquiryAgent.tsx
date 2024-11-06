@@ -16,7 +16,7 @@ import { QuestionsTable } from './questions-table'
 import AddIntegrationDialog from "./AddIntegrationDialog";
 
 
-function SecurityHelpDeskAgent() {
+function ClientSecInquiryAgent() {
   const router = useRouter();
 
   const [integrations, setIntegrations] = useState<Array<{
@@ -26,9 +26,9 @@ function SecurityHelpDeskAgent() {
     link: string;
   }>>([
     {
-      name: "Slack Channels",
-      subtitle: "10k+ messages",
-      icon: "FeatherSlack",
+      name: "GRC Trust Center",
+      subtitle: "1k+ entries",
+      icon: "FeatherMousePointerSquare",
       link: "#"
     },
     {
@@ -47,6 +47,18 @@ function SecurityHelpDeskAgent() {
       name: "Security Design Reviews",
       subtitle: "320 files",
       icon: "FeatherFile",
+      link: "#"
+    },
+    {
+      name: "Security Tool Configurations",
+      subtitle: "2.1k+ configs",
+      icon: "FeatherShieldCheck",
+      link: "#"
+    }, 
+    {
+      name: "Cyber Insurance Policies",
+      subtitle: "3 files",
+      icon: "FeatherLandmark",
       link: "#"
     }
   ])
@@ -92,7 +104,7 @@ function SecurityHelpDeskAgent() {
             <Breadcrumbs.Item onClick={() => router.push('/agents')}>Agents </Breadcrumbs.Item>
             < Breadcrumbs.Divider />
             <Breadcrumbs.Item active={true}>
-              Security Help Desk
+              Client Security Inquiries
             </Breadcrumbs.Item>
           </Breadcrumbs>
         </div>
@@ -152,25 +164,25 @@ function SecurityHelpDeskAgent() {
                   Outstanding questions
                 </span>
                 < div className="flex items-center gap-2" >
-                  <FilterBadge label="Urgent" count="3" selected={false} />
+                  <FilterBadge label="Urgent" count="2" selected={false} />
                   <Badge variant="error" icon="FeatherArrowUp" >
                     13 %
                   </Badge>
                 </div>
                 < div className="flex items-center gap-2" >
-                  <FilterBadge label="High" count="2" selected={false} />
+                  <FilterBadge label="High" count="5" selected={false} />
                   <Badge variant="success" icon="FeatherArrowDown" >
                     5 %
                   </Badge>
                 </div>
                 < div className="flex items-center gap-2" >
-                  <FilterBadge label="Medium" count="2" selected={false} />
+                  <FilterBadge label="Medium" count="1" selected={false} />
                   <Badge variant="neutral" icon="FeatherArrowRight" >
                     0 %
                   </Badge>
                 </div>
                 < div className="flex items-center gap-2" >
-                  <FilterBadge label="Low" count="1" selected={false} />
+                  <FilterBadge label="Low" count="0" selected={false} />
                   <Badge variant="success" icon="FeatherArrowDown" >
                     25 %
                   </Badge>
@@ -184,9 +196,9 @@ function SecurityHelpDeskAgent() {
                     </span>
                     < div className="flex w-full flex-col items-start gap-2" >
                       <span className="text-heading-2 font-heading-2 text-default-font" >
-                        4
+                        0
                       </span>
-                      < Badge variant="error" icon="FeatherArrowUp" >
+                      < Badge variant="success" icon="FeatherArrowDown" >
                         25 %
                       </Badge>
                     </div>
@@ -197,7 +209,7 @@ function SecurityHelpDeskAgent() {
                     </span>
                     < div className="flex w-full flex-col items-start gap-2" >
                       <span className="text-heading-2 font-heading-2 text-default-font" >
-                        9
+                        3
                       </span>
                       < Badge variant="success" icon="FeatherArrowDown" >
                         33 %
@@ -245,4 +257,4 @@ function SecurityHelpDeskAgent() {
   );
 }
 
-export default SecurityHelpDeskAgent;
+export default ClientSecInquiryAgent;

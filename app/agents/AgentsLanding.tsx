@@ -71,7 +71,7 @@ function AgentsLandingPage() {
                 size="large"
                 onClick={(event: React.MouseEvent<HTMLButtonElement>) => { router.push('/agents/helpdesk') }}
               >
-                Let&#39;s Go!
+                Let&apos;s Go!
               </Button>
             </div>
           </div>
@@ -118,7 +118,7 @@ function AgentsLandingPage() {
                 size="large"
                 onClick={(event: React.MouseEvent<HTMLButtonElement>) => { router.push('/agents/engsecurityreview') }}
               >
-                Let&#39;s Go!
+                Let&apos;s Go!
               </Button>
             </div>
           </div>
@@ -167,7 +167,7 @@ function AgentsLandingPage() {
                 size="large"
                 onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
               >
-                Let&#39;s Go!
+                Let&apos;s Go!
               </Button>
             </div>
           </div>
@@ -214,7 +214,7 @@ function AgentsLandingPage() {
                 size="large"
                 onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
               >
-                Let&#39;s Go!
+                Let&apos;s Go!
               </Button>
             </div>
           </div>
@@ -264,7 +264,7 @@ function AgentsLandingPage() {
                 size="large"
                 onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
               >
-                Let&#39;s Go!
+                Let&apos;s Go!
               </Button>
             </div>
           </div>
@@ -309,9 +309,9 @@ function AgentsLandingPage() {
                 className="h-10 w-full flex-none"
                 variant="brand-secondary"
                 size="large"
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => { router.push('/agents/clientsecurityinquiries') }}
               >
-                Let&#39;s Go!
+                Let&apos;s Go!
               </Button>
             </div>
           </div>

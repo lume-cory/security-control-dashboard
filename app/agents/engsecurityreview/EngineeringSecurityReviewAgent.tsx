@@ -12,7 +12,7 @@ import { QuestionsTable } from '@/components/questions-table-eng-security-review
 import { ExternalLink } from 'lucide-react'
 
 // Import the SuggestedModifications component
-import { SuggestedModifications } from '@/components/suggested-modifications'
+import { SuggestedModifications } from './suggested-modifications'
 import { DefaultPageLayout } from '@/components/ui/subframe/layouts/DefaultPageLayout'
 import { IconWithBackground } from '@/components/ui/subframe/components/IconWithBackground'
 import { Breadcrumbs } from '@/components/ui/subframe/components/Breadcrumbs'

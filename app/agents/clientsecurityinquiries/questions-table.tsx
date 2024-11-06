@@ -6,14 +6,16 @@ import { Button } from "@/subframe/components/Button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { ExternalLink, MessageSquare, Mail, Ticket, Phone, Fish, ArrowUpDown, CheckIcon, XIcon, ChevronDown, ChevronUp } from 'lucide-react'
+import { ExternalLink, MessageSquare, Mail, Ticket, Phone, Users, ArrowUpDown, FileText, PanelTop, ChevronDown, ChevronUp } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Accordion } from "@/subframe/components/Accordion";
 
 interface Question {
   id: number;
+  company: string;
   question: string;
   user: string;
+  email: string;
   stage: string;
   source: string;
   sourceLink: string;
@@ -54,112 +56,12 @@ interface PolicyOwner {
 const outstandingQuestions: OutstandingQuestion[] = [
   {
     id: 1,
-    question: "What are the security implications of using a third-party authentication service?",
-    user: "John Doe",
-    stage: "Architecture Review",
-    dueDate: new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
-    triage: "high",
-    policyOwner: {
-      team: "Identity & Access Management Team",
-      teamEmail: "iam@company.com",
-      contact: "Maya Patel",
-      email: "maya.patel@company.com",
-      teamConfidence: {
-        level: 'high',
-        reasons: [`Contributors from prior tickets belong to this team`, `Email alias for this team found on policy docs`, `Members of this team often respond to similar questions on Slack`, `Team owns KB article for this policy`]
-      },
-      contactConfidence: {
-        level: 'medium',
-        reasons: [`Manager of prior policy owner`, `Has answered similar questions on previous tickets`]
-      },
-      signOffStatus: 'Pending'
-    },
-    suggestedResponse: "Using a third-party authentication service can have both benefits and risks. Benefits include reduced development time and potentially more robust security measures. However, risks include potential data breaches at the third-party provider, loss of control over the authentication process, and potential service outages. It's crucial to thoroughly vet the provider, understand their security measures, and have contingency plans in place.",
-    supportingDocs: [
-      { name: "Security Policy #AUTH-001", link: "https://docs.company.com/security/AUTH-001" },
-      { name: "Prior Review #PR-789", link: "https://reviews.company.com/PR-789" }
-    ],
-    otherDocs: [
-      { name: "User Authentication Flow", link: "https://docs.company.com/auth/flow" },
-      { name: "Third-Party Integration Guidelines", link: "https://docs.company.com/integration/guidelines" }
-    ],
-    source: "Slack #ask-security channel",
-    sourceLink: "https://slack.com/archives/C01234567/p1623456789000200"
-  },
-  {
-    id: 2,
-    question: "I want to host a website for our team project. Can I register a .org domain and set it up myself?",
-    user: "Sarah Chen",
-    stage: "Planning",
-    dueDate: new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
-    triage: "medium",
-    policyOwner: {
-      team: "Infrastructure Security Team",
-      teamEmail: "infrasec@company.com",
-      contact: "Chris Martinez",
-      email: "chris.martinez@company.com",
-      teamConfidence: {
-        level: 'medium',
-        reasons: [`Contributors from prior tickets belong to this team`]
-      },
-      contactConfidence: {
-        level: 'low',
-        reasons: [`Manager of assumed policy ownning team`]
-      },
-      signOffStatus: 'N/A'
-    },
-    suggestedResponse: "All external websites must go through our Website Governance Process. This includes domain registration (which must be done through IT), security assessment of the hosting platform, and compliance review. Please submit a Website Request Form to initiate this process. Self-hosted solutions are not permitted due to security and maintenance concerns.",
-    supportingDocs: [
-      { name: "Website Governance Policy", link: "https://docs.company.com/security/WEB-001" },
-      { name: "Domain Management Guidelines", link: "https://docs.company.com/it/domains" }
-    ],
-    otherDocs: [
-      { name: "Cloud Hosting Standards", link: "https://docs.company.com/cloud/standards" },
-      { name: "Website Request Form", link: "https://forms.company.com/website-request" }
-    ],
-    source: "Email to security-helpdesk alias",
-    sourceLink: "https://mail.company.com/threads/website-inquiry-july12"
-  },
-  {
-    id: 3,
-    question: "I'm traveling to Mexico next week for the conference. Can I bring my work phone?",
-    user: "Michael Rodriguez",
-    stage: "Pre-travel",
-    dueDate: new Date().toISOString().split('T')[0],
-    triage: "low",
-    policyOwner: {
-      team: "Physical Security & Travel Team",
-      teamEmail: "travelsec@company.com",
-      contact: "Sarah O'Connor",
-      email: "sarah.oconnor@company.com",
-      teamConfidence: {
-        level: 'low',
-        reasons: ['Email alias for this team found on policy docs']
-      },
-      contactConfidence: {
-        level: 'medium',
-        reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`]
-      },
-      signOffStatus: 'N/A'
-    },
-    suggestedResponse: "Yes, you can bring your work phone to Mexico, but specific security measures are required. You must: 1) Enable full disk encryption, 2) Install our travel VPN profile, 3) Enable remote wipe capability, and 4) Register your travel in the Travel Security Portal. Avoid using public WiFi and consider a travel burner phone for personal use.",
-    supportingDocs: [
-      { name: "International Travel Security Policy", link: "https://docs.company.com/security/TRAVEL-002" },
-      { name: "Device Protection Guidelines", link: "https://docs.company.com/security/devices" }
-    ],
-    otherDocs: [
-      { name: "VPN Configuration Guide", link: "https://docs.company.com/vpn/setup" },
-      { name: "Country-Specific Security Advisories", link: "https://docs.company.com/security/advisories" }
-    ],
-    source: "Slack #ask-security channel",
-    sourceLink: "https://slack.com/archives/C01234567/p1623456789000400"
-  },
-  {
-    id: 4,
-    question: "Our team needs to share some sensitive financial documents with external auditors.",
-    user: "Alex Kumar",
-    stage: "Planning",
-    dueDate: new Date(Date.now() - (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    company: "TechCorp",
+    question: "What are your company's security measures for protecting customer data?",
+    user: "Jane Smith",
+    email: "jane.smith@techcorp.com",
+    stage: "Customer Inquiry",
+    dueDate: new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
     triage: "high",
     policyOwner: {
       team: "Data Protection Team",
@@ -168,362 +70,343 @@ const outstandingQuestions: OutstandingQuestion[] = [
       email: "james.wilson@company.com",
       teamConfidence: {
         level: 'high',
-        reasons: [`Contributors from prior tickets belong to this team`, `Email alias for this team found on policy docs`, `Members of this team often respond to similar questions on Slack`, `Team owns KB article for this policy`]
+        reasons: ["Team handles data protection queries", "Team is listed as the owner of relevant policies", "KB articles link back to this team"]
       },
       contactConfidence: {
-        level: 'high',
-        reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`, `Manager of prior policy owner`, `Has the same role as the prior policy owner`, `Has answered similar questions on previous tickets`, `Author on a design doc for this policy area`]
+        level: 'medium',
+        reasons: ["Has answered similar queries", "KB articles authored by this contact"]
       },
       signOffStatus: 'Pending'
     },
-    suggestedResponse: "External file sharing must use our approved secure file transfer solution (SecureShare). You'll need to: 1) Request access through IT Service Portal, 2) Complete the External Sharing Agreement form, 3) Use time-limited links (max 7 days), and 4) Enable download tracking. All shared documents must be logged in the Data Sharing Register.",
+    suggestedResponse: "Our company follows best practices to secure customer data, including encryption in transit and at rest, multi-factor authentication for access, and regular security audits. We also comply with GDPR and CCPA regulations to ensure customer data privacy and protection.",
     supportingDocs: [
-      { name: "External Data Sharing Policy", link: "https://docs.company.com/security/DATA-002" },
-      { name: "Auditor Security Requirements", link: "https://docs.company.com/security/audit-requirements" }
+      { name: "Data Protection Policy", link: "https://docs.company.com/security/DATA-001" },
+      { name: "Customer Data Handling Procedures", link: "https://docs.company.com/data-handling" }
     ],
     otherDocs: [
-      { name: "SecureShare User Guide", link: "https://docs.company.com/tools/secureshare" },
-      { name: "Data Classification Guidelines", link: "https://docs.company.com/security/data-classification" }
+      { name: "Data Encryption Overview", link: "https://docs.company.com/encryption/overview" },
+      { name: "Security Audit Summary", link: "https://docs.company.com/audits/summary" }
     ],
-    source: "Email to security-helpdesk alias",
-    sourceLink: "https://mail.company.com/threads/external-sharing-query"
+    source: "Customer via Helpdesk",
+    sourceLink: "https://mail.company.com/threads/security-inquiry-techcorp"
   },
   {
-    id: 5,
-    question: "We're hiring contractors next week and need to get them laptop access.",
-    user: "Patricia Wong",
-    stage: "Onboarding",
-    dueDate: new Date(Date.now() - (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    id: 2,
+    company: "FinServe",
+    question: "What controls are in place to ensure compliance with GDPR?",
+    user: "Mark Johnson",
+    email: "mark.johnson@finserve.com",
+    stage: "Regulatory Inquiry",
+    dueDate: new Date(Date.now() + (5 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "high",
+    policyOwner: {
+      team: "Compliance Team",
+      teamEmail: "compliance@company.com",
+      contact: "Emily Davis",
+      email: "emily.davis@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: ["Compliance Team is responsible for GDPR compliance", "Previous GDPR inquiries have been handled by this team"]
+      },
+      contactConfidence: {
+        level: 'high',
+        reasons: ["Emily Davis is listed as GDPR compliance contact", "Authored compliance documentation"]
+      },
+      signOffStatus: 'Pending'
+    },
+    suggestedResponse: "Our organization has implemented GDPR compliance through various measures, including data minimization, encryption, pseudonymization, and data subject rights management. We have a dedicated Data Protection Officer and conduct regular data protection impact assessments (DPIAs) to ensure ongoing compliance.",
+    supportingDocs: [
+      { name: "GDPR Compliance Policy", link: "https://docs.company.com/compliance/gdpr" },
+      { name: "DPIA Procedures", link: "https://docs.company.com/dpia/procedures" }
+    ],
+    otherDocs: [
+      { name: "Data Retention Policy", link: "https://docs.company.com/compliance/data-retention" },
+      { name: "Customer Rights Management", link: "https://docs.company.com/compliance/customer-rights" }
+    ],
+    source: "Regulator Inquiry via hello@company.com",
+    sourceLink: "https://mail.company.com/threads/gdpr-inquiry-finserve"
+  },
+  {
+    id: 3,
+    company: "GlobalBank",
+    question: "How do you handle incident response in the case of a data breach?",
+    user: "Sophie Lee",
+    email: "sophie.lee@globalbank.com",
+    stage: "Client Security Assessment",
+    dueDate: new Date(Date.now() + (7 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
     triage: "medium",
     policyOwner: {
-      team: "Identity & Access Management Team",
-      teamEmail: "iam@company.com",
-      contact: "Maya Patel",
-      email: "maya.patel@company.com",
+      team: "Incident Response Team",
+      teamEmail: "ir@company.com",
+      contact: "John Brown",
+      email: "john.brown@company.com",
       teamConfidence: {
         level: 'high',
-        reasons: [`Contributors from prior tickets belong to this team`, `Email alias for this team found on policy docs`, `Members of this team often respond to similar questions on Slack`, `Team owns KB article for this policy`]
+        reasons: ["Team manages incident response procedures", "Listed as owner in incident response playbook"]
       },
       contactConfidence: {
         level: 'medium',
-        reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`]
-      },
-      signOffStatus: 'No'
-    },
-    suggestedResponse: "Contractor device access requires: 1) Completed Contractor Security Agreement, 2) Background check confirmation from HR, 3) Completion of Security Awareness Training, 4) Device must be company-issued or meet our BYOD requirements. Submit requests through Contractor Access Portal at least 3 business days before start date.",
-    supportingDocs: [
-      { name: "Contractor Security Policy", link: "https://docs.company.com/security/CONTRACTOR-001" },
-      { name: "Device Access Requirements", link: "https://docs.company.com/security/device-access" }
-    ],
-    otherDocs: [
-      { name: "BYOD Guidelines", link: "https://docs.company.com/security/byod" },
-      { name: "Security Training Portal", link: "https://training.company.com/security" }
-    ],
-    source: "Slack #ask-security channel",
-    sourceLink: "https://slack.com/archives/C01234567/p1623456789000500"
-  },
-  {
-    id: 6,
-    question: "Can we use personal LastPass accounts to share team credentials?",
-    user: "Tom Mitchell",
-    stage: "Operations",
-    dueDate: new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
-    triage: "urgent",
-    policyOwner: {
-      team: "Identity & Access Management Team",
-      teamEmail: "iam@company.com",
-      contact: "Maya Patel",
-      email: "maya.patel@company.com",
-      teamConfidence: {
-        level: 'high',
-        reasons: [`Contributors from prior tickets belong to this team`, `Email alias for this team found on policy docs`, `Members of this team often respond to similar questions on Slack`, `Team owns KB article for this policy`]
-      },
-      contactConfidence: {
-        level: 'medium',
-        reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`]
+        reasons: ["John Brown is the primary incident response contact", "Participated in recent tabletop exercises"]
       },
       signOffStatus: 'Pending'
     },
-    suggestedResponse: "No, personal password managers cannot be used for company credentials under any circumstances. This violates our security policy and creates significant risks. For temporary credential sharing, use the approved interim solution (KeyPass with encrypted file on approved share). Enterprise password manager rollout is scheduled for completion in 2 weeks.",
+    suggestedResponse: "In the event of a data breach, we follow our Incident Response Plan which includes immediate containment, eradication of threats, and recovery procedures. Notifications to affected parties and regulators occur in line with legal requirements. Our IR team is trained for rapid response and performs regular drills.",
     supportingDocs: [
-      { name: "Password Management Policy", link: "https://docs.company.com/security/PASS-001" },
-      { name: "Credential Sharing Guidelines", link: "https://docs.company.com/security/cred-sharing" }
+      { name: "Incident Response Plan", link: "https://docs.company.com/ir/response-plan" },
+      { name: "Breach Notification Guidelines", link: "https://docs.company.com/ir/breach-notification" }
     ],
     otherDocs: [
-      { name: "Enterprise Password Manager Rollout Plan", link: "https://docs.company.com/projects/password-manager" },
-      { name: "Approved Tools List", link: "https://docs.company.com/security/approved-tools" }
+      { name: "Tabletop Exercise Reports", link: "https://docs.company.com/ir/tabletop-reports" },
+      { name: "Incident Logging Procedures", link: "https://docs.company.com/ir/logging" }
     ],
-    source: "Zendesk ticket",
-    sourceLink: "https://zendesk.company.com/tickets/SEC-2023-789"
+    source: "Client Questionnaire",
+    sourceLink: "https://clientportal.globalbank.com/security-assessment"
   },
   {
-    id: 7,
-    question: "Reporting suspicious emails with DocuSign links",
-    user: "Security Operations",
-    stage: "Active Incident",
-    dueDate: new Date(Date.now() - (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
-    triage: "urgent",
-    policyOwner: {
-      team: "Security Operations Team",
-      teamEmail: "secops@company.com",
-      contact: "Alex Rivera",
-      email: "alex.rivera@company.com",
-      teamConfidence: {
-        level: 'high',
-        reasons: [`Contributors from prior tickets belong to this team`, `Email alias for this team found on policy docs`, `Members of this team often respond to similar questions on Slack`, `Team owns KB article for this policy`]
-      },
-      contactConfidence: {
-        level: 'high',
-        reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`, `Has answered similar questions on previous tickets`, `Author on a design doc for this policy area`]
-      },
-      signOffStatus: 'Yes'
-    },
-    suggestedResponse: "1) Block sender domains immediately via email gateway, 2) Send company-wide alert about DocuSign phishing campaign, 3) Check email logs for click-throughs, 4) Reset passwords for any affected accounts, 5) Update phishing detection rules to catch similar patterns.",
-    supportingDocs: [
-      { name: "Phishing Response Playbook", link: "https://docs.company.com/security/phishing-response" },
-      { name: "Email Security Controls", link: "https://docs.company.com/security/email-controls" }
-    ],
-    otherDocs: [
-      { name: "Security Awareness Training", link: "https://docs.company.com/training/security" },
-      { name: "DocuSign Security Guidelines", link: "https://docs.company.com/security/docusign" }
-    ],
-    source: "Phishing report button",
-    sourceLink: "https://phishing.company.com/reports/2023-15"
-  },
-  {
-    id: 8,
-    question: "Data center fire alarm triggered - Emergency response needed",
-    user: "NOC Team",
-    stage: "Critical Incident",
+    id: 4,
+    company: "HealthNet",
+    question: "What controls do you have in place for HIPAA compliance?",
+    user: "Robert Chen",
+    email: "r.chen@healthnet.com",
+    stage: "Compliance Review",
     dueDate: new Date(Date.now() + (4 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
     triage: "urgent",
     policyOwner: {
-      team: "Infrastructure & Facilities",
-      teamEmail: "facilities@company.com",
-      contact: "Sarah Johnson",
-      email: "sarah.johnson@company.com",
+      team: "Healthcare Compliance Team",
+      teamEmail: "healthcare-compliance@company.com",
+      contact: "Sarah Miller",
+      email: "sarah.miller@company.com",
       teamConfidence: {
         level: 'high',
-        reasons: [`Contributors from prior tickets belong to this team`, `Email alias for this team found on policy docs`, `Members of this team often respond to similar questions on Slack`, `Team owns KB article for this policy`]
+        reasons: ["Dedicated HIPAA compliance team", "Handles all healthcare-related inquiries"]
       },
       contactConfidence: {
         level: 'high',
-        reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`, `Has answered similar questions on previous tickets`, `Author on a design doc for this policy area`]
+        reasons: ["HIPAA compliance officer", "Primary contact for healthcare customers"]
       },
-      signOffStatus: 'N/A'
+      signOffStatus: 'Pending'
     },
-    suggestedResponse: "Immediate actions required: 1) Verify fire suppression system activation, 2) Initiate emergency shutdown procedures for affected racks, 3) Notify on-call facilities team, 4) Activate disaster recovery procedures if needed, 5) Prepare for failover to backup data center if situation escalates.",
+    suggestedResponse: "Our HIPAA compliance program includes comprehensive PHI protection measures, including end-to-end encryption, access controls, audit logging, and regular compliance training. We maintain BAAs with all subprocessors and conduct annual HIPAA risk assessments.",
     supportingDocs: [
-      { name: "Data Center Emergency Procedures", link: "https://docs.company.com/facilities/dc-emergency" },
-      { name: "Business Continuity Plan", link: "https://docs.company.com/security/bcp" }
+      { name: "HIPAA Compliance Framework", link: "https://docs.company.com/compliance/hipaa" },
+      { name: "PHI Handling Guidelines", link: "https://docs.company.com/healthcare/phi" }
     ],
     otherDocs: [
-      { name: "Data Center Layout", link: "https://docs.company.com/facilities/dc-layout" },
-      { name: "Emergency Contact List", link: "https://docs.company.com/facilities/emergency-contacts" }
+      { name: "Access Control Policy", link: "https://docs.company.com/security/access-control" },
+      { name: "Audit Log Standards", link: "https://docs.company.com/security/audit-logs" }
     ],
-    source: "Emergency hotline",
-    sourceLink: "https://incidents.company.com/DC-2023-89"
+    source: "Trust Center Portal Form",
+    sourceLink: "https://compliance.healthnet.com/vendor-assessment"
+  },
+  {
+    id: 5,
+    company: "PaymentPro",
+    question: "Can you provide details about your PCI DSS certification level and controls?",
+    user: "Lisa Wong",
+    email: "l.wong@paymentpro.com",
+    stage: "Security Assessment",
+    dueDate: new Date(Date.now() + (6 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "high",
+    policyOwner: {
+      team: "Payment Security Team",
+      teamEmail: "payment-security@company.com",
+      contact: "Michael Torres",
+      email: "m.torres@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: ["Dedicated PCI compliance team", "Manages all payment security certifications"]
+      },
+      contactConfidence: {
+        level: 'medium',
+        reasons: ["Recently appointed as PCI lead", "Still transitioning into role"]
+      },
+      signOffStatus: 'Pending'
+    },
+    suggestedResponse: "We maintain PCI DSS Level 1 certification, verified annually by a QSA. Our controls include network segmentation, encryption of CHD, strict access controls, and continuous monitoring. We can provide our AOC upon execution of an NDA.",
+    supportingDocs: [
+      { name: "PCI Compliance Overview", link: "https://docs.company.com/compliance/pci" },
+      { name: "Cardholder Data Environment", link: "https://docs.company.com/security/cde" }
+    ],
+    otherDocs: [
+      { name: "Network Segmentation", link: "https://docs.company.com/security/network" },
+      { name: "Monitoring Standards", link: "https://docs.company.com/security/monitoring" }
+    ],
+    source: "Trust Center Portal Form",
+    sourceLink: "https://vendors.paymentpro.com/security"
+  },
+  {
+    id: 6,
+    company: "RelianceSys",
+    question: "What is your uptime? Do you have data from your last recovery test?",
+    user: "Amanda Patel",
+    email: "a.patel@reliancesys.com", 
+    stage: "Technical Due Diligence",
+    dueDate: new Date(Date.now() + (5 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "high",
+    policyOwner: {
+      team: "Site Reliability Engineering",
+      teamEmail: "sre@company.com",
+      contact: "Kevin Zhang",
+      email: "k.zhang@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: ["Owns uptime SLAs", "Manages disaster recovery program", "Conducts all recovery testing"]
+      },
+      contactConfidence: {
+        level: 'high',
+        reasons: ["SRE Team Lead", "Personally oversees DR tests", "Authors monthly availability reports"]
+      },
+      signOffStatus: 'Pending'
+    },
+    suggestedResponse: "We maintain 99.99% uptime (measured monthly) with our primary production environment. Our most recent disaster recovery test was conducted on March 15, 2024, achieving full recovery within our 4-hour RTO target. The test included full failover to our secondary region and validation of all critical business services.",
+    supportingDocs: [
+      { name: "Uptime Reports - Last 12 Months", link: "https://docs.company.com/sre/uptime-2024" },
+      { name: "DR Test Results - Q1 2024", link: "https://docs.company.com/sre/dr-test-q1-2024" }
+    ],
+    otherDocs: [
+      { name: "Business Continuity Plan", link: "https://docs.company.com/sre/bcp" },
+      { name: "SLA Commitments", link: "https://docs.company.com/sre/sla-terms" }
+    ],
+    source: "Client Meeting",
+    sourceLink: "https://meetings.company.com/reliancesys-dd"
+  },
+  {
+    id: 7,
+    company: "SecureBank",
+    question: "How at risk are you to ransomware? How quickly can you recover from a ransomware event?",
+    user: "Marcus Thompson",
+    email: "m.thompson@securebank.com",
+    stage: "Security Assessment",
+    dueDate: new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "urgent",
+    policyOwner: {
+      team: "Security Operations",
+      teamEmail: "secops@company.com",
+      contact: "Diana Martinez",
+      email: "d.martinez@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: ["Manages ransomware prevention program", "Leads incident response for malware events", "Conducts regular tabletop exercises"]
+      },
+      contactConfidence: {
+        level: 'high',
+        reasons: ["Head of Security Operations", "Created ransomware playbook", "Leads IR team"]
+      },
+      signOffStatus: 'Pending'
+    },
+    suggestedResponse: "We maintain robust ransomware defenses including immutable backups, network segmentation, and advanced EDR. Our last ransomware tabletop exercise demonstrated recovery within 6 hours. Key controls include offline backups with 15-minute RPO, air-gapped critical systems, and automated malware detection/response capabilities.",
+    supportingDocs: [
+      { name: "Ransomware Prevention Controls", link: "https://docs.company.com/security/ransomware-controls" },
+      { name: "Backup & Recovery Strategy", link: "https://docs.company.com/security/backup-strategy" }
+    ],
+    otherDocs: [
+      { name: "Latest Tabletop Results", link: "https://docs.company.com/security/tabletop-2024" },
+      { name: "EDR Implementation", link: "https://docs.company.com/security/edr-overview" }
+    ],
+    source: "Security Review Meeting",
+    sourceLink: "https://meetings.company.com/securebank-security"
+  },
+  {
+    id: 8,
+    company: "DataFirst",
+    question: "Are you using my data to train your algorithms? How do you ensure that my data is safe if you are using cloud AI models?",
+    user: "Sarah O'Connor",
+    email: "s.oconnor@datafirst.com",
+    stage: "Privacy Review",
+    dueDate: new Date(Date.now() + (4 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "high",
+    policyOwner: {
+      team: "AI Governance & Privacy",
+      teamEmail: "ai-privacy@company.com",
+      contact: "Dr. Alex Kumar",
+      email: "a.kumar@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: ["Dedicated AI governance team", "Oversees all AI/ML data usage", "Authors AI privacy policies"]
+      },
+      contactConfidence: {
+        level: 'high',
+        reasons: ["AI Ethics Officer", "PhD in Privacy-Preserving ML", "Leads AI governance program"]
+      },
+      signOffStatus: 'Pending'
+    },
+    suggestedResponse: "Customer data is never used for training our AI models without explicit consent. For cloud AI services, we use Azure OpenAI with Azure Confidential Computing, ensuring data remains encrypted in use. We maintain complete data isolation and implement prompt sanitization to prevent data leakage. All AI processing occurs in dedicated, access-controlled environments.",
+    supportingDocs: [
+      { name: "AI Data Usage Policy", link: "https://docs.company.com/ai/data-usage" },
+      { name: "Cloud AI Security Controls", link: "https://docs.company.com/ai/security-controls" }
+    ],
+    otherDocs: [
+      { name: "AI Privacy Impact Assessment", link: "https://docs.company.com/privacy/ai-pia" },
+      { name: "Data Isolation Architecture", link: "https://docs.company.com/security/data-isolation" }
+    ],
+    source: "Client Questionnaire",
+    sourceLink: "https://privacy.datafirst.com/assessment"
   }
-]
+];
 
 const resolvedQuestions: ResolvedQuestion[] = [
   {
     id: 1,
-    question: "What is our policy on password complexity?",
-    user: "Alice Johnson",
-    stage: "Implementation",
-    resolvedDate: "2024-01-14",
-    triage: "medium",
-    response: "Our password policy requires a minimum of 12 characters, including uppercase and lowercase letters, numbers, and special characters. We also implement a password strength meter to encourage even stronger passwords.",
-    decision: "Implemented in User Authentication Module",
-    documentationLink: "/security/policies/password-policy",
-    source: "Security review ticket",
-    sourceLink: "https://jira.company.com/browse/SEC-001",
+    company: "MediSecure",
+    question: "Does your organization encrypt all patient data?",
+    user: "Dr. Alice Brown",
+    email: "alice.brown@medisecure.com",
+    stage: "Compliance Verification",
+    resolvedDate: "2024-01-15",
+    triage: "high",
+    response: "Yes, we encrypt all patient data both in transit and at rest, using industry-standard AES-256 encryption. Our encryption protocols are regularly reviewed and updated to ensure they meet current best practices.",
+    decision: "Confirmed compliance with encryption standards",
+    documentationLink: "/security/policies/data-encryption",
+    source: "Client Questionnaire",
+    sourceLink: "https://compliance.medisecure.com/questions/enc-2024",
     policyOwner: {
-      team: "Identity & Access Management Team",
-      teamEmail: "iam@company.com",
-      contact: "Maya Patel",
-      email: "maya.patel@company.com",
+      team: "Data Protection Team",
+      teamEmail: "dataprotection@company.com",
+      contact: "James Wilson",
+      email: "james.wilson@company.com",
       teamConfidence: {
         level: 'high',
-        reasons: [`Contributors from prior tickets belong to this team`, `Email alias for this team found on policy docs`, `Members of this team often respond to similar questions on Slack`, `Team owns KB article for this policy`]
+        reasons: ["Team owns data encryption policies", "James Wilson has answered previous inquiries on encryption"]
       },
       contactConfidence: {
-        level: 'medium',
-        reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`]
+        level: 'high',
+        reasons: ["Primary contact for encryption policy", "Authored recent encryption guideline updates"]
       },
       signOffStatus: 'Yes'
     }
   },
   {
     id: 2,
-    question: "How often should we conduct security audits?",
-    user: "Bob Williams",
-    stage: "Operations",
+    company: "RetailSolutions",
+    question: "How frequently do you conduct vulnerability assessments?",
+    user: "Tom Harris",
+    email: "tom.harris@retailsolutions.com",
+    stage: "Customer Due Diligence",
     resolvedDate: "2024-01-13",
-    triage: "low",
-    response: "We conduct comprehensive security audits on a quarterly basis, with continuous monitoring and smaller checks performed weekly. This schedule balances thorough review with operational efficiency.",
-    decision: "Added to Security Operations Calendar",
-    documentationLink: "/security/operations/audit-schedule",
-    source: "Slack #ask-security channel",
-    sourceLink: "https://slack.com/archives/C01234567/p1623456789000300",
-    policyOwner: {
-      team: "Identity & Access Management Team",
-      teamEmail: "iam@company.com",
-      contact: "Maya Patel",
-      email: "maya.patel@company.com",
-      teamConfidence: {
-        level: 'medium',
-        reasons: [`Contributors from prior tickets belong to this team`]
-      },
-      contactConfidence: {
-        level: 'low',
-        reasons: [`Manager of team assumed to own policy`]
-      },
-      signOffStatus: 'N/A'
-    }
-  },
-  {
-    id: 3,
-    question: "Can I use my personal iPhone to access work email while on vacation?",
-    user: "Maria Garcia",
-    stage: "Access Management",
-    resolvedDate: "2024-01-14",
     triage: "medium",
-    response: "Yes, you can access work email on personal iOS devices if they meet our BYOD requirements: 1) Latest iOS version, 2) Device passcode enabled, 3) Installation of our MDM profile, 4) Acceptance of remote wipe capability. Install our Mobile Access Portal app to get started.",
-    decision: "Approved with standard BYOD controls",
-    documentationLink: "/security/byod/mobile-access",
-    source: "Email to security-helpdesk alias",
-    sourceLink: "https://mail.company.com/threads/mobile-access-request",
+    response: "We conduct vulnerability assessments monthly, and perform comprehensive penetration testing annually. This ensures that any vulnerabilities are identified and mitigated in a timely manner, reducing the risk of exploitation.",
+    decision: "Added to customer-facing security FAQs",
+    documentationLink: "/security/operations/vulnerability-assessment",
+    source: "Trust Center Portal Form",
+    sourceLink: "https://security.retailsolutions.com/dd-form",
     policyOwner: {
-      team: "Identity & Access Management Team",
-      teamEmail: "iam@company.com",
-      contact: "Maya Patel",
-      email: "maya.patel@company.com",
+      team: "Vulnerability Management Team",
+      teamEmail: "vuln-mgmt@company.com",
+      contact: "Emma Taylor",
+      email: "emma.taylor@company.com",
       teamConfidence: {
-        level: 'medium',
-        reasons: [`Contributors from prior tickets belong to this team`]
+        level: 'high',
+        reasons: ["Team manages all vulnerability assessments", "Emma Taylor leads the vulnerability assessment efforts"]
       },
       contactConfidence: {
         level: 'medium',
-        reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`]
-      },
-      signOffStatus: 'Yes'
-    }
-  },
-  {
-    id: 4,
-    question: "Lost my laptop in a taxi - what do I need to do immediately?",
-    user: "David Chen",
-    stage: "Incident Response",
-    resolvedDate: "2024-01-14",
-    triage: "urgent",
-    response: "Remote wipe initiated within 15 minutes of report. Device tracking enabled. User credentials reset. New laptop issued with restored backup from previous day. Incident report filed and no sensitive data was compromised due to disk encryption.",
-    decision: "Incident closed - no data breach",
-    documentationLink: "/security/incidents/LOST-2023-45",
-    source: "Emergency hotline",
-    sourceLink: "https://incidents.company.com/LOST-2023-45",
-    policyOwner: {
-      team: "Identity & Access Management Team",
-      teamEmail: "iam@company.com",
-      contact: "Maya Patel",
-      email: "maya.patel@company.com",
-      teamConfidence: {
-        level: 'high',
-        reasons: [`Contributors from prior tickets belong to this team`, `Email alias for this team found on policy docs`, `Members of this team often respond to similar questions on Slack`, `Team owns KB article for this policy`]
-      },
-      contactConfidence: {
-        level: 'high',
-        reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`, `Has answered similar questions on previous tickets`, `Author on a design doc for this policy area`]
-      },
-      signOffStatus: 'Yes'
-    }
-  },
-  {
-    id: 5,
-    question: "Need approval for using Zoom with external clients - is this allowed?",
-    user: "Rachel Thompson",
-    stage: "Software Approval",
-    resolvedDate: "2024-01-13",
-    triage: "medium",
-    response: "Zoom is approved for external client meetings with required settings: SSO authentication, waiting rooms enabled, meeting passwords required, cloud recording disabled. Use company Zoom account only, not personal.",
-    decision: "Approved with security controls",
-    documentationLink: "/security/approved-software/video-conferencing",
-    source: "Zendesk ticket",
-    sourceLink: "https://zendesk.company.com/tickets/SEC-2023-089",
-    policyOwner: {
-      team: "Identity & Access Management Team",
-      teamEmail: "iam@company.com",
-      contact: "Maya Patel",
-      email: "maya.patel@company.com",
-      teamConfidence: {
-        level: 'high',
-        reasons: [`Contributors from prior tickets belong to this team`, `Email alias for this team found on policy docs`, `Members of this team often respond to similar questions on Slack`, `Team owns KB article for this policy`]
-      },
-      contactConfidence: {
-        level: 'high',
-        reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`, `Has answered similar questions on previous tickets`, `Author on a design doc for this policy area`]
-      },
-      signOffStatus: 'Yes'
-    }
-  },
-  {
-    id: 6,
-    question: "Received suspicious email claiming to be from CEO - what should I do?",
-    user: "James Wilson",
-    stage: "Phishing Report",
-    resolvedDate: "2024-01-14",
-    triage: "high",
-    response: "Confirmed phishing attempt. Email reported to security team, blocked sender domain, updated email filters. All employees notified of phishing campaign. Reminder sent about CEO impersonation red flags.",
-    decision: "Phishing attempt blocked and documented",
-    documentationLink: "/security/incidents/PHISH-2023-12",
-    source: "Phishing report button",
-    sourceLink: "https://phishing.company.com/reports/2023-12",
-    policyOwner: {
-      team: "Identity & Access Management Team",
-      teamEmail: "iam@company.com",
-      contact: "Maya Patel",
-      email: "maya.patel@company.com",
-      teamConfidence: {
-        level: 'high',
-        reasons: [`Contributors from prior tickets belong to this team`, `Email alias for this team found on policy docs`, `Members of this team often respond to similar questions on Slack`, `Team owns KB article for this policy`]
-      },
-      contactConfidence: {
-        level: 'high',
-        reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`, `Has answered similar questions on previous tickets`, `Author on a design doc for this policy area`]
-      },
-      signOffStatus: 'Yes'
-    }
-  },
-  {
-    id: 7,
-    question: "Do we need to encrypt USB drives used in the office?",
-    user: "Emma Davis",
-    stage: "Policy Clarification",
-    resolvedDate: "2024-01-13",
-    triage: "medium",
-    response: "Yes, all removable storage devices must use hardware encryption. Only company-issued encrypted USB drives are permitted. Available from IT with department manager approval. Personal USB devices are not allowed.",
-    decision: "Policy reinforced - no exceptions",
-    documentationLink: "/security/policies/removable-media",
-    source: "Slack #ask-security channel",
-    sourceLink: "https://slack.com/archives/C01234567/p1623456789000400",
-    policyOwner: {
-      team: "Identity & Access Management Team",
-      teamEmail: "iam@company.com",
-      contact: "Maya Patel",
-      email: "maya.patel@company.com",
-      teamConfidence: {
-        level: 'high',
-        reasons: [`Contributors from prior tickets belong to this team`, `Email alias for this team found on policy docs`, `Members of this team often respond to similar questions on Slack`, `Team owns KB article for this policy`]
-      },
-      contactConfidence: {
-        level: 'high',
-        reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`, `Has answered similar questions on previous tickets`, `Author on a design doc for this policy area`]
+        reasons: ["Primary contact for vulnerability queries", "Frequently mentioned in vulnerability reports"]
       },
       signOffStatus: 'Yes'
     }
   }
-]
+];
+
 
 interface ConfirmedAssociations {
   [questionId: number]: {
@@ -574,18 +457,18 @@ export function QuestionsTable() {
 
   const getSourceIcon = (source: string) => {
     switch (source) {
-      case 'Slack #ask-security channel':
-        return <MessageSquare className="h-4 w-4 mr-2" />
-      case 'Email to security-helpdesk alias':
+      case 'Customer via Helpdesk':
+        return <Ticket className="h-4 w-4 mr-2" />
+      case 'Regulator Inquiry via hello@company.com':
         return <Mail className="h-4 w-4 mr-2" />  
-      case 'Security review ticket':
-        return <Ticket className="h-4 w-4 mr-2" />
-      case 'Zendesk ticket':
-        return <Ticket className="h-4 w-4 mr-2" />
-      case 'Phishing report button':
-        return <Fish className="h-4 w-4 mr-2" />
-      case 'Emergency hotline':
+      case 'Trust Center Portal Form':
+        return <PanelTop className="h-4 w-4 mr-2" />
+      case 'Client Questionnaire':
+        return <FileText className="h-4 w-4 mr-2" />
+      case 'Client Meeting':
         return <Phone className="h-4 w-4 mr-2" />
+      case 'Security Review Meeting':
+        return <Users className="h-4 w-4 mr-2" />
       default:
         return null
     }
@@ -684,6 +567,14 @@ export function QuestionsTable() {
                 )}
               </div>
             </TableHead>
+            <TableHead onClick={() => handleSort('company')} className="cursor-pointer hover:bg-muted">
+              <div className="flex items-center space-x-1">
+                <span>Company</span>
+                {sortConfig?.key === 'company' && (
+                  <ArrowUpDown className="h-4 w-4" />
+                )}
+              </div>
+            </TableHead>
             <TableHead onClick={() => handleSort('user')} className="cursor-pointer hover:bg-muted">
               <div className="flex items-center space-x-1">
                 <span>User</span>
@@ -743,6 +634,7 @@ export function QuestionsTable() {
           {sortedQuestions.map((question) => (
             <TableRow key={question.id} className="cursor-pointer hover:bg-muted" onClick={() => setSelectedQuestion(question)}>
               <TableCell>{question.question}</TableCell>
+              <TableCell>{question.company}</TableCell>
               <TableCell>{question.user}</TableCell>
               <TableCell>{question.stage}</TableCell>
               <TableCell>
@@ -797,6 +689,10 @@ export function QuestionsTable() {
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label className="text-right">Submitted by:</Label>
                 <span className="col-span-3">{selectedQuestion.user}</span>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label className="text-right">Company:</Label>
+                <span className="col-span-3">{selectedQuestion.company}</span>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label className="text-right">Stage:</Label>
