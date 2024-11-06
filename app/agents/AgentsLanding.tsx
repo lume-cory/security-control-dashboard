@@ -13,6 +13,9 @@ function AgentsLandingPage() {
 
   const router = useRouter();
 
+  const agentDescriptionText = `This agent is designed to aggregate questions from customers
+                    about the organization's security posture and suggest responses`;
+
   return (
     <DefaultPageLayout>
       <div className="flex h-full w-full flex-col items-start gap-6 px-6 py-6">
@@ -298,8 +301,7 @@ function AgentsLandingPage() {
                 </div>
                 <div className="flex flex-col items-start gap-2">
                   <span className="line-clamp-3 text-body font-body text-subtext-color">
-                    This agent is designed to aggregate questions from customers
-                    about the organization's security posture and suggest responses
+                    {agentDescriptionText}
                   </span>
                 </div>
               </div>
