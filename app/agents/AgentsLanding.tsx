@@ -165,7 +165,7 @@ function AgentsLandingPage() {
                 className="h-10 w-full flex-none"
                 variant="brand-secondary"
                 size="large"
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => { router.push('/agents/compliancepolicyreview') }}
               >
                 Let&apos;s Go!
               </Button>
