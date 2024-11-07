@@ -76,3 +76,32 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Add these styles */
+.sheet-large {
+  --sheet-width: 90vw !important;
+}
+
+@media (min-width: 640px) {
+  .sheet-large {
+    --sheet-width: 80vw !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .sheet-large {
+    --sheet-width: 75vw !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sheet-large {
+    --sheet-width: 70vw !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .sheet-large {
+    --sheet-width: 65vw !important;
+  }
+}
