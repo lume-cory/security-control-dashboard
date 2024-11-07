@@ -1,17 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from "@/components/ui/button"
+import { Button } from "@/subframe/components/Button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from "@/components/ui/textarea"
-import { AlertCircle, CheckCircle2, XCircle, Edit } from 'lucide-react'
+import { AlertCircle, CheckCircle2, XCircle, Edit, ExternalLink } from 'lucide-react'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 export function SuggestedModifications({ onBack }: { onBack: () => void }) {
+
+  const [dialogOpen, setDialogOpen] = useState<{ [key: string]: boolean }>({})
+
   const [lackOfDocumentation, setLackOfDocumentation] = useState([
     {
       id: 1,
@@ -61,9 +64,16 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
     {
       id: 1,
       requirement: "Password complexity",
-      doc1: { name: "User Authentication Policy", content: "Passwords must be at least 8 characters long." },
-      doc2: { name: "Security Baseline 2023", content: "Passwords must be at least 12 characters long." },
-      selectedDoc: undefined as string | undefined,
+      baselineControl: {
+        name: "User Authentication Policy",
+        content: "Passwords must be at least 8 characters long."
+      },
+      otherControlGroups: [
+        {
+          name: "High Risk Users",
+          content: "Passwords must be at least 12 characters long."
+        }
+      ],
       status: 'pending',
       suggestedModification: "Update all password requirements to enforce a minimum of 12 characters, including at least one uppercase letter, one lowercase letter, one number, and one special character.",
       modifiedContent: ''
@@ -71,9 +81,16 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
     {
       id: 2,
       requirement: "Multi-Factor Authentication Reset",
-      doc1: { name: "Help Desk Procedures", content: "Help desk can reset MFA after verifying employee ID and manager approval." },
-      doc2: { name: "Identity Security Policy", content: "MFA reset requires in-person verification with photo ID." },
-      selectedDoc: undefined as string | undefined,
+      baselineControl: {
+        name: "User Authentication Policy",
+        content: "Help desk can reset MFA after verifying employee ID and manager approval."
+      },
+      otherControlGroups: [
+        {
+          name: "Finance Team",
+          content: "MFA reset requires in-person verification with photo ID."
+        }
+      ],
       status: 'pending',
       suggestedModification: "Update procedures to require video call verification for remote employees, in-person verification for office employees, and manager approval in all cases. Emergency procedures should require CISO team approval.",
       modifiedContent: ''
@@ -81,9 +98,16 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
     {
       id: 3,
       requirement: "Software Installation Rights",
-      doc1: { name: "Endpoint Security Policy", content: "Users must not have local admin rights on company devices." },
-      doc2: { name: "Developer Workstation Guide", content: "Development team members require local admin access for tools and testing." },
-      selectedDoc: undefined as string | undefined,
+      baselineControl: {
+        name: "Endpoint Security Policy",
+        content: "Users must not have local admin rights on company devices."
+      },
+      otherControlGroups: [
+        {
+          name: "Development Team",
+          content: "Development team members require local admin access for tools and testing."
+        }
+      ],
       status: 'pending',
       suggestedModification: "Implement privileged access management system for temporary elevated rights. Standard users have no admin rights, developers can request time-limited admin access with automatic revocation.",
       modifiedContent: ''
@@ -91,9 +115,16 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
     {
       id: 4,
       requirement: "Remote Access VPN",
-      doc1: { name: "Remote Work Policy", content: "VPN must be active whenever accessing company resources." },
-      doc2: { name: "Cloud Access Guidelines", content: "Cloud applications should be accessed directly through SSO without VPN." },
-      selectedDoc: undefined as string | undefined,
+      baselineControl: {
+        name: "Remote Work Policy",
+        content: "VPN must be active whenever accessing company resources."
+      },
+      otherControlGroups: [
+        {
+          name: "Cloud Services Team",
+          content: "Cloud applications should be accessed directly through SSO without VPN."
+        }
+      ],
       status: 'pending',
       suggestedModification: "Update policies to clarify: VPN required for accessing internal network resources, SSO-enabled cloud apps can be accessed directly. Add network segmentation requirements and conditional access policies based on risk level.",
       modifiedContent: ''
@@ -101,9 +132,16 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
     {
       id: 5,
       requirement: "Guest Network Access",
-      doc1: { name: "Visitor Access Policy", content: "Guests must register with reception for wifi access." },
-      doc2: { name: "Office Network Guide", content: "Guest wifi password changes monthly and is posted in meeting rooms." },
-      selectedDoc: undefined as string | undefined,
+      baselineControl: {
+        name: "Visitor NetworkAccess Policy",
+        content: "Guests must register with reception for wifi access."
+      },
+      otherControlGroups: [
+        {
+          name: "Undefined",
+          content: "Guest wifi password changes monthly and is posted in meeting rooms."
+        }
+      ],
       status: 'pending',
       suggestedModification: "Implement unified guest access system: Visitors register through reception portal, receive time-limited access codes via SMS, and must agree to acceptable use policy. Remove all posted wifi passwords.",
       modifiedContent: ''
@@ -111,9 +149,16 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
     {
       id: 6,
       requirement: "Mobile Device Enrollment",
-      doc1: { name: "BYOD Policy", content: "Personal devices must be enrolled in MDM to access email." },
-      doc2: { name: "Email Access Guide", content: "Mobile email access available through web portal without enrollment." },
-      selectedDoc: undefined as string | undefined,
+      baselineControl: {
+        name: "Mobile Endpoint Security Policy",
+        content: "Personal devices must be enrolled in MDM to access email."
+      },
+      otherControlGroups: [
+        {
+          name: "Contractor Group",
+          content: "Mobile email access available through web portal without enrollment."
+        }
+      ],
       status: 'pending',
       suggestedModification: "Update all documentation to reflect: MDM enrollment required for native email apps, web-only access permitted without enrollment but with enhanced MFA requirements. Add risk warnings for web-only access.",
       modifiedContent: ''
@@ -126,10 +171,11 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       name: "Password Reset Procedures",
       lastUpdated: "2021-05-15",
       replacementDoc: "Self-Service Identity Management Guide",
-      suggestedHeaderText: "NOTICE: This document is outdated. Please refer to the 'Self-Service Identity Management Guide' for current password reset procedures including MFA verification steps.",
+      suggestedHeaderText: "NOTICE: This document is outdated...",
       note: "",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      url: '#'
     },
     {
       id: 2,
@@ -139,7 +185,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       suggestedHeaderText: "WARNING: This guide predates our current remote access infrastructure. For current VPN, SSO, and conditional access troubleshooting, consult the 'Hybrid Workforce Access Guide 2024'.",
       note: "",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      url: '#'
     },
     {
       id: 3,
@@ -149,7 +196,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       suggestedHeaderText: "DEPRECATED: This document doesn't reflect current MDM policies and BYOD procedures. Please refer to the 'Enterprise Mobility Management Handbook' for current mobile device support.",
       note: "",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      url: '#'
     },
     {
       id: 4,
@@ -159,7 +207,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       suggestedHeaderText: "OUTDATED: This document doesn't include current incident classification and automated response procedures. Please use the 'Security Operations Playbook 2024' for updated guidance.",
       note: "",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      url: '#'
     },
     {
       id: 5,
@@ -169,7 +218,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       suggestedHeaderText: "NOTICE: This escalation guide is outdated. For current security incident classification and escalation procedures, please refer to the 'Security Incident Triage Framework'.",
       note: "",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      url: '#'
     }
   ])
 
@@ -232,34 +282,120 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
     }
   ])
 
-  const handleAction = (
-    id: number,
-    action: 'accepted' | 'rejected' | 'modified' | 'selected',
-    category: 'lackOfDocumentation' | 'conflictingRequirements' | 'outdatedDocs' | 'bestPracticeImprovements',
-    modifiedContent = ''
-  ) => {
+  const getOutdatedPolicyDocs = () => {
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+    return outdatedDocs.filter(doc => {
+      const lastUpdated = new Date(doc.lastUpdated);
+      return lastUpdated < oneYearAgo;
+    });
+  }
+
+  const handleAction = (id: number, action: string, category: string, groupIndex?: number, value?: string) => {
     switch (category) {
-      case 'lackOfDocumentation':
-        setLackOfDocumentation(prev => prev.map(item => 
-          item.id === id ? { ...item, status: action, modifiedContent: modifiedContent || item.modifiedContent } : item
-        ))
-        break
       case 'conflictingRequirements':
-        setConflictingRequirements(prev => prev.map(item => 
-          item.id === id ? { ...item, status: action, modifiedContent: modifiedContent || item.modifiedContent } : item
-        ))
-        break
+        setConflictingRequirements(prevState =>
+          prevState.map(item =>
+            item.id === id
+              ? {
+                  ...item,
+                  status: action === 'accepted' ? 'accepted' : item.status,
+                  modifiedContent: action === 'modified' ? (value || item.modifiedContent) : item.modifiedContent,
+                  baselineControl: groupIndex === -1 && action === 'modified'
+                    ? { ...item.baselineControl, content: value || item.baselineControl.content }
+                    : item.baselineControl,
+                  otherControlGroups: groupIndex !== undefined && groupIndex >= 0 && action === 'modified'
+                    ? item.otherControlGroups.map((group, index) =>
+                        index === groupIndex
+                          ? { ...group, content: value || group.content }
+                          : group
+                      )
+                    : item.otherControlGroups
+                }
+              : item
+          )
+        )
+        break;
+      case 'lackOfDocumentation':
+        setLackOfDocumentation(prevState =>
+          prevState.map(item =>
+            item.id === id
+              ? {
+                  ...item,
+                  status: action,
+                  modifiedContent: action === 'modified' ? (value || item.modifiedContent) : item.modifiedContent
+                }
+              : item
+          )
+        )
+        break;
       case 'outdatedDocs':
-        setOutdatedDocs(prev => prev.map(item => 
-          item.id === id ? { ...item, status: action, modifiedContent: modifiedContent || item.modifiedContent } : item
-        ))
-        break
+        setOutdatedDocs(prevState =>
+          prevState.map(item =>
+            item.id === id
+              ? {
+                  ...item,
+                  status: action,
+                  modifiedContent: action === 'modified' ? (value || item.modifiedContent) : item.modifiedContent,
+                  note: action === 'modified' ? (value || item.note) : item.note
+                }
+              : item
+          )
+        )
+        break;
       case 'bestPracticeImprovements':
-        setBestPracticeImprovements(prev => prev.map(item => 
-          item.id === id ? { ...item, status: action, modifiedContent: modifiedContent || item.modifiedContent } : item
-        ))
-        break
+        setBestPracticeImprovements(prevState =>
+          prevState.map(item =>
+            item.id === id
+              ? {
+                  ...item,
+                  status: action,
+                  modifiedContent: action === 'modified' ? (value || item.modifiedContent) : item.modifiedContent
+                }
+              : item
+          )
+        )
+        break;
     }
+  }
+
+  const renderUpdateDialog = (item: any, groupIndex: number, isBaseline: boolean) => {
+    const dialogKey = `${item.id}-${isBaseline ? 'baseline' : groupIndex}`
+
+    return (
+      <>
+        <Button
+          size="medium"
+          variant="brand-secondary"
+          onClick={() => setDialogOpen(prev => ({ ...prev, [dialogKey]: true }))}
+          icon="FeatherEdit"
+        >
+          Update Control
+        </Button>
+        <Dialog open={dialogOpen[dialogKey]} onOpenChange={(open) => setDialogOpen(prev => ({ ...prev, [dialogKey]: open }))}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Update {isBaseline ? 'Baseline' : 'Other'} Control</DialogTitle>
+              <DialogDescription>Make changes to the control content.</DialogDescription>
+            </DialogHeader>
+            <Textarea
+              value={isBaseline ? item.baselineControl.content : item.otherControlGroups[groupIndex].content}
+              onChange={(e) => handleAction(item.id, 'modified', 'conflictingRequirements', groupIndex, e.target.value)}
+            />
+            <DialogFooter>
+              <Button 
+                size="medium"
+                variant="brand-primary"
+                onClick={() => {
+                  handleAction(item.id, 'modified', 'conflictingRequirements', groupIndex)
+                  setDialogOpen(prev => ({ ...prev, [dialogKey]: false }))
+              }}>Save Changes</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </>
+    )
   }
 
   const renderActionButtons = (
@@ -268,17 +404,16 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
   ) => (
     <div className="flex space-x-2 mt-2">
       <Button 
-        size="sm" 
-        variant={item.status === 'accepted' ? 'default' : 'outline'}
+        size="small"
+        icon="FeatherCheckCircle"
+        variant={item.status === 'brand-secondary' ? 'brand-secondary' : 'brand-secondary'}
         onClick={() => handleAction(item.id, 'accepted', category)}
       >
-        <CheckCircle2 className="mr-2 h-4 w-4" />
         Accept
       </Button>
       <Dialog>
         <DialogTrigger asChild>
-          <Button size="sm" variant="outline">
-            <Edit className="mr-2 h-4 w-4" />
+          <Button size="small" variant="brand-secondary" icon="FeatherEdit">
             Modify
           </Button>
         </DialogTrigger>
@@ -289,7 +424,7 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
           </DialogHeader>
           <Textarea 
             value={item.modifiedContent || item.suggestedHeaderText || item.suggestedModification || item.suggestedUpdate || item.note} 
-            onChange={(e) => handleAction(item.id, 'modified', category, e.target.value)}
+            onChange={(e) => handleAction(item.id, 'modified', category, undefined, e.target.value)}
           />
           <DialogFooter>
             <Button onClick={() => handleAction(item.id, 'modified', category)}>Save Changes</Button>
@@ -297,11 +432,11 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
         </DialogContent>
       </Dialog>
       <Button 
-        size="sm" 
-        variant={item.status === 'rejected' ? 'default' : 'outline'}
+        size="small" 
+        variant={item.status === 'brand-secondary' ? 'brand-secondary' : 'brand-secondary'}
         onClick={() => handleAction(item.id, 'rejected', category)}
+        icon="FeatherXCircle"
       >
-        <XCircle className="mr-2 h-4 w-4" />
         Reject
       </Button>
     </div>
@@ -347,28 +482,40 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
             </CardHeader>
             <CardContent>
               {conflictingRequirements.map((item) => (
-                <div key={item.id} className="mb-4 p-4 border rounded">
-                  <h3 className="font-semibold mb-2">{item.requirement}</h3>
-                  <RadioGroup 
-                    onValueChange={(value) => handleAction(item.id, 'selected', 'conflictingRequirements', value)}
-                    value={item.selectedDoc}
-                  >
-                    <div className="flex items-center space-x-2 mb-2">
-                      <RadioGroupItem value={item.doc1.name} id={`${item.id}-doc1`} />
-                      <Label htmlFor={`${item.id}-doc1`}>{item.doc1.name}: {item.doc1.content}</Label>
+                <div key={item.id} className="mb-8 p-4 border rounded">
+                  <h3 className="font-semibold mb-4">{item.requirement}</h3>
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="font-bold">Baseline Control: {item.baselineControl.name}</h4>
+                      {renderUpdateDialog(item, -1, true)}
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value={item.doc2.name} id={`${item.id}-doc2`} />
-                      <Label htmlFor={`${item.id}-doc2`}>{item.doc2.name}: {item.doc2.content}</Label>
-                    </div>
-                  </RadioGroup>
-                  {item.selectedDoc && (
-                    <p className="mt-2 text-sm text-green-600">Selected: {item.selectedDoc}</p>
-                  )}
+                    <p>{item.baselineControl.content}</p>
+                  </div>
+                  <div className="mb-4">
+                    <h4 className="font-bold mb-2">Other Control Groups:</h4>
+                    {item.otherControlGroups.map((group, index) => (
+                      <div key={index} className="mb-4 ml-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <h5 className="font-bold">{group.name}</h5>
+                          <div className="flex space-x-2">
+                            <Button
+                              size="medium"
+                              variant={item.status === 'brand-secondary' ? 'brand-secondary' : 'brand-secondary'}
+                              onClick={() => handleAction(item.id, 'accepted', 'conflictingRequirements')}
+                              icon="FeatherCheckCircle"
+                            >
+                              Accept Differences
+                            </Button>
+                            {renderUpdateDialog(item, index, false)}
+                          </div>
+                        </div>
+                        <p>{group.content}</p>
+                      </div>
+                    ))}
+                  </div>
                   <div className="mt-4">
-                    <h4 className="font-semibold mb-2">Suggested Modification:</h4>
-                    <p className="mb-2">{item.suggestedModification}</p>
-                    {renderActionButtons(item, 'conflictingRequirements')}
+                    <h4 className="font-bold mb-2">Suggested Modification:</h4>
+                    <p>{item.suggestedModification}</p>
                   </div>
                 </div>
               ))}
@@ -380,29 +527,47 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
           <Card>
             <CardHeader>
               <CardTitle>Outdated Documentation</CardTitle>
-              <CardDescription>Add header text to outdated documents and notes pointing to the correct documentation.</CardDescription>
+              <CardDescription>Review and update outdated policy documents.</CardDescription>
             </CardHeader>
             <CardContent>
-              {outdatedDocs.map((item) => (
-                <div key={item.id} className="mb-4 p-4 border rounded">
-                  <h3 className="font-semibold mb-2">{item.name}</h3>
-                  <p className="mb-2">Last Updated: {item.lastUpdated}</p>
-                  <p className="mb-2">Replacement: {item.replacementDoc}</p>
-                  <div className="mb-4">
-                    <h4 className="font-semibold mb-2">Suggested Header Text:</h4>
-                    <p className="mb-2 p-2 bg-yellow-100 border border-yellow-300 rounded">{item.suggestedHeaderText}</p>
-                    {renderActionButtons(item, 'outdatedDocs')}
+              <div className="mb-8 p-4 bg-muted rounded-lg">
+                <h3 className="font-semibold mb-4">Outdated Policy Docs</h3>
+                <p className="mb-2">Policy documents not updated in the past year:</p>
+                <ul className="list-disc pl-5 space-y-2">
+                  {getOutdatedPolicyDocs().map(doc => (
+                    <li key={doc.id} className="flex items-center">
+                      <ExternalLink className="mr-2 h-4 w-4" />
+                      <a href={doc.url} className="text-primary hover:underline">
+                        {doc.name} (Last updated: {doc.lastUpdated})
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="mb-8">
+                <h3 className="font-semibold mb-4">Outdated Doc Updates</h3>
+                <p className="mb-2">Suggested modifications to stale or outdated docs:</p>
+                {outdatedDocs.map((item) => (
+                  <div key={item.id} className="mb-8 p-4 border rounded">
+                    <h4 className="font-semibold mb-2">{item.name}</h4>
+                    <p className="mb-2">Last Updated: {item.lastUpdated}</p>
+                    <p className="mb-2">Replacement: {item.replacementDoc}</p>
+                    <div className="mb-4">
+                      <h5 className="font-semibold mb-2">Suggested Header Text:</h5>
+                      <p className="mb-2 p-2 bg-yellow-100 border border-yellow-100 rounded">{item.suggestedHeaderText}</p>
+                      {renderActionButtons(item, 'outdatedDocs')}
+                    </div>
+                    <div className="mt-4">
+                      <h5 className="font-semibold mb-2">Additional Note:</h5>
+                      <Textarea
+                        placeholder="Add a note for users of this document..."
+                        value={item.note}
+                        onChange={(e) => handleAction(item.id, 'modified', 'outdatedDocs', undefined, e.target.value)}
+                      />
+                    </div>
                   </div>
-                  <div className="mt-4">
-                    <h4 className="font-semibold mb-2">Additional Note:</h4>
-                    <Textarea
-                      placeholder="Add a note for users of this document..."
-                      value={item.note}
-                      onChange={(e) => handleAction(item.id, 'modified', 'outdatedDocs', e.target.value)}
-                    />
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

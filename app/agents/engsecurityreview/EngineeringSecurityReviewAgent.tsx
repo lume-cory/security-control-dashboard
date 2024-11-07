@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Button } from "@/subframe/components/Button"
+import { FilterBadge } from "@/subframe/components/FilterBadge";
+import { Badge } from "@/subframe/components/Badge";
 import * as SubframeCore from "@subframe/core";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -19,6 +21,8 @@ import { Breadcrumbs } from '@/components/ui/subframe/components/Breadcrumbs'
 import IntegrationsAndDataSources from './IntegrationsAndDataSources';
 import AddIntegrationDialog from './AddIntegrationDialog';
 import EngSecurityReviewQuestionsTable from './QuestionsTable';
+import MetricsPanel from './MetricsPanel';
+import { ChatDrawer } from './ChatDrawer'
 
 export default function EngineeringSecurityReviewAgent() {
   const router = useRouter()
@@ -117,10 +121,13 @@ export default function EngineeringSecurityReviewAgent() {
         {showModifications ? (
           <SuggestedModifications onBack={() => setShowModifications(false)} />
         ) : (
-          <div className="flex w-full flex-col gap-4">
-            <IntegrationsAndDataSources integrations={integrations} addIntegration={handleDialogOpen} />
-            <EngSecurityReviewQuestionsTable />
-          </div>
+          <>
+            <div className="flex w-full flex-col gap-4">
+              <IntegrationsAndDataSources integrations={integrations} addIntegration={handleDialogOpen} />
+              <MetricsPanel />
+              <EngSecurityReviewQuestionsTable />
+            </div>
+          </>
         )}
       </div>
       <AddIntegrationDialog
@@ -131,6 +138,7 @@ export default function EngineeringSecurityReviewAgent() {
         setNewIntegration={setNewIntegration}
         addIntegration={addIntegration}
       />
+      <ChatDrawer />
     </DefaultPageLayout>
   )
 }

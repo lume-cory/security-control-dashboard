@@ -29,14 +29,14 @@ export function HomeViewWrapper() {
 
   return (
     <DefaultPageLayout>
-      <div className="flex h-full w-full flex-col items-start gap-6 px-6 py-6" >
-        <div className="flex w-full items-start gap-4 mobile:flex-col mobile:items-center mobile:justify-start mobile:gap-6" >
+      <div className="flex h-full w-full flex-col items-start gap-6 p-4 sm:p-6" >
+        <div className="flex w-full flex-col items-start gap-4 sm:flex-row sm:items-center" >
           <IconWithBackground size="medium" icon="FeatherRocket" />
-          <span className="text-heading-2 font-heading-2 text-default-font mobile:text-center" >
+          <span className="text-heading-2 font-heading-2 text-default-font text-center sm:text-left" >
             Acme Inc
           </span>
         </div>
-        < div className="flex w-full items-center justify-between" >
+        <div className="flex w-full items-center justify-between overflow-x-auto" >
           <Breadcrumbs>
             <Breadcrumbs.Item onClick={() => router.push('/agents')}>Agents </Breadcrumbs.Item>
             < Breadcrumbs.Divider />
@@ -46,12 +46,11 @@ export function HomeViewWrapper() {
           </Breadcrumbs>
         </div>
 
-
-        <div>
+        <div className="w-full">
           <HomeViewComponent onNavigateToComplianceMapper={handleCardClick} />
 
           <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-            <SheetContent side="right" className="w-full overflow-hidden" style={{ maxWidth: '80vw' }}>
+            <SheetContent side="right" className="w-full overflow-hidden" style={{ maxWidth: 'min(90vw, 1200px)' }}>
               <div className="h-[calc(100vh-4rem)] overflow-y-auto">
                 <ComplianceMapperComponent onBack={() => setIsDrawerOpen(false)} />
               </div>

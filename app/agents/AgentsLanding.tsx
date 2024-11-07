@@ -13,8 +13,7 @@ function AgentsLandingPage() {
 
   const router = useRouter();
 
-  const agentDescriptionText = `This agent is designed to aggregate questions from customers
-                    about the organization's security posture and suggest responses`;
+  const agentDescriptionText = `This agent is designed to aggregate questions from customers about the organization's security posture and suggest responses`;
 
   return (
     <DefaultPageLayout>
@@ -215,7 +214,7 @@ function AgentsLandingPage() {
                 className="h-10 w-full flex-none"
                 variant="brand-secondary"
                 size="large"
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => { router.push('/agents/clientrequirements') }}
               >
                 Let&apos;s Go!
               </Button>
