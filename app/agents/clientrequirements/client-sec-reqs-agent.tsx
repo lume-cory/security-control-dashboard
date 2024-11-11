@@ -436,8 +436,7 @@ export default function ClientSecurityRequirementsCheck() {
         </div>
 
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">AI Agent Security Dashboard</h1>
-
+      
       {/* Metrics Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <Card>

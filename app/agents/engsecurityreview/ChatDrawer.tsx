@@ -89,7 +89,21 @@ const previousChats = [
         { role: "user", content: "How should we handle security findings?" },
         { role: "assistant", content: "Handle security findings with:\n\n1. Severity-based Approach:\n   - Critical/High: Block deployment\n   - Medium: Require review\n   - Low: Track in backlog\n\n2. Remediation Process:\n   - Automated tickets creation\n   - SLA based on severity\n   - Required security sign-off\n\n3. Monitoring:\n   - Track security debt\n   - Regular vulnerability reports\n   - Compliance dashboards" }
       ]
-    }
+    },
+    {
+        id: "5",
+        question: "Do we have any prior implementation examples for authorization? I want to look at some examples to help me implement my service.",
+        title: "Prior Implementations for Authorization",
+        timestamp: new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+        conversation: [
+          { role: "user", content: "Do we have any prior implementation examples for authorization? I want to look at some examples to help me implement my service." },
+          { role: "assistant", content: "Yes, here are some recent authorization implementations in our codebase:\n\n1. Customer Portal Service (Recommended)\n   - Repository: github.com/company/customer-portal/tree/main/src/auth\n   - Author: Sarah Chen (@schen)\n   - Uses RBAC with JWT tokens and middleware pattern\n   - Good example of role-based access control\n\n2. Admin Dashboard\n   - Repository: github.com/company/admin-dashboard/tree/main/lib/auth\n   - Author: Mike Johnson (@mjohnson)\n   - Implements attribute-based access control (ABAC)\n   - Includes example of fine-grained permissions\n\n3. API Gateway Service\n   - Repository: github.com/company/api-gateway/tree/main/src/middleware/auth\n   - Author: David Park (@dpark)\n   - Shows token validation and route protection\n   - Good reference for API security" },
+          { role: "user", content: "The Customer Portal implementation looks promising. What specific patterns should I look at?" },
+          { role: "assistant", content: "In the Customer Portal implementation, focus on these key components:\n\n1. Authorization Middleware (github.com/company/customer-portal/tree/main/src/auth/middleware.ts)\n   - Shows how to validate JWT tokens\n   - Implements role checking\n   - Handles error cases gracefully\n\n2. Permission Guards (github.com/company/customer-portal/tree/main/src/auth/guards/)\n   - Check out `RoleGuard.ts` for role validation\n   - See `ResourceGuard.ts` for resource-level permissions\n   - Good example of composable guards\n\n3. Custom Decorators (github.com/company/customer-portal/tree/main/src/auth/decorators/)\n   - `@RequireRole` decorator implementation\n   - `@RequirePermission` decorator\n\nSarah Chen (@schen) is still actively maintaining this code and can provide additional context. She's usually available on Slack (#team-security) for questions." },
+          { role: "user", content: "Who is the security policy owner for authorization?" },
+          { role: "assistant", content: "Alex Thompson (@athompson) is our Security Policy Owner for authorization. As the Director of Security Architecture, they:\n\n1. Maintain our authorization policies in the security portal: security-policies.company.com/auth\n2. Review and approve authorization design patterns\n3. Lead the monthly security architecture meetings (every first Tuesday)\n\nYou can reach them via:\n- Slack: @athompson\n- Email: alex.thompson@company.com\n- Security Office Hours: Thursdays 2-4pm" }
+        ]
+      }
   ]
 
   const handleChatSelect = (chat: Chat) => {

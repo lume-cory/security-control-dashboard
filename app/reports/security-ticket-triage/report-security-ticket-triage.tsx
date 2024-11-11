@@ -13,6 +13,7 @@ import { Button } from "@/subframe/components/Button";
 import * as SubframeCore from "@subframe/core";
 import { PieChart } from "@/subframe/components/PieChart";
 import { useRouter } from "next/navigation";
+import { SecurityTicketTable } from "./SecurityTicketTable";
 
 function SecurityTicketReport() {
   const router = useRouter();
@@ -320,11 +321,12 @@ function SecurityTicketReport() {
           <div className="flex w-full flex-wrap items-start gap-4">
             <PieChart
               className="h-auto w-52 flex-none self-stretch"
-              category={"Graduates"}
+              category={"Issues"}
               data={[
-                { Major: "Psychology", Graduates: 180 },
-                { Major: "Business", Graduates: 160 },
-                { Major: "Biology", Graduates: 140 },
+                { Major: "Engineering", Issues: 527 },
+                { Major: "Sales", Issues: 356 },
+                { Major: "IT", Issues: 295 },
+                { Major: "Exec", Issues: 32 },
               ]}
               index={"Major"}
             />
@@ -613,6 +615,15 @@ function SecurityTicketReport() {
             </div>
           </div>
         </div>
+        <div className="flex w-full flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
+          <div className="flex w-full items-center gap-2">
+            <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">
+              Recent Security Tickets
+            </span>
+          </div>
+          <SecurityTicketTable />
+        </div>
+        <hr className="w-full border-t border-neutral-border" />
       </div>
     </DefaultPageLayout>
   );

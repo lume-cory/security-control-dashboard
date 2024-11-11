@@ -101,6 +101,7 @@ function SecurityHelpDeskAgent() {
             {showModifications ? 'Back to Review Requests' : 'View Suggested Doc Modifications'}
           </Button>
         </div>
+        
         {showModifications ? (
           <SuggestedModifications onBack={() => setShowModifications(false)} />
         ) : (
