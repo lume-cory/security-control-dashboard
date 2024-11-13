@@ -14,6 +14,7 @@ import { useState } from 'react'
 import { SuggestedModifications } from './suggested-modifications'
 import { QuestionsTable } from './questions-table'
 import AddIntegrationDialog from "./AddIntegrationDialog";
+import { ChatDrawer } from './ChatDrawer'
 
 
 function SecurityHelpDeskAgent() {
@@ -101,7 +102,7 @@ function SecurityHelpDeskAgent() {
             {showModifications ? 'Back to Review Requests' : 'View Suggested Doc Modifications'}
           </Button>
         </div>
-        
+
         {showModifications ? (
           <SuggestedModifications onBack={() => setShowModifications(false)} />
         ) : (
@@ -242,6 +243,7 @@ function SecurityHelpDeskAgent() {
           </>
         )}
       </div>
+      <ChatDrawer />
     </DefaultPageLayout>
   );
 }

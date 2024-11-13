@@ -22,36 +22,36 @@ const criticalityLevels = ['Critical', 'High', 'Medium', 'Low']
 
 const mockEngVulnerabilities = [
   // Frontend Team
-  { id: 1, team: 'Frontend', type: 'XSS', criticality: 'High', feature: 'User Profile', daysOpen: 5, slaTimeLeft: '2 days', description: 'Potential XSS vulnerability in user profile rendering', impact: 'High', remediation: 'Implement proper input sanitization and output encoding' },
-  { id: 2, team: 'Frontend', type: 'CSRF', criticality: 'Medium', feature: 'Comment System', daysOpen: 6, slaTimeLeft: '6 days', description: 'CSRF vulnerability in comment submission', impact: 'Medium', remediation: 'Implement anti-CSRF tokens for all state-changing operations' },
-  { id: 3, team: 'Frontend', type: 'Insecure Direct Object References', criticality: 'High', feature: 'User Settings', daysOpen: 4, slaTimeLeft: '3 days', description: 'Direct object reference allows unauthorized access to user settings', impact: 'High', remediation: 'Implement proper authorization checks for all user-specific resources' },
-  { id: 4, team: 'Frontend', type: 'Security Misconfiguration', criticality: 'Medium', feature: 'Error Handling', daysOpen: 7, slaTimeLeft: '5 days', description: 'Verbose error messages reveal sensitive information', impact: 'Medium', remediation: 'Implement custom error pages and log detailed errors server-side' },
-  { id: 5, team: 'Frontend', type: 'Unvalidated Redirects and Forwards', criticality: 'Low', feature: 'Login Redirect', daysOpen: 9, slaTimeLeft: '7 days', description: 'Unvalidated redirect after login could lead to phishing attacks', impact: 'Low', remediation: 'Implement a whitelist of allowed redirect URLs' },
-  { id: 6, team: 'Frontend', type: 'XSS', criticality: 'Medium', feature: 'Search Results', daysOpen: 3, slaTimeLeft: '4 days', description: 'Potential XSS in search result display', impact: 'Medium', remediation: 'Implement proper output encoding for search results' },
+  { id: 1, team: 'Frontend', type: 'XSS', criticality: 'High', feature: 'User Profile', daysOpen: 5, slaTimeLeft: '2 days', description: 'Potential XSS vulnerability in user profile rendering', impact: 'High', remediation: 'Implement proper input sanitization and output encoding', issueOwner: 'Application Security', ownerContact: 'appsec@acme.com', srbRanking: 1 },
+  { id: 2, team: 'Frontend', type: 'CSRF', criticality: 'Medium', feature: 'Comment System', daysOpen: 6, slaTimeLeft: '6 days', description: 'CSRF vulnerability in comment submission', impact: 'Medium', remediation: 'Implement anti-CSRF tokens for all state-changing operations', issueOwner: 'Product Security', ownerContact: 'product-security@acme.com', srbRanking: 4 },
+  { id: 3, team: 'Frontend', type: 'Insecure Direct Object References', criticality: 'High', feature: 'User Settings', daysOpen: 4, slaTimeLeft: '3 days', description: 'Direct object reference allows unauthorized access to user settings', impact: 'High', remediation: 'Implement proper authorization checks for all user-specific resources', issueOwner: 'Application Security', ownerContact: 'appsec@acme.com', srbRanking: 2 },
+  { id: 4, team: 'Frontend', type: 'Security Misconfiguration', criticality: 'Medium', feature: 'Error Handling', daysOpen: 7, slaTimeLeft: '5 days', description: 'Verbose error messages reveal sensitive information', impact: 'Medium', remediation: 'Implement custom error pages and log detailed errors server-side', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 5 },
+  { id: 5, team: 'Frontend', type: 'Unvalidated Redirects and Forwards', criticality: 'Low', feature: 'Login Redirect', daysOpen: 9, slaTimeLeft: '7 days', description: 'Unvalidated redirect after login could lead to phishing attacks', impact: 'Low', remediation: 'Implement a whitelist of allowed redirect URLs', issueOwner: 'Product Security', ownerContact: 'product-security@acme.com', srbRanking: 3 },
+  { id: 6, team: 'Frontend', type: 'XSS', criticality: 'Medium', feature: 'Search Results', daysOpen: 3, slaTimeLeft: '4 days', description: 'Potential XSS in search result display', impact: 'Medium', remediation: 'Implement proper output encoding for search results', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 6 },
 
   // Backend Team
-  { id: 7, team: 'Backend', type: 'SQL Injection', criticality: 'Critical', feature: 'Data API', daysOpen: 2, slaTimeLeft: '1 day', description: 'SQL injection vulnerability in data retrieval endpoint', impact: 'Critical', remediation: 'Use parameterized queries or ORM to prevent SQL injection' },
-  { id: 8, team: 'Backend', type: 'Broken Authentication', criticality: 'High', feature: 'User Authentication', daysOpen: 4, slaTimeLeft: '2 days', description: 'Session fixation vulnerability in login process', impact: 'High', remediation: 'Regenerate session ID after successful authentication' },
-  { id: 9, team: 'Backend', type: 'Sensitive Data Exposure', criticality: 'High', feature: 'User Data API', daysOpen: 3, slaTimeLeft: '2 days', description: 'Sensitive user data transmitted in cleartext', impact: 'High', remediation: 'Implement TLS for all sensitive data transmissions' },
-  { id: 10, team: 'Backend', type: 'Insecure Direct Object References', criticality: 'Medium', feature: 'Order Management', daysOpen: 5, slaTimeLeft: '4 days', description: 'Direct object reference allows unauthorized access to orders', impact: 'Medium', remediation: 'Implement proper authorization checks for all order-related endpoints' },
-  { id: 11, team: 'Backend', type: 'Security Misconfiguration', criticality: 'High', feature: 'Server Configuration', daysOpen: 2, slaTimeLeft: '1 day', description: 'Default server configuration exposes sensitive information', impact: 'High', remediation: 'Review and harden server configuration, disable unnecessary features' },
-  { id: 12, team: 'Backend', type: 'Broken Access Control', criticality: 'Critical', feature: 'Admin Panel', daysOpen: 1, slaTimeLeft: '1 day', description: 'Improper access control allows regular users to access admin functions', impact: 'Critical', remediation: 'Implement robust role-based access control for all admin functions' },
+  { id: 7, team: 'Backend', type: 'SQL Injection', criticality: 'Critical', feature: 'Data API', daysOpen: 2, slaTimeLeft: '1 day', description: 'SQL injection vulnerability in data retrieval endpoint', impact: 'Critical', remediation: 'Use parameterized queries or ORM to prevent SQL injection', issueOwner: 'Application Security', ownerContact: 'appsec@acme.com', srbRanking: 1 },
+  { id: 8, team: 'Backend', type: 'Broken Authentication', criticality: 'High', feature: 'User Authentication', daysOpen: 4, slaTimeLeft: '2 days', description: 'Session fixation vulnerability in login process', impact: 'High', remediation: 'Regenerate session ID after successful authentication', issueOwner: 'Product Security', ownerContact: 'product-security@acme.com', srbRanking: 4 },
+  { id: 9, team: 'Backend', type: 'Sensitive Data Exposure', criticality: 'High', feature: 'User Data API', daysOpen: 3, slaTimeLeft: '2 days', description: 'Sensitive user data transmitted in cleartext', impact: 'High', remediation: 'Implement TLS for all sensitive data transmissions', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 3 },
+  { id: 10, team: 'Backend', type: 'Insecure Direct Object References', criticality: 'Medium', feature: 'Order Management', daysOpen: 5, slaTimeLeft: '4 days', description: 'Direct object reference allows unauthorized access to orders', impact: 'Medium', remediation: 'Implement proper authorization checks for all order-related endpoints', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 5 },
+  { id: 11, team: 'Backend', type: 'Security Misconfiguration', criticality: 'High', feature: 'Server Configuration', daysOpen: 2, slaTimeLeft: '1 day', description: 'Default server configuration exposes sensitive information', impact: 'High', remediation: 'Review and harden server configuration, disable unnecessary features', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 6 },
+  { id: 12, team: 'Backend', type: 'Broken Access Control', criticality: 'Critical', feature: 'Admin Panel', daysOpen: 1, slaTimeLeft: '1 day', description: 'Improper access control allows regular users to access admin functions', impact: 'Critical', remediation: 'Implement robust role-based access control for all admin functions', issueOwner: 'Product Security', ownerContact: 'product-security@acme.com', srbRanking: 2 },
 
   // DevOps Team
-  { id: 13, team: 'DevOps', type: 'Sensitive Data Exposure', criticality: 'Medium', feature: 'Logging System', daysOpen: 8, slaTimeLeft: '4 days', description: 'Sensitive user data being logged in plaintext', impact: 'Medium', remediation: 'Implement data masking for sensitive information in logs' },
-  { id: 14, team: 'DevOps', type: 'Security Misconfiguration', criticality: 'High', feature: 'Cloud Infrastructure', daysOpen: 3, slaTimeLeft: '2 days', description: 'Misconfigured cloud storage allows public access to private data', impact: 'High', remediation: 'Review and correct all cloud resource permissions, implement least privilege principle' },
-  { id: 15, team: 'DevOps', type: 'Insufficient Logging & Monitoring', criticality: 'Medium', feature: 'Monitoring System', daysOpen: 6, slaTimeLeft: '5 days', description: 'Lack of proper logging for critical system events', impact: 'Medium', remediation: 'Implement comprehensive logging and real-time alerting for critical events' },
-  { id: 16, team: 'DevOps', type: 'Insecure Deserialization', criticality: 'High', feature: 'Data Processing Pipeline', daysOpen: 4, slaTimeLeft: '3 days', description: 'Insecure deserialization in data processing could lead to remote code execution', impact: 'High', remediation: 'Implement secure deserialization practices, validate and sanitize all input data' },
-  { id: 17, team: 'DevOps', type: 'Using Components with Known Vulnerabilities', criticality: 'Critical', feature: 'Third-party Libraries', daysOpen: 2, slaTimeLeft: '1 day', description: 'Critical vulnerability in a widely used third-party library', impact: 'Critical', remediation: 'Immediately update affected libraries, implement automated dependency scanning' },
-  { id: 18, team: 'DevOps', type: 'Insufficient Logging & Monitoring', criticality: 'Low', feature: 'Audit Logs', daysOpen: 10, slaTimeLeft: '8 days', description: 'Audit logs not retained for sufficient duration', impact: 'Low', remediation: 'Increase log retention period and implement secure log archiving' },
+  { id: 13, team: 'DevOps', type: 'Sensitive Data Exposure', criticality: 'Medium', feature: 'Logging System', daysOpen: 8, slaTimeLeft: '4 days', description: 'Sensitive user data being logged in plaintext', impact: 'Medium', remediation: 'Implement data masking for sensitive information in logs', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 4 },
+  { id: 14, team: 'DevOps', type: 'Security Misconfiguration', criticality: 'High', feature: 'Cloud Infrastructure', daysOpen: 3, slaTimeLeft: '2 days', description: 'Misconfigured cloud storage allows public access to private data', impact: 'High', remediation: 'Review and correct all cloud resource permissions, implement least privilege principle', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 1 },
+  { id: 15, team: 'DevOps', type: 'Insufficient Logging & Monitoring', criticality: 'Medium', feature: 'Monitoring System', daysOpen: 6, slaTimeLeft: '5 days', description: 'Lack of proper logging for critical system events', impact: 'Medium', remediation: 'Implement comprehensive logging and real-time alerting for critical events', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 5 },
+  { id: 16, team: 'DevOps', type: 'Insecure Deserialization', criticality: 'High', feature: 'Data Processing Pipeline', daysOpen: 4, slaTimeLeft: '3 days', description: 'Insecure deserialization in data processing could lead to remote code execution', impact: 'High', remediation: 'Implement secure deserialization practices, validate and sanitize all input data', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 2 },
+  { id: 17, team: 'DevOps', type: 'Using Components with Known Vulnerabilities', criticality: 'Critical', feature: 'Third-party Libraries', daysOpen: 2, slaTimeLeft: '1 day', description: 'Critical vulnerability in a widely used third-party library', impact: 'Critical', remediation: 'Immediately update affected libraries, implement automated dependency scanning', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 3 },
+  { id: 18, team: 'DevOps', type: 'Insufficient Logging & Monitoring', criticality: 'Low', feature: 'Audit Logs', daysOpen: 10, slaTimeLeft: '8 days', description: 'Audit logs not retained for sufficient duration', impact: 'Low', remediation: 'Increase log retention period and implement secure log archiving', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 6 },
 
   // Mobile Team
-  { id: 19, team: 'Mobile', type: 'Broken Authentication', criticality: 'High', feature: 'Login Flow', daysOpen: 3, slaTimeLeft: '3 days', description: 'Weak password policy in mobile app login', impact: 'High', remediation: 'Enforce stronger password requirements and implement multi-factor authentication' },
-  { id: 20, team: 'Mobile', type: 'Insecure Data Storage', criticality: 'High', feature: 'Local Data Storage', daysOpen: 4, slaTimeLeft: '2 days', description: 'Sensitive user data stored in plaintext on device', impact: 'High', remediation: 'Implement secure local storage using encryption' },
-  { id: 21, team: 'Mobile', type: 'Insufficient Transport Layer Protection', criticality: 'Medium', feature: 'API Communication', daysOpen: 5, slaTimeLeft: '4 days', description: 'Insecure communication with backend APIs', impact: 'Medium', remediation: 'Implement certificate pinning and ensure all API communications use TLS' },
-  { id: 22, team: 'Mobile', type: 'Insecure Authorization', criticality: 'High', feature: 'In-App Purchases', daysOpen: 2, slaTimeLeft: '2 days', description: 'Improper authorization checks for in-app purchases', impact: 'High', remediation: 'Implement server-side validation for all in-app purchases' },
-  { id: 23, team: 'Mobile', type: 'Client Code Quality', criticality: 'Low', feature: 'Error Handling', daysOpen: 7, slaTimeLeft: '6 days', description: 'Improper error handling leaks sensitive information', impact: 'Low', remediation: 'Implement proper exception handling and create user-friendly error messages' },
-  { id: 24, team: 'Mobile', type: 'Code Tampering', criticality: 'Medium', feature: 'App Integrity', daysOpen: 6, slaTimeLeft: '5 days', description: 'Lack of runtime application self-protection', impact: 'Medium', remediation: 'Implement code obfuscation and runtime integrity checks' },
+  { id: 19, team: 'Mobile', type: 'Broken Authentication', criticality: 'High', feature: 'Login Flow', daysOpen: 3, slaTimeLeft: '3 days', description: 'Weak password policy in mobile app login', impact: 'High', remediation: 'Enforce stronger password requirements and implement multi-factor authentication', issueOwner: 'Product Security', ownerContact: 'product-security@acme.com', srbRanking: 1 },
+  { id: 20, team: 'Mobile', type: 'Insecure Data Storage', criticality: 'High', feature: 'Local Data Storage', daysOpen: 4, slaTimeLeft: '2 days', description: 'Sensitive user data stored in plaintext on device', impact: 'High', remediation: 'Implement secure local storage using encryption', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 4 },
+  { id: 21, team: 'Mobile', type: 'Insufficient Transport Layer Protection', criticality: 'Medium', feature: 'API Communication', daysOpen: 5, slaTimeLeft: '4 days', description: 'Insecure communication with backend APIs', impact: 'Medium', remediation: 'Implement certificate pinning and ensure all API communications use TLS', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 2 },
+  { id: 22, team: 'Mobile', type: 'Insecure Authorization', criticality: 'High', feature: 'In-App Purchases', daysOpen: 2, slaTimeLeft: '2 days', description: 'Improper authorization checks for in-app purchases', impact: 'High', remediation: 'Implement server-side validation for all in-app purchases', issueOwner: 'Product Security', ownerContact: 'product-security@acme.com', srbRanking: 5 },
+  { id: 23, team: 'Mobile', type: 'Client Code Quality', criticality: 'Low', feature: 'Error Handling', daysOpen: 7, slaTimeLeft: '6 days', description: 'Improper error handling leaks sensitive information', impact: 'Low', remediation: 'Implement proper exception handling and create user-friendly error messages', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 3 },
+  { id: 24, team: 'Mobile', type: 'Code Tampering', criticality: 'Medium', feature: 'App Integrity', daysOpen: 6, slaTimeLeft: '5 days', description: 'Lack of runtime application self-protection', impact: 'Medium', remediation: 'Implement code obfuscation and runtime integrity checks', issueOwner: 'Infrastructure Security', ownerContact: 'infrasec@acme.com', srbRanking: 6 },
 ]
 
 // Generate mock data for the past 12 months
@@ -149,7 +149,7 @@ export default function EngVulnReport() {
         </div>
       </div>
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Security Vulnerability Report</h1>
+      <h1 className="text-3xl font-bold mb-6">Product Vulnerabilities</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <Select onValueChange={setSelectedTeam}>
@@ -189,9 +189,11 @@ export default function EngVulnReport() {
         </Select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 gap-6 mb-6">
         {teams.map(team => {
-          const teamVulnerabilities = filteredVulnerabilities.filter(v => v.team === team)
+          const teamVulnerabilities = filteredVulnerabilities
+            .filter(v => v.team === team)
+            .sort((a, b) => a.srbRanking - b.srbRanking)
           const isExpanded = expandedTeams[team]
           const displayedVulnerabilities = isExpanded ? teamVulnerabilities : teamVulnerabilities.slice(0, 5)
 
@@ -207,12 +209,14 @@ export default function EngVulnReport() {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead>SRB Rank</TableHead>
                       <TableHead>Criticality</TableHead>
-                      
                       <TableHead>Type</TableHead>
                       <TableHead>Feature</TableHead>
                       <TableHead>Days Open</TableHead>
                       <TableHead>SLA Time Left</TableHead>
+                      <TableHead>Owner</TableHead>
+                      <TableHead>Contact</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -222,6 +226,7 @@ export default function EngVulnReport() {
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => setSelectedVulnerability(vuln)}
                       >
+                        <TableCell>{vuln.srbRanking}</TableCell>
                         <TableCell>
                           <Badge variant="outline" className="flex items-center gap-1">
                             {getCriticalityIcon(vuln.criticality)}
@@ -232,6 +237,8 @@ export default function EngVulnReport() {
                         <TableCell>{vuln.feature}</TableCell>
                         <TableCell>{vuln.daysOpen}</TableCell>
                         <TableCell>{vuln.slaTimeLeft}</TableCell>
+                        <TableCell>{vuln.issueOwner}</TableCell>
+                        <TableCell>{vuln.ownerContact}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

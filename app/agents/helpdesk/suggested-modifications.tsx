@@ -10,57 +10,100 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from "@/components/ui/textarea"
 import { AlertCircle, CheckCircle2, XCircle, Edit, ExternalLink } from 'lucide-react'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Badge } from "@/components/ui/badge"
+
+interface LackOfDocumentation {
+  id: number
+  question: string
+  suggestedUpdate: string
+  status: 'pending' | 'accepted' | 'modified'
+  modifiedContent: string
+  prbStatus?: 'Pending' | 'Approved' | 'Rejected'
+}
+
+interface ConflictingRequirement {
+  id: number
+  requirement: string
+  baselineControl: {
+    name: string
+    content: string
+  }
+  otherControlGroups: {
+    name: string
+    content: string
+  }[]
+  status: 'pending' | 'accepted' | 'modified'
+  suggestedModification: string
+  modifiedContent: string
+  prbStatus?: 'Pending' | 'Approved' | 'Rejected'
+}
+
+interface BestPracticeImprovement {
+  id: number
+  currentPractice: string
+  suggestedImprovement: string
+  framework: string
+  status: 'pending' | 'accepted' | 'modified'
+  modifiedContent: string
+  prbStatus?: 'Pending' | 'Approved' | 'Rejected'
+}
 
 export function SuggestedModifications({ onBack }: { onBack: () => void }) {
 
   const [dialogOpen, setDialogOpen] = useState<{ [key: string]: boolean }>({})
 
-  const [lackOfDocumentation, setLackOfDocumentation] = useState([
+  const [lackOfDocumentation, setLackOfDocumentation] = useState<LackOfDocumentation[]>([
     {
       id: 1,
       question: "How do I request access to production systems for an emergency fix?",
       suggestedUpdate: "Create an Emergency Access Procedure document covering: approval process, temporary access duration, audit logging requirements, and post-incident documentation requirements.",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 2,
       question: "What's the process for reporting a potential insider threat?",
       suggestedUpdate: "Develop an Insider Threat Reporting Guide that outlines: confidential reporting channels, required information, investigation process, and protection for whistleblowers.",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 3,
       question: "How do we handle security for BYOD devices?",
       suggestedUpdate: "Create a BYOD Security Policy covering: required security controls, approved apps/services, data handling requirements, and remote wipe procedures.",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 4,
       question: "What's the process for conducting security reviews of new vendors?",
       suggestedUpdate: "Develop a Vendor Security Assessment Guide including: assessment questionnaire, required security controls, compliance requirements, and approval workflow.",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 5,
       question: "How do we handle security incidents during non-business hours?",
       suggestedUpdate: "Create an After-Hours Security Incident Response document covering: on-call procedures, escalation paths, emergency contacts, and severity classification guidelines.",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 6,
       question: "What are the requirements for storing customer PII data?",
       suggestedUpdate: "Develop a PII Handling Guide covering: approved storage locations, encryption requirements, access controls, retention periods, and deletion procedures.",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     }
   ])
 
-  const [conflictingRequirements, setConflictingRequirements] = useState([
+  const [conflictingRequirements, setConflictingRequirements] = useState<ConflictingRequirement[]>([
     {
       id: 1,
       requirement: "Password complexity",
@@ -76,7 +119,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       ],
       status: 'pending',
       suggestedModification: "Update all password requirements to enforce a minimum of 12 characters, including at least one uppercase letter, one lowercase letter, one number, and one special character.",
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 2,
@@ -93,7 +137,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       ],
       status: 'pending',
       suggestedModification: "Update procedures to require video call verification for remote employees, in-person verification for office employees, and manager approval in all cases. Emergency procedures should require CISO team approval.",
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 3,
@@ -110,7 +155,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       ],
       status: 'pending',
       suggestedModification: "Implement privileged access management system for temporary elevated rights. Standard users have no admin rights, developers can request time-limited admin access with automatic revocation.",
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 4,
@@ -127,7 +173,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       ],
       status: 'pending',
       suggestedModification: "Update policies to clarify: VPN required for accessing internal network resources, SSO-enabled cloud apps can be accessed directly. Add network segmentation requirements and conditional access policies based on risk level.",
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 5,
@@ -144,7 +191,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       ],
       status: 'pending',
       suggestedModification: "Implement unified guest access system: Visitors register through reception portal, receive time-limited access codes via SMS, and must agree to acceptable use policy. Remove all posted wifi passwords.",
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 6,
@@ -161,7 +209,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       ],
       status: 'pending',
       suggestedModification: "Update all documentation to reflect: MDM enrollment required for native email apps, web-only access permitted without enrollment but with enhanced MFA requirements. Add risk warnings for web-only access.",
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     }
   ])
 
@@ -223,14 +272,15 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
     }
   ])
 
-  const [bestPracticeImprovements, setBestPracticeImprovements] = useState([
+  const [bestPracticeImprovements, setBestPracticeImprovements] = useState<BestPracticeImprovement[]>([
     {
       id: 1,
       currentPractice: "Password resets require phone call to help desk",
       suggestedImprovement: "Implement self-service password reset portal with MFA verification, automated identity verification, and audit logging. Help desk should only handle exceptional cases.",
       framework: "NIST Digital Identity Guidelines",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 2,
@@ -238,7 +288,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       suggestedImprovement: "Deploy automated incident ticket creation from email reports, phishing button alerts, and security tools. Include severity classification, required fields, and automatic routing based on incident type.",
       framework: "ITIL Service Management",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 3,
@@ -246,7 +297,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       suggestedImprovement: "Implement identity governance platform with self-service access requests, automated approvals for standard access, and integration with HR systems for role-based access control.",
       framework: "ISO 27001",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 4,
@@ -254,7 +306,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       suggestedImprovement: "Develop interactive security knowledge base with guided troubleshooting, video tutorials, and AI-powered search. Include feedback mechanism and automatic updates based on new incidents.",
       framework: "HDI Support Center Certification",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 5,
@@ -262,7 +315,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       suggestedImprovement: "Create automated software request portal with pre-approved software catalog, security scanning integration, and automated deployment through endpoint management system.",
       framework: "CIS Controls",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     },
     {
       id: 6,
@@ -270,7 +324,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       suggestedImprovement: "Implement dynamic incident response playbooks with automated data collection, guided resolution steps, and integration with security tools for rapid response.",
       framework: "SANS Incident Handler's Handbook",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     }, 
     {
       id: 1,
@@ -278,7 +333,8 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       suggestedImprovement: "Implement continuous penetration testing using automated tools, supplemented by quarterly manual penetration tests.",
       framework: "NIST Cybersecurity Framework",
       status: 'pending',
-      modifiedContent: ''
+      modifiedContent: '',
+      prbStatus: undefined
     }
   ])
 
@@ -323,7 +379,7 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
             item.id === id
               ? {
                   ...item,
-                  status: action,
+                  status: action as 'pending' | 'accepted' | 'modified',
                   modifiedContent: action === 'modified' ? (value || item.modifiedContent) : item.modifiedContent
                 }
               : item
@@ -350,7 +406,7 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
             item.id === id
               ? {
                   ...item,
-                  status: action,
+                  status: action as 'pending' | 'accepted' | 'modified',
                   modifiedContent: action === 'modified' ? (value || item.modifiedContent) : item.modifiedContent
                 }
               : item
@@ -406,7 +462,7 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       <Button 
         size="small"
         icon="FeatherCheckCircle"
-        variant={item.status === 'brand-secondary' ? 'brand-secondary' : 'brand-secondary'}
+        variant="brand-secondary"
         onClick={() => handleAction(item.id, 'accepted', category)}
       >
         Accept
@@ -433,7 +489,7 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       </Dialog>
       <Button 
         size="small" 
-        variant={item.status === 'brand-secondary' ? 'brand-secondary' : 'brand-secondary'}
+        variant="brand-secondary"
         onClick={() => handleAction(item.id, 'rejected', category)}
         icon="FeatherXCircle"
       >
@@ -442,6 +498,45 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
     </div>
   )
 
+  const getPrbStatusVariant = (status?: string) => {
+    switch (status) {
+      case 'Pending':
+        return 'secondary'
+      case 'Approved':
+        return 'default'
+      case 'Rejected':
+        return 'destructive'
+      default:
+        return 'outline'
+    }
+  }
+
+  const hasModifications = () => {
+    return (
+      lackOfDocumentation.some(item => (item.status === 'accepted' || item.status === 'modified') && !item.prbStatus) ||
+      conflictingRequirements.some(item => (item.status === 'accepted' || item.status === 'modified') && !item.prbStatus) ||
+      bestPracticeImprovements.some(item => (item.status === 'accepted' || item.status === 'modified') && !item.prbStatus)
+    )
+  }
+
+  const hasActiveRequests = () => {
+    return (
+      lackOfDocumentation.some(item => item.prbStatus === 'Pending') ||
+      conflictingRequirements.some(item => item.prbStatus === 'Pending') ||
+      bestPracticeImprovements.some(item => item.prbStatus === 'Pending')
+    )
+  }
+
+  const handleRequestApproval = () => {
+    // Implementation for submitting to PRB
+    // This would update the prbStatus of selected items to 'Pending'
+  }
+
+  const handleRevokeRequest = () => {
+    // Implementation for revoking PRB request
+    // This would clear the prbStatus of selected items
+  }
+
   return (
     <div className="container mx-auto p-4 space-y-8">
       <div className="flex justify-between items-center">
@@ -449,11 +544,12 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
       </div>
       
       <Tabs defaultValue="lack-of-documentation">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="lack-of-documentation">Lack of Documentation</TabsTrigger>
           <TabsTrigger value="conflicting-requirements">Conflicting Requirements</TabsTrigger>
           <TabsTrigger value="outdated-docs">Outdated Documentation</TabsTrigger>
           <TabsTrigger value="best-practices">Best Practice Improvements</TabsTrigger>
+          <TabsTrigger value="approvals">Leadership Approvals</TabsTrigger>
         </TabsList>
         
         <TabsContent value="lack-of-documentation">
@@ -500,7 +596,7 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
                           <div className="flex space-x-2">
                             <Button
                               size="medium"
-                              variant={item.status === 'brand-secondary' ? 'brand-secondary' : 'brand-secondary'}
+                              variant="brand-secondary"
                               onClick={() => handleAction(item.id, 'accepted', 'conflictingRequirements')}
                               icon="FeatherCheckCircle"
                             >
@@ -587,6 +683,110 @@ export function SuggestedModifications({ onBack }: { onBack: () => void }) {
                   {renderActionButtons(item, 'bestPracticeImprovements')}
                 </div>
               ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="approvals">
+          <Card>
+            <CardHeader>
+              <CardTitle>Policy Review Board Approvals</CardTitle>
+              <CardDescription>Review and submit policy modifications for PRB approval.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {/* Lack of Documentation Updates */}
+                {lackOfDocumentation.filter(item => item.status === 'accepted' || item.status === 'modified').length > 0 && (
+                  <div className="border rounded-lg p-4">
+                    <h3 className="text-lg font-semibold mb-4">Documentation Updates</h3>
+                    {lackOfDocumentation
+                      .filter(item => item.status === 'accepted' || item.status === 'modified')
+                      .map(item => (
+                        <div key={item.id} className="mb-4 last:mb-0">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h4 className="font-medium">{item.question}</h4>
+                              <p className="text-sm text-muted-foreground">
+                                {item.modifiedContent || item.suggestedUpdate}
+                              </p>
+                            </div>
+                            <Badge variant={getPrbStatusVariant(item.prbStatus)}>
+                              {item.prbStatus || 'Not Submitted'}
+                            </Badge>
+                          </div>
+                        </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Conflicting Requirements Updates */}
+                {conflictingRequirements.filter(item => item.status === 'accepted' || item.status === 'modified').length > 0 && (
+                  <div className="border rounded-lg p-4">
+                    <h3 className="text-lg font-semibold mb-4">Requirement Conflict Resolutions</h3>
+                    {conflictingRequirements
+                      .filter(item => item.status === 'accepted' || item.status === 'modified')
+                      .map(item => (
+                        <div key={item.id} className="mb-4 last:mb-0">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h4 className="font-medium">{item.requirement}</h4>
+                              <p className="text-sm text-muted-foreground">
+                                {item.modifiedContent || item.suggestedModification}
+                              </p>
+                            </div>
+                            <Badge variant={getPrbStatusVariant(item.prbStatus)}>
+                              {item.prbStatus || 'Not Submitted'}
+                            </Badge>
+                          </div>
+                        </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Best Practice Updates */}
+                {bestPracticeImprovements.filter(item => item.status === 'accepted' || item.status === 'modified').length > 0 && (
+                  <div className="border rounded-lg p-4">
+                    <h3 className="text-lg font-semibold mb-4">Best Practice Improvements</h3>
+                    {bestPracticeImprovements
+                      .filter(item => item.status === 'accepted' || item.status === 'modified')
+                      .map(item => (
+                        <div key={item.id} className="mb-4 last:mb-0">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h4 className="font-medium">{item.currentPractice}</h4>
+                              <p className="text-sm text-muted-foreground">
+                                {item.modifiedContent || item.suggestedImprovement}
+                              </p>
+                            </div>
+                            <Badge variant={getPrbStatusVariant(item.prbStatus)}>
+                              {item.prbStatus || 'Not Submitted'}
+                            </Badge>
+                          </div>
+                        </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex justify-end space-x-4 mt-6">
+                  <Button
+                    variant="brand-primary"
+                    icon="FeatherCheckCircle2"
+                    onClick={() => handleRequestApproval()}
+                    disabled={!hasModifications()}
+                  >
+                    Request PRB Approval
+                  </Button>
+                  <Button
+                    variant="brand-secondary"
+                    icon="FeatherXCircle"
+                    onClick={() => handleRevokeRequest()}
+                    disabled={!hasActiveRequests()}
+                  >
+                    Revoke Request
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
