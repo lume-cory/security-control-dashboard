@@ -36,10 +36,15 @@ export function HomeViewWrapper() {
             Acme Inc
           </span>
         </div>
-        <div className="flex w-full items-center justify-between overflow-x-auto" >
-          <Breadcrumbs>
-            <Breadcrumbs.Item onClick={() => router.push('/agents')}>Agents </Breadcrumbs.Item>
-            < Breadcrumbs.Divider />
+        <div className="flex w-full items-center justify-between overflow-x-auto">
+          <Breadcrumbs className="flex items-center gap-1">
+            <Breadcrumbs.Item
+              onClick={() => router.push('/agents')}
+              className="cursor-pointer hover:underline"
+            >
+              Agents
+            </Breadcrumbs.Item>
+            <Breadcrumbs.Divider />
             <Breadcrumbs.Item active={true}>
               Compliance & Policy Reviewer
             </Breadcrumbs.Item>

@@ -129,8 +129,8 @@ export const HomeViewComponent: React.FC<HomeViewComponentProps> = ({ onNavigate
               onClick={handleClick}
             />
             <AlertCard
-              title="NIST Cybersecurity Framework v2.0"
-              description="A new version of NIST Cybersecurity Framework was recently published. The Information Security Policy is misaligned with 4 controls."
+              title="NIST CSF v2.0"
+              description="A new version of NIST Cybersecurity Framework (CSF) v2.0 security framework was recently published. The Information Security Policy is misaligned with 4 controls."
               aligned={96}
               nonAligned={4}
               onClick={handleClick}
