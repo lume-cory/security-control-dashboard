@@ -3,6 +3,7 @@ import { criControls } from '../../../data/control-frameworks/cri-profile-v2';
 import { ispSections } from '../../../data/policies/information-security-policy';
 import { iso42001Controls } from '../../../data/control-frameworks/iso-42001';
 import { aiPolicySections } from '../../../data/policies/ai-responsible-use-policy';
+import { nistCsfV2Controls } from '../../../data/control-frameworks/nist-csf-v2';
 
 export const options = {
   regulation: ['Digital Operational Resilience Act (DORA)', 'UK General Data Protection Regulation (UK GDPR)', 'EU General Data Protection Regulation (EU GDPR)', 'California Consumer Privacy Act (CCPA)', 'NIS2 Directive', 'EU AI Act','Federal Information Security Management Act (FISMA)', 'Payment Card Industry Data Security Standard (PCI DSS)', 'Health Insurance Portability and Accountability Act (HIPAA)'],
@@ -19,6 +20,7 @@ export interface Requirement {
   // Control fields (optional)
   controlId?: string | null;
   controlCategory?: string;
+  controlSubCategory?: string;
   controlText?: string;
   // Policy fields (optional)
   policyId?: string | null;
@@ -421,6 +423,91 @@ export const iso42001AiPolicyRequirements: Requirement[] = [
   }
 ];
 
+//Data for NIST CSF v2 and Information Security Policy
+export const nistCsfIspRequirements: Requirement[] = [
+    {
+      id: '1',
+      article: '',
+      subArticle: '',
+      regulationText: '',
+      controlId: nistCsfV2Controls[0].controlId,
+      controlCategory: nistCsfV2Controls[0].category,
+      controlText: nistCsfV2Controls[0].controlStatement,
+      policyId: ispSections[0].policyId,
+      policyCategory: 'GOVERN / Organizational Context',
+      confidenceInterval: 95,
+      policyText: ispSections[0].text
+    },
+    {
+      id: '2',
+      article: '',
+      subArticle: '',
+      regulationText: '',
+      controlId: nistCsfV2Controls[38].controlId,
+      controlCategory: nistCsfV2Controls[38].category,
+      controlText: nistCsfV2Controls[38].controlStatement,
+      policyId: null,
+      suggestedPolicyCategory: 'IDENTIFY / Risk Assessment',
+      confidenceInterval: 90,
+      suggestedPolicyText: `1. Risk Assessment Framework
+  1.1. Risk Assessment Requirements:
+  - Conduct regular risk assessments of critical assets and systems
+  - Document and prioritize identified risks
+  - Develop and implement risk mitigation strategies`
+    },
+    {
+      id: '3',
+      article: '',
+      subArticle: '',
+      regulationText: '',
+      controlId: nistCsfV2Controls[32].controlId,
+      controlCategory: nistCsfV2Controls[32].category,
+      controlText: nistCsfV2Controls[32].controlStatement,
+      policyId: null,
+      suggestedPolicyCategory: 'IDENTIFY / Asset Management',
+      confidenceInterval: 88,
+      suggestedPolicyText: `1. Asset Management Program
+  1.1. Asset Inventory Requirements:
+  - Maintain comprehensive inventory of all IT assets
+  - Regular updates and validation of asset inventory
+  - Classification of assets based on criticality`
+    },
+    {
+      id: '4',
+      article: '',
+      subArticle: '',
+      regulationText: '',
+      controlId: nistCsfV2Controls[56].controlId,
+      controlCategory: nistCsfV2Controls[56].category,
+      controlText: nistCsfV2Controls[56].controlStatement,
+      policyId: null,
+      suggestedPolicyCategory: 'PROTECT / Access Control',
+      confidenceInterval: 92,
+      suggestedPolicyText: `1. Access Control Policy
+  1.1. Access Management Requirements:
+  - Implement role-based access control
+  - Regular access reviews and updates
+  - Secure authentication mechanisms`
+    },
+    {
+      id: '5',
+      article: '',
+      subArticle: '',
+      regulationText: '',
+      controlId: nistCsfV2Controls[60].controlId,
+      controlCategory: nistCsfV2Controls[60].category,
+      controlText: nistCsfV2Controls[60].controlStatement,
+      policyId: null,
+      suggestedPolicyCategory: 'PROTECT / Data Security',
+      confidenceInterval: 94,
+      suggestedPolicyText: `1. Data Protection Standards
+  1.1. Data Security Requirements:
+  - Encryption of sensitive data at rest and in transit
+  - Regular data backup and validation
+  - Secure data disposal procedures`
+    }
+  ];
+
 export function getRequirements(regulation: string | null, securityControl: string | null, companyPolicy: string | null): Requirement[] {
   if (regulation === 'Digital Operational Resilience Act (DORA)' && 
       securityControl === 'Cyber Risk Institute (CRI) Profile v2.0' && 
@@ -434,6 +521,10 @@ export function getRequirements(regulation: string | null, securityControl: stri
              securityControl === 'ISO 42001 - AI Management Systems' &&
              companyPolicy === 'AI Responsible Use Policy v1.0') {
     return iso42001AiPolicyRequirements;
+  } else if (regulation === null &&
+             securityControl === 'NIST Cybersecurity Framework (CSF) v2' &&
+             companyPolicy === 'Information Security Policy v7') {
+    return nistCsfIspRequirements;
   }
   return [];
 }

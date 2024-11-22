@@ -165,142 +165,152 @@ export function ComplianceMapperComponent({ onBack }: ComplianceMapperProps) {
 
   return (
     <div className="w-full h-full relative">
-      <Card className="w-full mx-auto">
-        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-          <CardTitle className="mb-4 sm:mb-0">Compliance Mapper</CardTitle>
-          <Button onClick={handleUploadClick} className="w-full sm:w-auto">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add New
-          </Button>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <label htmlFor="regulation" className="text-sm font-medium">
-                Regulation
-              </label>
-              <Select 
-                value={selectedRegulation || 'none'} 
-                onValueChange={(value) => handleSelectChange(value, setSelectedRegulation)}
-              >
-                <SelectTrigger id="regulation">
-                  <SelectValue>{selectedRegulation || 'Select Regulation'}</SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">None</SelectItem>
-                  {hardcodedOptions.regulation.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="securityControl" className="text-sm font-medium">
-                Security Control
-              </label>
-              <Select 
-                value={selectedSecurityControl || 'none'} 
-                onValueChange={(value) => handleSelectChange(value, setSelectedSecurityControl)}
-              >
-                <SelectTrigger id="securityControl">
-                  <SelectValue>{selectedSecurityControl || 'Select Security Control'}</SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">None</SelectItem>
-                  {hardcodedOptions.securityControl.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="companyPolicy" className="text-sm font-medium">
-                Company Policy
-              </label>
-              <Select 
-                value={selectedCompanyPolicy || 'none'} 
-                onValueChange={(value) => handleSelectChange(value, setSelectedCompanyPolicy)}
-              >
-                <SelectTrigger id="companyPolicy">
-                  <SelectValue>{selectedCompanyPolicy || 'Select Company Policy'}</SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">None</SelectItem>
-                  {hardcodedOptions.companyPolicy.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <Button onClick={handleCreateMapping} className="w-full">
-            Create Mapping
-          </Button>
-          {notification && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-              <span className="block sm:inline">{notification}</span>
-            </div>
-          )}
-          {showDashboard && (
-            <>
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                <h2 className="text-lg font-semibold mb-2 sm:mb-0">Mapping Results</h2>
-                <Button onClick={toggleFilter} variant="outline" className="w-full sm:w-auto">
-                  {filterMode === 'all' ? 'Show Missing Coverage' : 'Show All Mappings'}
-                </Button>
+      {selectedRequirement ? (
+        <DetailedView 
+          requirement={selectedRequirement} 
+          onClose={() => setSelectedRequirement(null)}
+          regulation={selectedRegulation || ''}
+          securityControl={selectedSecurityControl || ''}
+          companyPolicy={selectedCompanyPolicy || ''}
+        />
+      ) : (
+        <Card className="w-full mx-auto">
+          <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+            <CardTitle className="mb-4 sm:mb-0">Compliance Mapper</CardTitle>
+            <Button onClick={handleUploadClick} className="w-full sm:w-auto">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add New
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <label htmlFor="regulation" className="text-sm font-medium">
+                  Regulation
+                </label>
+                <Select 
+                  value={selectedRegulation || 'none'} 
+                  onValueChange={(value) => handleSelectChange(value, setSelectedRegulation)}
+                >
+                  <SelectTrigger id="regulation">
+                    <SelectValue>{selectedRegulation || 'Select Regulation'}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">None</SelectItem>
+                    {hardcodedOptions.regulation.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      {selectedRegulation && (
-                        <>
-                          <TableHead>Regulation Article</TableHead>
-                          <TableHead>Sub-Article</TableHead>
-                          <TableHead>Requirement Description</TableHead>
-                        </>
-                      )}
-                      <TableHead>Control Category</TableHead>
-                      <TableHead>Control ID</TableHead>
-                      <TableHead>Control Text</TableHead>
-                      <TableHead>Security Policy ID</TableHead>
-                      <TableHead>Mapping Confidence Interval</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredRequirements.map((requirement) => (
-                      <TableRow
-                        key={requirement.id}
-                        className="cursor-pointer hover:bg-gray-100"
-                        onClick={() => handleRowClick(requirement)}
-                      >
+              <div className="space-y-2">
+                <label htmlFor="securityControl" className="text-sm font-medium">
+                  Security Control
+                </label>
+                <Select 
+                  value={selectedSecurityControl || 'none'} 
+                  onValueChange={(value) => handleSelectChange(value, setSelectedSecurityControl)}
+                >
+                  <SelectTrigger id="securityControl">
+                    <SelectValue>{selectedSecurityControl || 'Select Security Control'}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">None</SelectItem>
+                    {hardcodedOptions.securityControl.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="companyPolicy" className="text-sm font-medium">
+                  Company Policy
+                </label>
+                <Select 
+                  value={selectedCompanyPolicy || 'none'} 
+                  onValueChange={(value) => handleSelectChange(value, setSelectedCompanyPolicy)}
+                >
+                  <SelectTrigger id="companyPolicy">
+                    <SelectValue>{selectedCompanyPolicy || 'Select Company Policy'}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">None</SelectItem>
+                    {hardcodedOptions.companyPolicy.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <Button onClick={handleCreateMapping} className="w-full">
+              Create Mapping
+            </Button>
+            {notification && (
+              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                <span className="block sm:inline">{notification}</span>
+              </div>
+            )}
+            {showDashboard && (
+              <>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                  <h2 className="text-lg font-semibold mb-2 sm:mb-0">Mapping Results</h2>
+                  <Button onClick={toggleFilter} variant="outline" className="w-full sm:w-auto">
+                    {filterMode === 'all' ? 'Show Missing Coverage' : 'Show All Mappings'}
+                  </Button>
+                </div>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
                         {selectedRegulation && (
                           <>
-                            <TableCell>{requirement.article}</TableCell>
-                            <TableCell>{requirement.subArticle}</TableCell>
-                            <TableCell>{requirement.regulationText}</TableCell>
+                            <TableHead>Regulation Article</TableHead>
+                            <TableHead>Sub-Article</TableHead>
+                            <TableHead>Requirement Description</TableHead>
                           </>
                         )}
-                        <TableCell>{requirement.controlCategory}</TableCell>
-                        <TableCell>{requirement.controlId}</TableCell>
-                        <TableCell>{requirement.controlText}</TableCell>
-                        <TableCell>{requirement.policyId}</TableCell>
-                        <TableCell>{requirement.confidenceInterval}%</TableCell>
+                        <TableHead>Control Category</TableHead>
+                        <TableHead>Control ID</TableHead>
+                        <TableHead>Control Text</TableHead>
+                        <TableHead>Security Policy ID</TableHead>
+                        <TableHead>Mapping Confidence Interval</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredRequirements.map((requirement) => (
+                        <TableRow
+                          key={requirement.id}
+                          className="cursor-pointer hover:bg-gray-100"
+                          onClick={() => handleRowClick(requirement)}
+                        >
+                          {selectedRegulation && (
+                            <>
+                              <TableCell>{requirement.article}</TableCell>
+                              <TableCell>{requirement.subArticle}</TableCell>
+                              <TableCell>{requirement.regulationText}</TableCell>
+                            </>
+                          )}
+                          <TableCell>{requirement.controlCategory}</TableCell>
+                          <TableCell>{requirement.controlId}</TableCell>
+                          <TableCell>{requirement.controlText}</TableCell>
+                          <TableCell>{requirement.policyId}</TableCell>
+                          <TableCell>{requirement.confidenceInterval}%</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      )}
       <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
         <DialogContent  className="sm:max-w-[425px]">
           <DialogHeader>
@@ -316,15 +326,6 @@ export function ComplianceMapperComponent({ onBack }: ComplianceMapperProps) {
           </div>
         </DialogContent>
       </Dialog>
-      {selectedRequirement && (
-        <DetailedView 
-          requirement={selectedRequirement} 
-          onClose={() => setSelectedRequirement(null)}
-          regulation={selectedRegulation || ''}
-          securityControl={selectedSecurityControl || ''}
-          companyPolicy={selectedCompanyPolicy || ''}
-        />
-      )}
     </div>
   )
 }
