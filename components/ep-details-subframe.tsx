@@ -99,117 +99,221 @@ const EndpointProtectionDetailsView: React.FC<DetailViewWithActivityProps> = ({ 
       title: "MTTR/MTTD by Region or Country",
       finding: "The Asia-Pacific region has a Mean Time to Detect (MTTD) of 72 hours, which is 50% higher than the global average.",
       response: "Investigate regional disparities by assessing local security team capabilities and resource allocations. Provide additional training or augment staff in underperforming regions to improve detection times. Consider centralizing monitoring efforts or implementing standardized processes across all regions.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "Slow detection times directly impact our APAC expansion strategy and customer trust KPIs. Improving MTTD is crucial for maintaining our service level agreements with enterprise clients in the region.",
+        strategyLink: "/strategy/apac-expansion-2024.pdf#security-metrics",
+        strategyName: "APAC Market Expansion Strategy 2024"
+      }
     },
     {
       title: "Incident Frequency by Location",
       finding: "There is a higher incident frequency in the Phillipines, accounting for 35% of total incidents.",
-      response: "Assess the local regulatory environment and compliance requirements that may impact security measures. Enhance security protocols in that location, and adapt policies to align with regional regulations. Engage with local authorities if necessary to improve compliance.",
-      impact: "High"
+      response: "Assess the local regulatory environment and compliance requirements that may impact security measures. Enhance security protocols in that location, and adapt policies to address specific regional threats.",
+      impact: "High",
+      businessContext: {
+        description: "High incident rates in the Philippines affect our operational efficiency KPI and market penetration goals. This metric is key to our Southeast Asian market growth strategy.",
+        strategyLink: "/strategy/sea-market-expansion.pdf#risk-assessment",
+        strategyName: "SEA Growth & Risk KPIs"
+      }
     },
     {
       title: "Incident Rates by Department",
       finding: "The Finance Department experiences 40% more security incidents compared to other departments.",
       response: "Provide targeted security awareness training to the Finance team, emphasizing phishing and malware threats. Review and adjust access privileges to ensure they align with the principle of least privilege. Standardize operational practices by aligning them with organizational security policies.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "Finance department security directly impacts our SOX compliance and financial data integrity KPIs. Reducing incidents is crucial for maintaining investor confidence and regulatory compliance.",
+        strategyLink: "/strategy/financial-controls-2024.pdf#security",
+        strategyName: "Financial Controls & Compliance Strategy"
+      }
     },
     {
       title: "Incidents Over Time and Seasonal Patterns",
       finding: "There is a spike in incidents during holiday seasons, with incidents increasing by 50%.",
       response: "Adjust staffing schedules to ensure adequate coverage during peak times, including holidays. Increase monitoring efforts during these periods. Conduct pre-holiday security briefings to heighten awareness among remaining staff.",
-      impact: "Medium"
+      impact: "Medium",
+      businessContext: {
+        description: "Holiday season security impacts our Q4 revenue targets and customer satisfaction KPIs. Maintaining security during peak business periods is essential for our retail strategy.",
+        strategyLink: "/strategy/retail-success.pdf#seasonal-planning",
+        strategyName: "Retail Success Metrics & Planning"
+      }
     },
     {
       title: "Incidents by Network Segment",
       finding: "The Demilitarized Zone (DMZ) network segment accounts for 60% of detected threats.",
       response: "Assess and enhance network segmentation to contain threats more effectively. Implement additional access controls and security measures in the DMZ. Regularly review firewall and IDS/IPS configurations to ensure they are up to date and effective.",
-      impact: "Critical"
+      impact: "Critical",
+      businessContext: {
+        description: "DMZ security directly affects our cloud services availability SLA and customer-facing services. This aligns with our cloud-first infrastructure strategy and reliability targets.",
+        strategyLink: "/strategy/cloud-infrastructure.pdf#reliability",
+        strategyName: "Cloud Infrastructure Reliability Goals"
+      }
     },
     {
       title: "Incidents Linked to Third Parties",
       finding: "15% of security incidents are linked to the Akaunting accounting software tool.",
       response: "Strengthen vendor management practices by incorporating stringent security requirements into contracts and SLAs. Conduct regular security audits of third-party vendors. Limit vendor access to necessary systems and monitor their activities closely.",
-      impact: "High"
-    }, 
+      impact: "High",
+      businessContext: {
+        description: "Third-party risk management is key to our supply chain resilience strategy and vendor management KPIs. This impacts our overall operational risk profile.",
+        strategyLink: "/strategy/vendor-management.pdf#risk",
+        strategyName: "Vendor Risk Management Framework"
+      }
+    },
     {
       title: "Increase in Ransomware Attempts",
       finding: "20% increase in ransomware attempts targeting endpoint devices in the last quarter.",
       response: "Implement advanced EDR solutions with AI-powered threat detection and automated response capabilities.",
-      impact: "Critical"
+      impact: "Critical",
+      businessContext: {
+        description: "Ransomware protection is crucial for our business continuity goals and cyber insurance requirements. This directly impacts our operational resilience strategy.",
+        strategyLink: "/strategy/cyber-resilience.pdf#ransomware",
+        strategyName: "Cyber Resilience Strategy"
+      }
     },
     {
       title: "Outdated Operating Systems",
       finding: "15% of endpoints are running outdated or unsupported operating systems.",
       response: "Accelerate OS upgrade program and implement compensating controls for devices that cannot be immediately upgraded.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "OS modernization is part of our digital workplace transformation strategy. This impacts our technology debt reduction KPIs and operational efficiency goals.",
+        strategyLink: "/strategy/digital-workplace.pdf#modernization",
+        strategyName: "Digital Workplace Transformation"
+      }
     },
     {
       title: "Mobile Device Security Gaps",
       finding: "30% of mobile devices have outdated MDM profiles or disabled security features.",
       response: "Enforce stricter MDM policies and conduct user awareness training on mobile device security.",
-      impact: "Medium"
+      impact: "Medium",
+      businessContext: {
+        description: "Mobile security directly impacts our remote work enablement strategy and BYOD program success metrics. This is crucial for our workforce mobility initiatives.",
+        strategyLink: "/strategy/mobile-workforce.pdf#security",
+        strategyName: "Mobile Workforce Strategy"
+      }
     },
     {
       title: "Unauthorized Software Installations",
       finding: "Increase in unauthorized software installations, particularly on remote work devices.",
       response: "Strengthen application whitelisting policies and implement more robust software installation controls.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "Software control is essential for our IT governance and compliance strategy. This affects our security posture KPIs and software license management goals.",
+        strategyLink: "/strategy/it-governance.pdf#software-control",
+        strategyName: "IT Governance Framework"
+      }
     },
     {
       title: "Delayed Patch Application",
       finding: "Critical patches are taking an average of 15 days to be applied across all endpoints.",
       response: "Streamline patch management process and consider automated patch deployment for critical vulnerabilities.",
-      impact: "Critical"
+      impact: "Critical",
+      businessContext: {
+        description: "Patch management efficiency impacts our vulnerability management KPIs and cyber insurance requirements. This is crucial for maintaining our security certifications.",
+        strategyLink: "/strategy/vulnerability-management.pdf#patching",
+        strategyName: "Vulnerability Management Program"
+      }
     },
     {
       title: "Insufficient Endpoint Visibility",
       finding: "20% of endpoints have intermittent or no reporting to central management consoles.",
       response: "Improve endpoint visibility through network access control and regular connectivity checks.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "Endpoint visibility is key to our Zero Trust security strategy and asset management KPIs. This impacts our overall security monitoring capabilities.",
+        strategyLink: "/strategy/zero-trust.pdf#endpoint-visibility",
+        strategyName: "Zero Trust Security Framework"
+      }
     },
     {
       title: "Low Patch Compliance in Specific Departments",
       finding: "The Sales Department has a patch compliance rate of 65%, significantly lower than the organizational average of 90%.",
       response: "Schedule dedicated patch deployment sessions for the Sales Department, possibly during non-peak hours, and implement automated patch management tools to ensure timely updates on their devices.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "Sales department security affects our customer data protection goals and sales enablement strategy. This impacts our ability to maintain industry certifications needed for enterprise sales.",
+        strategyLink: "/strategy/sales-enablement.pdf#security",
+        strategyName: "Sales Enablement Security Requirements"
+      }
     },
     {
       title: "High Malware Rate on Unmanaged Devices",
       finding: "Unmanaged devices (e.g., contractor laptops) account for 50% of malware infections despite representing only 10% of total endpoints.",
       response: "Enforce a policy requiring all devices to meet security standards before network access, including the installation of approved endpoint protection software; implement Network Access Control (NAC) to restrict network access for non-compliant devices.",
-      impact: "Critical"
+      impact: "Critical",
+      businessContext: {
+        description: "Contractor device security is crucial for our external workforce management strategy. This impacts our third-party risk management KPIs and compliance requirements.",
+        strategyLink: "/strategy/contractor-management.pdf#security",
+        strategyName: "Contractor Security Standards"
+      }
     },
     {
       title: "Increase in Unauthorized Software Installs",
       finding: "There is a 30% increase in unauthorized software installations over the last quarter.",
       response: "Deploy application whitelisting tools to prevent the execution of unapproved software and enhance user training on software policies; conduct regular audits and enforce disciplinary measures for violations.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "Software control is essential for our IT governance and compliance strategy. This affects our security posture KPIs and software license management goals.",
+        strategyLink: "/strategy/it-governance.pdf#software-control",
+        strategyName: "IT Governance Framework"
+      }
     },
     {
       title: "Outdated Endpoint Protection Software",
       finding: "15% of endpoints are running outdated versions of the protection software.",
-      response: "Configure automatic updates for all endpoint protection software and perform an immediate update sweep to bring all endpoints to the latest version; set up compliance reporting to monitor and address future discrepancies.",
-      impact: "High"
+      response: "Prioritize the implementaiton of Island to these endpoints that are running outdated software.",
+      impact: "Medium",
+      businessContext: {
+        description: "We've made the decision to leverage Island Enterprise Browser on all endpoints as a primary alternative to endpoint AV protection software.",
+        strategyLink: "/strategy/vulnerability-management.pdf#endpoint-protection",
+        strategyName: "Vulnerability Management Program"
+      }
     },
     {
       title: "High Rate of Protection Alerts Ignored",
       finding: "40% of critical alerts from endpoint protection systems are not investigated within the required SLA.",
       response: "Revise incident response procedures to prioritize critical alerts, increase staffing or reallocate resources to ensure timely investigations, and implement automated alert triage to filter and escalate important alerts.",
-      impact: "Critical"
+      impact: "Critical",
+      businessContext: {
+        description: "Alert response time is a key metric in our incident management strategy and SOC 2 compliance. This directly affects our mean time to respond (MTTR) KPIs.",
+        strategyLink: "/strategy/incident-management.pdf#sla",
+        strategyName: "Incident Management SLAs"
+      }
     },
     {
       title: "Users Disabling Endpoint Protection",
       finding: "There are 50 instances of users disabling endpoint protection software in the past month.",
       response: "Restrict user permissions to prevent tampering with security software, communicate strict policies against disabling protections, and initiate disciplinary actions for non-compliance.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "User compliance with security controls is essential for our security awareness program KPIs and cyber insurance requirements. This impacts our security culture initiatives.",
+        strategyLink: "/strategy/security-culture.pdf#compliance",
+        strategyName: "Security Culture & Awareness Program"
+      }
     },
     {
       title: "Ineffective Endpoint Backup Procedures",
       finding: "25% of endpoints have not completed successful backups in the past month.",
       response: "Deploy centralized backup solutions to ensure regular and successful backups, monitor backup logs, and address failures promptly to prevent data loss.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "Endpoint backup completion rates affect our data protection strategy and business continuity KPIs. This is crucial for maintaining our recovery point objectives (RPO).",
+        strategyLink: "/strategy/data-protection.pdf#backup",
+        strategyName: "Data Protection & Recovery Strategy"
+      }
     }
   ]
+
+  const sortByImpactLevel = (items: any[]) => {
+    const impactOrder = { 'Critical': 0, 'High': 1, 'Medium': 2, 'Low': 3 };
+    return [...items].sort((a, b) => {
+      const aOrder = impactOrder[a.impact as keyof typeof impactOrder] ?? 4;
+      const bOrder = impactOrder[b.impact as keyof typeof impactOrder] ?? 4;
+      return aOrder - bOrder;
+    });
+  };
 
   const [activeTab, setActiveTab] = useState("compliance");
 
@@ -276,97 +380,125 @@ const EndpointProtectionDetailsView: React.FC<DetailViewWithActivityProps> = ({ 
       <div className="flex w-full grow shrink-0 basis-0 flex-col items-start">
         <div className="flex w-full items-end">
           <div className="flex h-px w-6 flex-none flex-col items-center gap-2 bg-neutral-200" />
-          {/* <Tabs>
-            <Tabs.Item active={true}>Findings (6)</Tabs.Item>
-            <Tabs.Item active={false}>Metrics (9)</Tabs.Item>
-            <Tabs.Item>Resources (6)</Tabs.Item>
-            <Tabs.Item>Compliance (3)</Tabs.Item> */}
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList>
-                <TabsTrigger value="compliance">Frameworks</TabsTrigger>
-                <TabsTrigger value="resources">Security Resources</TabsTrigger>
-                <TabsTrigger value="metrics">Metrics</TabsTrigger>
-                <TabsTrigger value="analysis">Analysis</TabsTrigger>
-              </TabsList>
-              <TabsContent value="compliance">
-                {compliance.map((func, index) => (
-                  <div key={index} className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">{func.function}</h3>
-                    {func.categories.map((category, catIndex) => (
-                      <div key={catIndex} className="ml-4 mb-2">
-                        <h4 className="text-md font-medium mb-1">{category.name}</h4>
-                        <ul className="list-disc list-inside ml-4">
-                          {category.controls.map((control, controlIndex) => (
-                            <li key={controlIndex} className="text-sm mb-2">
-                              <strong>{control.id}:</strong> {control.description}
-                              <p className="ml-6 text-muted-foreground">{control.details}</p>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </TabsContent>
-              <TabsContent value="resources">
-                {resources.map((resource, index) => (
-                  <div key={index} className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">{resource.category}</h3>
-                    <ul className="list-disc list-inside ml-4">
-                      {resource.tools.map((tool, toolIndex) => (
-                        <li key={toolIndex} className="text-sm mb-1">
-                          {tool}
-                          <p className="ml-6 text-muted-foreground">{resource.details}</p>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </TabsContent>
-              <TabsContent value="metrics">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {metrics.map((metric, index) => (
-                    <Card key={index}>
-                      <CardHeader>
-                        <CardTitle className="text-lg">{metric.category}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-2xl font-bold">{metric.value}</p>
-                        <p className="text-sm text-muted-foreground">{metric.description}</p>
-                        <p className={`text-sm ${metric.trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
-                          {metric.trend === 'up' ? '↑' : '↓'} Trend
-                        </p>
-                      </CardContent>
-                    </Card>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList>
+              <TabsTrigger value="compliance">Frameworks</TabsTrigger>
+              <TabsTrigger value="resources">Security Resources</TabsTrigger>
+              <TabsTrigger value="metrics">Metrics</TabsTrigger>
+              <TabsTrigger value="analysis">Analysis</TabsTrigger>
+            </TabsList>
+            <TabsContent value="compliance">
+              {compliance.map((func, index) => (
+                <div key={index} className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">{func.function}</h3>
+                  {func.categories.map((category, catIndex) => (
+                    <div key={catIndex} className="ml-4 mb-2">
+                      <h4 className="text-md font-medium mb-1">{category.name}</h4>
+                      <ul className="list-disc list-inside ml-4">
+                        {category.controls.map((control, controlIndex) => (
+                          <li key={controlIndex} className="text-sm mb-2">
+                            <strong>{control.id}:</strong> {control.description}
+                            <p className="ml-6 text-muted-foreground">{control.details}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   ))}
                 </div>
-              </TabsContent>
-              <TabsContent value="analysis">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {analysis.map((item, index) => (
-                    <Card key={index}>
-                      <CardHeader>
-                        <CardTitle className="text-lg">{item.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm mb-2"><strong>Finding:</strong> {item.finding}</p>
-                        <p className="text-sm mb-2"><strong>Response:</strong> {item.response}</p>
-                        <p className={`text-sm font-semibold ${
-                          item.impact === 'Critical' ? 'text-red-500' :
-                          item.impact === 'High' ? 'text-orange-500' :
-                          item.impact === 'Medium' ? 'text-yellow-500' :
-                          'text-green-500'
-                        }`}>
-                          Impact: {item.impact}
-                        </p>
-                        <Button className="w-full mt-4 px-4 py-2" variant="brand-secondary">
+              ))}
+            </TabsContent>
+            <TabsContent value="resources">
+              {resources.map((resource, index) => (
+                <div key={index} className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">{resource.category}</h3>
+                  <ul className="list-disc list-inside ml-4">
+                    {resource.tools.map((tool, toolIndex) => (
+                      <li key={toolIndex} className="text-sm mb-1">
+                        {tool}
+                        <p className="ml-6 text-muted-foreground">{resource.details}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </TabsContent>
+            <TabsContent value="metrics">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {metrics.map((metric, index) => (
+                  <Card key={index}>
+                    <CardHeader>
+                      <CardTitle className="text-lg">{metric.category}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-2xl font-bold">{metric.value}</p>
+                      <p className="text-sm text-muted-foreground">{metric.description}</p>
+                      <p className={`text-sm ${metric.trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
+                        {metric.trend === 'up' ? '↑' : '↓'} Trend
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="analysis">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {sortByImpactLevel(analysis).map((item, index) => (
+                  <Card key={index} className="bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-2">
+                      <div className="flex justify-between items-start">
+                        <CardTitle className="text-lg font-semibold">{item.title}</CardTitle>
+                        <Badge variant={
+                          item.impact === 'Critical' ? 'error' :
+                          item.impact === 'High' ? 'warning' :
+                          item.impact === 'Medium' ? 'neutral' :
+                          'success'
+                        }>
+                          {item.impact}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="bg-muted/50 p-3 rounded-md">
+                          <p className="text-sm font-medium">Finding</p>
+                          <p className="text-sm text-muted-foreground">{item.finding}</p>
+                        </div>
+                        
+                        <div className="bg-muted/50 p-3 rounded-md">
+                          <p className="text-sm font-medium">Response</p>
+                          <p className="text-sm text-muted-foreground">{item.response}</p>
+                        </div>
+
+                        <div className="bg-muted/50 p-3 rounded-md">
+                          <p className="text-sm font-medium">Business Context</p>
+                          <p className="text-sm text-muted-foreground">{item.businessContext.description}</p>
+                          <div className="mt-2">
+                            <a 
+                              href={item.businessContext.strategyLink}
+                              className="text-sm text-primary hover:underline inline-flex items-center gap-1"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <span className="text-primary">📄</span>
+                              {item.businessContext.strategyName}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 flex gap-2">
+                        <Button className="w-full" variant="brand-secondary">
+                          View Details
+                        </Button>
+                        <Button className="w-full" variant="brand-primary">
                           Take Action
                         </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
           </Tabs>
         </div>
       </div>

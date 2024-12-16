@@ -15,8 +15,30 @@ import { PieChart } from "@/subframe/components/PieChart";
 import { useRouter } from "next/navigation";
 import { SecurityTicketTable } from "./SecurityTicketTable";
 
+const getMonthName = (monthIndex: number): string => {
+  const date = new Date();
+  date.setMonth(monthIndex);
+  return date.toLocaleString('default', { month: 'short' });
+};
+
 function SecurityTicketReport() {
   const router = useRouter();
+  const [selectedMonths, setSelectedMonths] = React.useState(6);
+  const [slackSourceCount, setSlackSourceCount] = React.useState(421);
+  const [zendeskSourceCount, setZendeskSourceCount] = React.useState(1240);
+  const [emailSourceCount, setEmailSourceCount] = React.useState(132);
+  const [phishingTagsSourceCount, setPhishingTagsSourceCount] = React.useState(279);
+  const [engineeringInboundCount, setEngineeringInboundCount] = React.useState(527);
+  const [salesInboundCount, setSalesInboundCount] = React.useState(356);
+  const [itInboundCount, setItInboundCount] = React.useState(295);
+  const [supportInboundCount, setSupportInboundCount] = React.useState(132);
+  const [execInboundCount, setExecInboundCount] = React.useState(32);
+  const [auditInboundCount, setAuditInboundCount] = React.useState(45);
+  const [regulatorInboundCount, setRegulatorInboundCount] = React.useState(53);
+
+  const handleMonthChange = (value: string) => {
+    setSelectedMonths(parseInt(value));
+  };
 
   return (
     <DefaultPageLayout>
@@ -56,15 +78,15 @@ function SecurityTicketReport() {
             label=""
             placeholder="6 months"
             helpText=""
-            value={undefined}
-            onValueChange={(value: string) => { }}
+            value={selectedMonths.toString()}
+            onValueChange={handleMonthChange}
           >
-            <Select.Item value="1 month">1 month</Select.Item>
-            <Select.Item value="3 months">3 months</Select.Item>
-            <Select.Item value="6 months">6 months</Select.Item>
-            <Select.Item value="1 year">1 year</Select.Item>
-            <Select.Item value="2 years">2 years</Select.Item>
-            <Select.Item value="3 years">3 years</Select.Item>
+            <Select.Item value="1">1 month</Select.Item>
+            <Select.Item value="3">3 months</Select.Item>
+            <Select.Item value="6">6 months</Select.Item>
+            <Select.Item value="12">1 year</Select.Item>
+            <Select.Item value="24">2 years</Select.Item>
+            <Select.Item value="36">3 years</Select.Item>
           </Select>
         </div>
         <div className="flex w-full flex-wrap items-start gap-4">
@@ -164,14 +186,14 @@ function SecurityTicketReport() {
             stacked={true}
             categories={["Urgent", "High", "Medium", "Low"]}
             data={[
-              { Year: "May", Urgent: 120, High: 110, Medium: 100, Low: 90 },
-              { Year: "June", Urgent: 130, High: 95, Medium: 105, Low: 115 },
-              { Year: "July", Urgent: 115, High: 105, Medium: 110, Low: 120 },
-              { Year: "Aug", Urgent: 125, High: 120, Medium: 90, Low: 130 },
-              { Year: "Sep", Urgent: 110, High: 130, Medium: 85, Low: 140 },
-              { Year: "Oct", Urgent: 135, High: 100, Medium: 95, Low: 150 },
+              { month: getMonthName(new Date().getMonth() - 6), Urgent: 120, High: 110, Medium: 100, Low: 90 },
+              { month: getMonthName(new Date().getMonth() - 5), Urgent: 130, High: 95, Medium: 105, Low: 115 },
+              { month: getMonthName(new Date().getMonth() - 4), Urgent: 115, High: 105, Medium: 110, Low: 120 },
+              { month: getMonthName(new Date().getMonth() - 3), Urgent: 125, High: 120, Medium: 90, Low: 130 },
+              { month: getMonthName(new Date().getMonth() - 2), Urgent: 110, High: 130, Medium: 85, Low: 140 },
+              { month: getMonthName(new Date().getMonth() -1), Urgent: 135, High: 100, Medium: 95, Low: 150 },
             ]}
-            index={"Year"}
+            index={"month"}
           />
         </div>
         <div className="flex w-full flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
@@ -209,11 +231,11 @@ function SecurityTicketReport() {
                       name="FeatherSlack"
                     />
                     <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
-                      421
+                      {slackSourceCount}
                     </span>
                   </div>
                   <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
-                    May 31 – Today
+                    {`${new Date(new Date().setMonth(new Date().getMonth() - selectedMonths)).toLocaleDateString()} – Today`}
                   </span>
                 </div>
                 <div className="flex min-w-[160px] grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-neutral-50 px-6 py-6">
@@ -231,11 +253,11 @@ function SecurityTicketReport() {
                       name="FeatherTicket"
                     />
                     <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
-                      1.24k
+                      {zendeskSourceCount}
                     </span>
                   </div>
                   <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
-                    May 31 – Today
+                    {`${new Date(new Date().setMonth(new Date().getMonth() - selectedMonths)).toLocaleDateString()} – Today`}
                   </span>
                 </div>
               </div>
@@ -255,11 +277,11 @@ function SecurityTicketReport() {
                       name="FeatherMail"
                     />
                     <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
-                      132
+                      {emailSourceCount}
                     </span>
                   </div>
                   <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
-                    May 31 – Today
+                    {`${new Date(new Date().setMonth(new Date().getMonth() - selectedMonths)).toLocaleDateString()} – Today`}
                   </span>
                 </div>
                 <div className="flex min-w-[160px] grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-neutral-50 px-6 py-6">
@@ -277,11 +299,11 @@ function SecurityTicketReport() {
                       name="FeatherFish"
                     />
                     <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
-                      279
+                      {phishingTagsSourceCount}
                     </span>
                   </div>
                   <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
-                    May 31 – Today
+                    {`${new Date(new Date().setMonth(new Date().getMonth() - selectedMonths)).toLocaleDateString()} – Today`}
                   </span>
                 </div>
               </div>
@@ -290,10 +312,10 @@ function SecurityTicketReport() {
               className="h-auto w-52 flex-none self-stretch"
               category={"Count"}
               data={[
-                { Source: "Slack", Count: 421 },
-                { Source: "Zendesk", Count: 1240 },
-                { Source: "Email", Count: 132 },
-                { Source: "Phishing Tags", Count: 279 },
+                { Source: "Slack", Count: slackSourceCount },
+                { Source: "Zendesk", Count: zendeskSourceCount },
+                { Source: "Email", Count: emailSourceCount },
+                { Source: "Phishing Tags", Count: phishingTagsSourceCount },
               ]}
               index={"Source"}
             />
@@ -320,15 +342,18 @@ function SecurityTicketReport() {
           </div>
           <div className="flex w-full flex-wrap items-start gap-4">
             <PieChart
-              className="h-auto w-52 flex-none self-stretch"
+              className="h-auto w-64 flex-none self-stretch"
               category={"Issues"}
               data={[
-                { Major: "Engineering", Issues: 527 },
-                { Major: "Sales", Issues: 356 },
-                { Major: "IT", Issues: 295 },
-                { Major: "Exec", Issues: 32 },
+                { Department: "Engineering", Issues: engineeringInboundCount },
+                { Department: "Sales", Issues: salesInboundCount },
+                { Department: "IT", Issues: itInboundCount },
+                { Department: "Support", Issues: supportInboundCount },
+                { Department: "Exec", Issues: execInboundCount },
+                { Department: "Audit", Issues: auditInboundCount },
+                { Department: "Regulator", Issues: regulatorInboundCount },
               ]}
-              index={"Major"}
+              index={"Department"}
             />
             <div className="flex grow shrink-0 basis-0 flex-wrap items-start gap-4">
               <div className="flex min-w-[160px] grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-neutral-50 px-6 py-6">
@@ -336,17 +361,17 @@ function SecurityTicketReport() {
                   <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
                     Engineering
                   </span>
-                  <span className="text-body-bold font-body-bold text-success-600">
+                  <span className="text-body-bold font-body-bold text-error-700">
                     +1.3%
                   </span>
                 </div>
                 <div className="flex w-full items-center gap-2">
                   <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
-                    527
+                    {engineeringInboundCount}
                   </span>
                 </div>
                 <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
-                  May 31 – Today
+                  {`${new Date(new Date().setMonth(new Date().getMonth() - selectedMonths)).toLocaleDateString()} – Today`}
                 </span>
               </div>
               <div className="flex min-w-[160px] grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-neutral-50 px-6 py-6">
@@ -354,17 +379,17 @@ function SecurityTicketReport() {
                   <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
                     Sales
                   </span>
-                  <span className="text-body-bold font-body-bold text-success-600">
+                  <span className="text-body-bold font-body-bold text-error-700">
                     +6.1%
                   </span>
                 </div>
                 <div className="flex w-full items-center gap-2">
                   <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
-                    356
+                    {salesInboundCount}
                   </span>
                 </div>
                 <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
-                  May 31 – Today
+                  {`${new Date(new Date().setMonth(new Date().getMonth() - selectedMonths)).toLocaleDateString()} – Today`}
                 </span>
               </div>
             </div>
@@ -374,35 +399,93 @@ function SecurityTicketReport() {
                   <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
                     IT
                   </span>
-                  <span className="text-body-bold font-body-bold text-error-700">
+                  <span className="text-body-bold font-body-bold text-success-600">
                     -5.3%
                   </span>
                 </div>
                 <div className="flex w-full items-center gap-2">
                   <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
-                    295
+                    {itInboundCount}
                   </span>
                 </div>
                 <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
-                  May 31 – Today
+                  {`${new Date(new Date().setMonth(new Date().getMonth() - selectedMonths)).toLocaleDateString()} – Today`}
                 </span>
               </div>
               <div className="flex min-w-[160px] grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-neutral-50 px-6 py-6">
                 <div className="flex w-full items-center gap-2">
                   <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                    Exec
+                    Customer Support
                   </span>
-                  <span className="text-body-bold font-body-bold text-error-700">
+                  <span className="text-body-bold font-body-bold text-success-600">
                     -2.4%
                   </span>
                 </div>
                 <div className="flex w-full items-center gap-2">
                   <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
-                    32
+                    {supportInboundCount}
                   </span>
                 </div>
                 <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
-                  May 31 – Today
+                  {`${new Date(new Date().setMonth(new Date().getMonth() - selectedMonths)).toLocaleDateString()} – Today`}
+                </span>
+              </div>
+            </div>
+            <div className="flex grow shrink-0 basis-0 flex-wrap items-start gap-4">
+              <div className="flex min-w-[160px] grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-neutral-50 px-6 py-6">
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                    Exec
+                  </span>
+                  <span className="text-body-bold font-body-bold text-success-600">
+                    -2.4%
+                  </span>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
+                    {execInboundCount}
+                  </span>
+                </div>
+                <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
+                  {`${new Date(new Date().setMonth(new Date().getMonth() - selectedMonths)).toLocaleDateString()} – Today`}
+                </span>
+              </div>
+              <div className="flex min-w-[160px] grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-neutral-50 px-6 py-6">
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                    Audit
+                  </span>
+                  <span className="text-body-bold font-body-bold text-error-700">
+                    +8.4%
+                  </span>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
+                    {auditInboundCount}
+                  </span>
+                </div>
+                <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
+                  {`${new Date(new Date().setMonth(new Date().getMonth() - selectedMonths)).toLocaleDateString()} – Today`}
+                </span>
+              </div>
+            </div>
+            <div className="flex grow shrink-0 basis-0 flex-wrap items-start gap-4">
+              <div className="flex min-w-[160px] grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-neutral-50 px-6 py-6">
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                    Regulator
+                  </span>
+                  <span className="text-body-bold font-body-bold text-error-700">
+                    +10.3%
+                  </span>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
+                    {regulatorInboundCount}
+                  </span>
+                </div>
+                <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
+                  {`${new Date(new Date().setMonth(new Date().getMonth() - selectedMonths)).toLocaleDateString()} – Today`}
                 </span>
               </div>
             </div>
@@ -463,16 +546,16 @@ function SecurityTicketReport() {
                   />
                   <div className="flex flex-col items-start gap-1">
                     <span className="line-clamp-1 w-full text-body-bold font-body-bold text-default-font">
-                      Endpoint App Installs
+                      App & Vendor Install Requests
                     </span>
                     <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
-                      274 tickets
+                      174 tickets
                     </span>
                   </div>
                 </div>
                 <span className="line-clamp-3 text-body font-body text-subtext-color text-center">
-                  Requests to use applications blocked or disabled by company
-                  policy
+                  Requests from employees to use applications, triaged and approved based 
+                  on residual risk of the vendor. 
                 </span>
                 <Button
                   variant="brand-secondary"
@@ -490,16 +573,17 @@ function SecurityTicketReport() {
                   />
                   <div className="flex flex-col items-start gap-1">
                     <span className="line-clamp-1 w-full text-body-bold font-body-bold text-default-font">
-                      Security Questionnaires
+                      External Security Questions
                     </span>
                     <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
-                      73 tickets
+                      124 tickets
                     </span>
                   </div>
                 </div>
                 <span className="line-clamp-3 text-body font-body text-subtext-color text-center">
-                  Requests to fill out or clarify security questionnaires from
-                  clients
+                  Requests to fill out questionnaires or clarify security practices from
+                  clients (customers, sales prospects, partners, vendors, auditors, 
+                  or regulators)
                 </span>
                 <Button
                   variant="brand-secondary"
@@ -611,6 +695,188 @@ function SecurityTicketReport() {
                 >
                   See Examples
                 </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex w-full flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
+          <div className="flex w-full items-center gap-2">
+            <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">
+              Estimated Savings
+            </span>
+          </div>
+          <div className="flex w-full flex-col gap-4">
+            {/* App Requests Group */}
+            <div className="flex w-full flex-row items-start gap-4">
+              <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-neutral-50 px-6 py-6">
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                    App Requests
+                  </span>
+                  <span className="text-body-bold font-body-bold text-success-600">
+                    -15.3%
+                  </span>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
+                    2.1 days
+                  </span>
+                </div>
+                <span className="text-caption font-caption text-subtext-color">
+                  Time to Resolve
+                </span>
+              </div>
+              <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-neutral-50 px-6 py-6">
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                    App Request Triage
+                  </span>
+                  <span className="text-body-bold font-body-bold text-success-600">
+                    -23.1%
+                  </span>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
+                    1.2 hrs
+                  </span>
+                </div>
+                <span className="text-caption font-caption text-subtext-color">
+                  Hours Spent
+                </span>
+              </div>
+              <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-brand-50 px-6 py-6">
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                    Total Time Saved
+                  </span>
+                  <span className="text-caption font-caption text-subtext-color">
+                    Compared to baseline
+                  </span>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
+                    156.4 hrs
+                  </span>
+                </div>
+                <span className="text-caption font-caption text-subtext-color">
+                  Last {selectedMonths} months
+                </span>
+              </div>
+            </div>
+
+            {/* Eng Design Reviews Group */}
+            <div className="flex w-full flex-row items-start gap-4">
+              <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-neutral-50 px-6 py-6">
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                    Eng Design Reviews
+                  </span>
+                  <span className="text-body-bold font-body-bold text-success-600">
+                    -8.4%
+                  </span>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
+                    3.4 days
+                  </span>
+                </div>
+                <span className="text-caption font-caption text-subtext-color">
+                  Time to Resolve
+                </span>
+              </div>
+              <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-neutral-50 px-6 py-6">
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                    Eng Design Triage
+                  </span>
+                  <span className="text-body-bold font-body-bold text-success-600">
+                    -12.7%
+                  </span>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
+                    2.8 hrs
+                  </span>
+                </div>
+                <span className="text-caption font-caption text-subtext-color">
+                  Hours Spent
+                </span>
+              </div>
+              <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-brand-50 px-6 py-6">
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                    Total Time Saved
+                  </span>
+                  <span className="text-caption font-caption text-subtext-color">
+                    Compared to baseline
+                  </span>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
+                    243.2 hrs
+                  </span>
+                </div>
+                <span className="text-caption font-caption text-subtext-color">
+                  Last {selectedMonths} months
+                </span>
+              </div>
+            </div>
+
+            {/* Client Requests Group */}
+            <div className="flex w-full flex-row items-start gap-4">
+              <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-neutral-50 px-6 py-6">
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                    Client Requests
+                  </span>
+                  <span className="text-body-bold font-body-bold text-success-600">
+                    -19.2%
+                  </span>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
+                    1.8 days
+                  </span>
+                </div>
+                <span className="text-caption font-caption text-subtext-color">
+                  Time to Resolve
+                </span>
+              </div>
+              <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-neutral-50 px-6 py-6">
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                    Client Request Triage
+                  </span>
+                  <span className="text-body-bold font-body-bold text-success-600">
+                    -25.8%
+                  </span>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
+                    0.9 hrs
+                  </span>
+                </div>
+                <span className="text-caption font-caption text-subtext-color">
+                  Hours Spent
+                </span>
+              </div>
+              <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1 rounded-md bg-brand-50 px-6 py-6">
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                    Total Time Saved
+                  </span>
+                  <span className="text-caption font-caption text-subtext-color">
+                    Compared to baseline
+                  </span>
+                </div>
+                <div className="flex w-full items-center gap-2">
+                  <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-1 font-heading-1 text-brand-700">
+                    189.6 hrs
+                  </span>
+                </div>
+                <span className="text-caption font-caption text-subtext-color">
+                  Last {selectedMonths} months
+                </span>
               </div>
             </div>
           </div>

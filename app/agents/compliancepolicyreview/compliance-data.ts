@@ -102,6 +102,19 @@ export const doraCriRequirements: Requirement[] = [
       - Be redundant and resilient
       - Use secure protocols
       - Be monitored for accuracy`
+  }, 
+  {
+    id: '5',
+    article: doraArticles[5].article,
+    subArticle: doraArticles[5].subArticle,
+    regulationText: doraArticles[5].text,
+    controlId: criControls[186].profileId,
+    controlCategory: criControls[186].category,
+    controlText: criControls[186].diagnosticStatement,
+    policyId: ispSections[2].policyId,
+    policyCategory: ispSections[2].category,
+    confidenceInterval: 95,
+    policyText: ispSections[2].text
   }
 ];
 
@@ -132,6 +145,19 @@ export const criIspRequirements: Requirement[] = [
     policyCategory: ispSections[1].category,
     confidenceInterval: 92,
     policyText: ispSections[1].text
+  }, 
+  {
+    id: '3',
+    article: '',
+    subArticle: '',
+    regulationText: '',
+    controlId: criControls[186].profileId,
+    controlCategory: criControls[186].category,
+    controlText: criControls[186].diagnosticStatement,
+    policyId: ispSections[2].policyId,
+    policyCategory: ispSections[2].category,
+    confidenceInterval: 95,
+    policyText: ispSections[2].text
   }
 ];
 

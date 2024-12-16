@@ -123,7 +123,7 @@ export const HomeViewComponent: React.FC<HomeViewComponentProps> = ({ onNavigate
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <AlertCard
               title="Security Policy v7"
-              description="The latest revision of the Information Security Policy has resulted in misalignment with the NIST Cybersecurity Frameworks and 3 regulations."
+              description="The latest revision of the Information Security Policy has resulted in misalignment with the NIST Cybersecurity Frameworks, CRI Profiles, and 3 regulations."
               aligned={94}
               nonAligned={13}
               onClick={handleClick}

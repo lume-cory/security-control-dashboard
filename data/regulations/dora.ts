@@ -35,5 +35,11 @@ export const doraArticles: DoraArticle[] = [
     article: 'Article 7',
     subArticle: '7.2',
     text: 'Ensure systems are technologically resilient under adverse conditions.'
+  }, 
+  {
+    id: '9.2',
+    article: 'Article 9',
+    subArticle: '9.2',
+    text: 'Financial entities must implement ICT security measures to ensure the resilience, continuity, and availability of critical systems while maintaining high standards of data availability, authenticity, integrity, and confidentiality across all stages—at rest, in use, and in transit..'
   }
 ];

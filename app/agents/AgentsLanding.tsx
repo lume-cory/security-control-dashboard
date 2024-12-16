@@ -231,7 +231,7 @@ function AgentsLandingPage() {
               <div className="flex w-full flex-col items-start gap-2">
                 <div className="flex w-full items-center justify-between">
                   <span className="text-body-bold font-body-bold text-default-font">
-                    Security Policy &amp; Doc Suggestions
+                    Vendor &amp; App Approval Agent
                   </span>
                   <div className="flex items-center gap-2">
                     <IconButton
@@ -252,9 +252,9 @@ function AgentsLandingPage() {
                 </div>
                 <div className="flex flex-col items-start gap-2">
                   <span className="line-clamp-3 text-body font-body text-subtext-color">
-                    This agent is continuously reviewing policy and
-                    documentation to find gaps or conflicts, recommending and
-                    automatically updating content after approval
+                    This agent receives requests from employees to use or renew
+                    vendors or applications and automatically generates supporting data and risk analysis
+                    based on security policy and vendor risk management data
                   </span>
                 </div>
               </div>
@@ -264,7 +264,7 @@ function AgentsLandingPage() {
                 className="h-10 w-full flex-none"
                 variant="brand-secondary"
                 size="large"
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => { router.push('/agents/vendorreview') }}
               >
                 Let&apos;s Go!
               </Button>

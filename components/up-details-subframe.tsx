@@ -114,41 +114,69 @@ const ProvisioningDetailsView: React.FC<DetailViewWithActivityProps> = ({ onClos
       title: "Inconsistent Access Rights",
       finding: "Users in different departments with the same roles have varying access rights.",
       response: "Implement centralized RBAC system to standardize access rights across departments.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "Access standardization is crucial for our operational efficiency and compliance strategy. This impacts our ability to maintain consistent security controls across departments.",
+        strategyLink: "/strategy/access-standardization.pdf#rbac",
+        strategyName: "Access Control Standardization"
+      }
     },
     {
       title: "Delayed De-Provisioning",
       finding: "30% of user accounts remain active for >10 days after employee departure.",
       response: "Integrate HR systems with IAM tools to automate de-provisioning process.",
-      impact: "Critical"
+      impact: "Critical",
+      businessContext: {
+        description: "Timely de-provisioning is essential for our HR compliance and data security strategy. This directly impacts our ability to protect intellectual property during employee transitions.",
+        strategyLink: "/strategy/employee-lifecycle.pdf#offboarding",
+        strategyName: "Employee Lifecycle Security"
+      }
     },
     {
       title: "High Number of Orphaned Accounts",
       finding: "150 active accounts without associated users identified.",
       response: "Conduct audit to disable orphaned accounts and establish regular reconciliation.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "Account hygiene affects our license management efficiency and security posture KPIs. This is tied to our cost optimization and compliance initiatives.",
+        strategyLink: "/strategy/account-management.pdf#orphaned",
+        strategyName: "Account Management Framework"
+      }
     },
     {
       title: "Provisioning Errors",
       finding: "15% of provisioning requests result in incorrect access levels.",
       response: "Introduce automated workflows with predefined role templates.",
-      impact: "Medium"
+      impact: "Medium",
+      businessContext: {
+        description: "Accurate provisioning is key to our employee productivity and security compliance goals. This impacts our operational efficiency KPIs and user satisfaction metrics.",
+        strategyLink: "/strategy/user-provisioning.pdf#automation",
+        strategyName: "User Provisioning Automation"
+      }
     },
     {
       title: "Lack of Visibility",
       finding: "Security team lacks comprehensive view of user access rights.",
       response: "Deploy access governance tool for centralized visibility and control.",
-      impact: "High"
-    },
-    {
-      title: "Non-Compliance with Policies",
-      finding: "40% of provisioning activities bypass formal approval processes.",
-      response: "Enforce mandatory policies through centralized IAM system and staff training.",
-      impact: "Critical"
+      impact: "High",
+      businessContext: {
+        description: "Access visibility is fundamental to our security governance and audit readiness strategy. This affects our ability to demonstrate compliance and manage access risks.",
+        strategyLink: "/strategy/access-governance.pdf#visibility",
+        strategyName: "Access Governance Program"
+      }
     }
   ]
 
   const [activeTab, setActiveTab] = useState("compliance");
+
+  const sortByImpactLevel = (items: any[]) => {
+    const impactOrder = { 'Critical': 0, 'High': 1, 'Medium': 2, 'Low': 3 };
+    return [...items].sort((a, b) => {
+      const aOrder = impactOrder[a.impact as keyof typeof impactOrder] ?? 4;
+      const bOrder = impactOrder[b.impact as keyof typeof impactOrder] ?? 4;
+      return aOrder - bOrder;
+    });
+  };
 
   return (
     <div className="flex h-full w-full flex-col items-start bg-default-background">
@@ -213,97 +241,125 @@ const ProvisioningDetailsView: React.FC<DetailViewWithActivityProps> = ({ onClos
       <div className="flex w-full grow shrink-0 basis-0 flex-col items-start">
         <div className="flex w-full items-end">
           <div className="flex h-px w-6 flex-none flex-col items-center gap-2 bg-neutral-200" />
-          {/* <Tabs>
-            <Tabs.Item active={true}>Findings (6)</Tabs.Item>
-            <Tabs.Item active={false}>Metrics (9)</Tabs.Item>
-            <Tabs.Item>Resources (6)</Tabs.Item>
-            <Tabs.Item>Compliance (3)</Tabs.Item> */}
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList>
-                <TabsTrigger value="compliance">Frameworks</TabsTrigger>
-                <TabsTrigger value="resources">Security Resources</TabsTrigger>
-                <TabsTrigger value="metrics">Metrics</TabsTrigger>
-                <TabsTrigger value="analysis">Analysis</TabsTrigger>
-              </TabsList>
-              <TabsContent value="compliance">
-                {compliance.map((func, index) => (
-                  <div key={index} className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">{func.function}</h3>
-                    {func.categories.map((category, catIndex) => (
-                      <div key={catIndex} className="ml-4 mb-2">
-                        <h4 className="text-md font-medium mb-1">{category.name}</h4>
-                        <ul className="list-disc list-inside ml-4">
-                          {category.controls.map((control, controlIndex) => (
-                            <li key={controlIndex} className="text-sm mb-2">
-                              <strong>{control.id}:</strong> {control.description}
-                              <p className="ml-6 text-muted-foreground">{control.details}</p>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </TabsContent>
-              <TabsContent value="resources">
-                {resources.map((resource, index) => (
-                  <div key={index} className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">{resource.category}</h3>
-                    <ul className="list-disc list-inside ml-4">
-                      {resource.tools.map((tool, toolIndex) => (
-                        <li key={toolIndex} className="text-sm mb-1">
-                          {tool}
-                          <p className="ml-6 text-muted-foreground">{resource.details}</p>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </TabsContent>
-              <TabsContent value="metrics">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {metrics.map((metric, index) => (
-                    <Card key={index}>
-                      <CardHeader>
-                        <CardTitle className="text-lg">{metric.category}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-2xl font-bold">{metric.value}</p>
-                        <p className="text-sm text-muted-foreground">{metric.description}</p>
-                        <p className={`text-sm ${metric.trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
-                          {metric.trend === 'up' ? '↑' : '↓'} Trend
-                        </p>
-                      </CardContent>
-                    </Card>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList>
+              <TabsTrigger value="compliance">Frameworks</TabsTrigger>
+              <TabsTrigger value="resources">Security Resources</TabsTrigger>
+              <TabsTrigger value="metrics">Metrics</TabsTrigger>
+              <TabsTrigger value="analysis">Analysis</TabsTrigger>
+            </TabsList>
+            <TabsContent value="compliance">
+              {compliance.map((func, index) => (
+                <div key={index} className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">{func.function}</h3>
+                  {func.categories.map((category, catIndex) => (
+                    <div key={catIndex} className="ml-4 mb-2">
+                      <h4 className="text-md font-medium mb-1">{category.name}</h4>
+                      <ul className="list-disc list-inside ml-4">
+                        {category.controls.map((control, controlIndex) => (
+                          <li key={controlIndex} className="text-sm mb-2">
+                            <strong>{control.id}:</strong> {control.description}
+                            <p className="ml-6 text-muted-foreground">{control.details}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   ))}
                 </div>
-              </TabsContent>
-              <TabsContent value="analysis">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {analysis.map((item, index) => (
-                    <Card key={index}>
-                      <CardHeader>
-                        <CardTitle className="text-lg">{item.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm mb-2"><strong>Finding:</strong> {item.finding}</p>
-                        <p className="text-sm mb-2"><strong>Response:</strong> {item.response}</p>
-                        <p className={`text-sm font-semibold ${
-                          item.impact === 'Critical' ? 'text-red-500' :
-                          item.impact === 'High' ? 'text-orange-500' :
-                          item.impact === 'Medium' ? 'text-yellow-500' :
-                          'text-green-500'
-                        }`}>
-                          Impact: {item.impact}
-                        </p>
-                        <Button className="w-full mt-4 px-4 py-2" variant="brand-secondary">
+              ))}
+            </TabsContent>
+            <TabsContent value="resources">
+              {resources.map((resource, index) => (
+                <div key={index} className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">{resource.category}</h3>
+                  <ul className="list-disc list-inside ml-4">
+                    {resource.tools.map((tool, toolIndex) => (
+                      <li key={toolIndex} className="text-sm mb-1">
+                        {tool}
+                        <p className="ml-6 text-muted-foreground">{resource.details}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </TabsContent>
+            <TabsContent value="metrics">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {metrics.map((metric, index) => (
+                  <Card key={index}>
+                    <CardHeader>
+                      <CardTitle className="text-lg">{metric.category}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-2xl font-bold">{metric.value}</p>
+                      <p className="text-sm text-muted-foreground">{metric.description}</p>
+                      <p className={`text-sm ${metric.trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
+                        {metric.trend === 'up' ? '↑' : '↓'} Trend
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="analysis">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {sortByImpactLevel(analysis).map((item, index) => (
+                  <Card key={index} className="bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-2">
+                      <div className="flex justify-between items-start">
+                        <CardTitle className="text-lg font-semibold">{item.title}</CardTitle>
+                        <Badge variant={
+                          item.impact === 'Critical' ? 'error' :
+                          item.impact === 'High' ? 'warning' :
+                          item.impact === 'Medium' ? 'neutral' :
+                          'brand'
+                        }>
+                          {item.impact}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="bg-muted/50 p-3 rounded-md">
+                          <p className="text-sm font-medium">Finding</p>
+                          <p className="text-sm text-muted-foreground">{item.finding}</p>
+                        </div>
+                        
+                        <div className="bg-muted/50 p-3 rounded-md">
+                          <p className="text-sm font-medium">Response</p>
+                          <p className="text-sm text-muted-foreground">{item.response}</p>
+                        </div>
+
+                        <div className="bg-muted/50 p-3 rounded-md">
+                          <p className="text-sm font-medium">Business Context</p>
+                          <p className="text-sm text-muted-foreground">{item.businessContext.description}</p>
+                          <div className="mt-2">
+                            <a 
+                              href={item.businessContext.strategyLink}
+                              className="text-sm text-primary hover:underline inline-flex items-center gap-1"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <span className="text-primary">📄</span>
+                              {item.businessContext.strategyName}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 flex gap-2">
+                        <Button className="w-full" variant="brand-secondary">
+                          View Details
+                        </Button>
+                        <Button className="w-full" variant="brand-primary">
                           Take Action
                         </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
           </Tabs>
         </div>
       </div>

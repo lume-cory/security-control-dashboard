@@ -48,5 +48,28 @@ export const ispSections: PolicySection[] = [
     text: `01.1. Risk Management Framework Integration
 01.1.1. Technology and cybersecurity risk management strategies must be formally documented and approved by the Board or designated committee.
 01.1.2. These strategies must align with and support the organization's overall business objectives.`
+  },
+  {
+    id: 'pro-3',
+    policyId: 'PR.DP.ENC-01',
+    category: 'PROTECT / Data Protection / Encryption and Data Security',
+    text: `01.1. Data at Rest Protection Requirements
+01.1.1. All sensitive data stored in databases, file systems, or other storage media must be encrypted using industry-standard encryption algorithms (minimum AES-256).
+01.1.2. Encryption keys must be stored separately from the encrypted data and managed through a secure key management system.
+
+01.2. Encryption Standards and Implementation
+01.2.1. Strong cryptographic algorithms and protocols must be used for all data encryption operations.
+01.2.2. Legacy or deprecated encryption algorithms (e.g., DES, 3DES, RC4) are prohibited.
+01.2.3. Encryption implementations must be reviewed annually to ensure compliance with current security standards.
+
+01.3. Key Management
+01.3.1. Encryption keys must be rotated at least annually or immediately upon suspected compromise.
+01.3.2. Access to encryption keys must be strictly controlled and limited to authorized personnel only.
+01.3.3. Key backup and recovery procedures must be documented and tested regularly.
+
+01.4. Data Classification and Protection
+01.4.1. All data must be classified according to sensitivity levels and encrypted accordingly.
+01.4.2. Highly sensitive data must utilize additional protection measures such as field-level encryption.
+01.4.3. Regular audits must be conducted to ensure proper encryption of classified data.`
   }
 ];

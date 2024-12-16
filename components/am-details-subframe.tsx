@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { useState } from 'react';
+import React, { useState } from "react";
 import { DropdownMenu } from "@/subframe/components/DropdownMenu";
 import * as SubframeCore from "@subframe/core";
 import { IconButton } from "@/subframe/components/IconButton";
@@ -127,41 +126,80 @@ const AccessManagementDetailsView: React.FC<DetailViewWithActivityProps> = ({ on
       title: "Low Multi-Factor Authentication Adoption",
       finding: "Only 60% of users in the sales and marketing team have enabled Multi-Factor Authentication (MFA). The company average is 92% for other business units.",
       response: "Mandate MFA enrollment for all users, prioritizing high-risk and privileged accounts.",
-      impact: "Critical"
+      impact: "Critical",
+      businessContext: {
+        description: "MFA adoption directly impacts our zero trust security strategy and cyber insurance requirements. This is crucial for maintaining our security certifications and customer trust.",
+        strategyLink: "/strategy/zero-trust-security.pdf#mfa",
+        strategyName: "Zero Trust Security Implementation"
+      }
     },
     {
       title: "Delayed De-Provisioning of Access",
       finding: "Average of 7 days to revoke access for terminated employees. It appears this is largely due to a delay between the HR team's submission of termination requests and the IAM team's revocation of access.",
       response: "Check with the IT team to see what their ticketing and de-provisioning process is and if there is any way to automate it.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "Efficient de-provisioning is essential for our HR compliance and data protection KPIs. This impacts our ability to maintain SOX compliance and protect intellectual property.",
+        strategyLink: "/strategy/access-lifecycle.pdf#offboarding",
+        strategyName: "Access Lifecycle Management"
+      }
     },
     {
       title: "High Number of Inactive Accounts",
       finding: "18% of user accounts have not been accessed in over 90 days.",
       response: "Conduct an audit to identify and disable inactive accounts; establish an automated review process.",
-      impact: "Medium"
+      impact: "Medium",
+      businessContext: {
+        description: "Account cleanup affects our license management efficiency and security posture KPIs. This is tied to our cost optimization strategy for SaaS applications.",
+        strategyLink: "/strategy/license-optimization.pdf#inactive-accounts",
+        strategyName: "SaaS License Optimization Strategy"
+      }
     },
     {
       title: "Privileged Accounts Without Regular Review",
       finding: "12% of privileged accounts not reviewed in the past 6 months.",
       response: "Establish a mandatory quarterly review process for all privileged accounts.",
-      impact: "Critical"
+      impact: "Critical",
+      businessContext: {
+        description: "Privileged access management is crucial for our SOX compliance and audit readiness goals. This directly impacts our regulatory compliance strategy.",
+        strategyLink: "/strategy/privileged-access.pdf#review-process",
+        strategyName: "Privileged Access Management Framework"
+      }
     },
     {
       title: "Excessive Privileges Granted",
       finding: "22% of users have access permissions exceeding their job requirements.",
       response: "Implement role-based access controls (RBAC) to align user permissions with job functions.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "Right-sized access is key to our least privilege initiative and compliance requirements. This affects our overall risk management strategy and audit findings.",
+        strategyLink: "/strategy/least-privilege.pdf#rbac",
+        strategyName: "Least Privilege Access Strategy"
+      }
     },
     {
       title: "Increase in After-Hours Access Attempts",
       finding: "25% increase in unauthorized access attempts during weekends and non-business hours.",
       response: "Implement stricter access controls during off-hours by requiring additional authentication steps.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "After-hours security directly impacts our fraud prevention KPIs and operational security goals. This is crucial for protecting our 24/7 global operations.",
+        strategyLink: "/strategy/global-security.pdf#after-hours",
+        strategyName: "Global Operations Security Framework"
+      }
     }
   ]
 
   const [activeTab, setActiveTab] = useState("compliance");
+
+  const sortByImpactLevel = (items: any[]) => {
+    const impactOrder = { 'Critical': 0, 'High': 1, 'Medium': 2, 'Low': 3 };
+    return [...items].sort((a, b) => {
+      const aOrder = impactOrder[a.impact as keyof typeof impactOrder] ?? 4;
+      const bOrder = impactOrder[b.impact as keyof typeof impactOrder] ?? 4;
+      return aOrder - bOrder;
+    });
+  };
 
   return (
     <div className="flex h-full w-full flex-col items-start bg-default-background">
@@ -226,97 +264,125 @@ const AccessManagementDetailsView: React.FC<DetailViewWithActivityProps> = ({ on
       <div className="flex w-full grow shrink-0 basis-0 flex-col items-start">
         <div className="flex w-full items-end">
           <div className="flex h-px w-6 flex-none flex-col items-center gap-2 bg-neutral-200" />
-          {/* <Tabs>
-            <Tabs.Item active={true}>Findings (6)</Tabs.Item>
-            <Tabs.Item active={false}>Metrics (9)</Tabs.Item>
-            <Tabs.Item>Resources (6)</Tabs.Item>
-            <Tabs.Item>Compliance (3)</Tabs.Item> */}
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList>
-                <TabsTrigger value="compliance">Frameworks</TabsTrigger>
-                <TabsTrigger value="resources">Security Resources</TabsTrigger>
-                <TabsTrigger value="metrics">Metrics</TabsTrigger>
-                <TabsTrigger value="analysis">Analysis</TabsTrigger>
-              </TabsList>
-              <TabsContent value="compliance">
-                {compliance.map((func, index) => (
-                  <div key={index} className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">{func.function}</h3>
-                    {func.categories.map((category, catIndex) => (
-                      <div key={catIndex} className="ml-4 mb-2">
-                        <h4 className="text-md font-medium mb-1">{category.name}</h4>
-                        <ul className="list-disc list-inside ml-4">
-                          {category.controls.map((control, controlIndex) => (
-                            <li key={controlIndex} className="text-sm mb-2">
-                              <strong>{control.id}:</strong> {control.description}
-                              <p className="ml-6 text-muted-foreground">{control.details}</p>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </TabsContent>
-              <TabsContent value="resources">
-                {resources.map((resource, index) => (
-                  <div key={index} className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">{resource.category}</h3>
-                    <ul className="list-disc list-inside ml-4">
-                      {resource.tools.map((tool, toolIndex) => (
-                        <li key={toolIndex} className="text-sm mb-1">
-                          {tool}
-                          <p className="ml-6 text-muted-foreground">{resource.details}</p>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </TabsContent>
-              <TabsContent value="metrics">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {metrics.map((metric, index) => (
-                    <Card key={index}>
-                      <CardHeader>
-                        <CardTitle className="text-lg">{metric.category}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-2xl font-bold">{metric.value}</p>
-                        <p className="text-sm text-muted-foreground">{metric.description}</p>
-                        <p className={`text-sm ${metric.trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
-                          {metric.trend === 'up' ? '↑' : '↓'} Trend
-                        </p>
-                      </CardContent>
-                    </Card>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList>
+              <TabsTrigger value="compliance">Frameworks</TabsTrigger>
+              <TabsTrigger value="resources">Security Resources</TabsTrigger>
+              <TabsTrigger value="metrics">Metrics</TabsTrigger>
+              <TabsTrigger value="analysis">Analysis</TabsTrigger>
+            </TabsList>
+            <TabsContent value="compliance">
+              {compliance.map((func, index) => (
+                <div key={index} className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">{func.function}</h3>
+                  {func.categories.map((category, catIndex) => (
+                    <div key={catIndex} className="ml-4 mb-2">
+                      <h4 className="text-md font-medium mb-1">{category.name}</h4>
+                      <ul className="list-disc list-inside ml-4">
+                        {category.controls.map((control, controlIndex) => (
+                          <li key={controlIndex} className="text-sm mb-2">
+                            <strong>{control.id}:</strong> {control.description}
+                            <p className="ml-6 text-muted-foreground">{control.details}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   ))}
                 </div>
-              </TabsContent>
-              <TabsContent value="analysis">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {analysis.map((item, index) => (
-                    <Card key={index}>
-                      <CardHeader>
-                        <CardTitle className="text-lg">{item.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm mb-2"><strong>Finding:</strong> {item.finding}</p>
-                        <p className="text-sm mb-2"><strong>Response:</strong> {item.response}</p>
-                        <p className={`text-sm font-semibold ${
-                          item.impact === 'Critical' ? 'text-red-500' :
-                          item.impact === 'High' ? 'text-orange-500' :
-                          item.impact === 'Medium' ? 'text-yellow-500' :
-                          'text-green-500'
-                        }`}>
-                          Impact: {item.impact}
-                        </p>
-                        <Button className="w-full mt-4 px-4 py-2" variant="brand-secondary">
+              ))}
+            </TabsContent>
+            <TabsContent value="resources">
+              {resources.map((resource, index) => (
+                <div key={index} className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">{resource.category}</h3>
+                  <ul className="list-disc list-inside ml-4">
+                    {resource.tools.map((tool, toolIndex) => (
+                      <li key={toolIndex} className="text-sm mb-1">
+                        {tool}
+                        <p className="ml-6 text-muted-foreground">{resource.details}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </TabsContent>
+            <TabsContent value="metrics">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {metrics.map((metric, index) => (
+                  <Card key={index}>
+                    <CardHeader>
+                      <CardTitle className="text-lg">{metric.category}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-2xl font-bold">{metric.value}</p>
+                      <p className="text-sm text-muted-foreground">{metric.description}</p>
+                      <p className={`text-sm ${metric.trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
+                        {metric.trend === 'up' ? '↑' : '↓'} Trend
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="analysis">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {sortByImpactLevel(analysis).map((item, index) => (
+                  <Card key={index} className="bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-2">
+                      <div className="flex justify-between items-start">
+                        <CardTitle className="text-lg font-semibold">{item.title}</CardTitle>
+                        <Badge variant={
+                          item.impact === 'Critical' ? 'error' :
+                          item.impact === 'High' ? 'warning' :
+                          item.impact === 'Medium' ? 'neutral' :
+                          'success'
+                        }>
+                          {item.impact}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="bg-muted/50 p-3 rounded-md">
+                          <p className="text-sm font-medium">Finding</p>
+                          <p className="text-sm text-muted-foreground">{item.finding}</p>
+                        </div>
+                        
+                        <div className="bg-muted/50 p-3 rounded-md">
+                          <p className="text-sm font-medium">Response</p>
+                          <p className="text-sm text-muted-foreground">{item.response}</p>
+                        </div>
+
+                        <div className="bg-muted/50 p-3 rounded-md">
+                          <p className="text-sm font-medium">Business Context</p>
+                          <p className="text-sm text-muted-foreground">{item.businessContext.description}</p>
+                          <div className="mt-2">
+                            <a 
+                              href={item.businessContext.strategyLink}
+                              className="text-sm text-primary hover:underline inline-flex items-center gap-1"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <span className="text-primary">📄</span>
+                              {item.businessContext.strategyName}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 flex gap-2">
+                        <Button className="w-full" variant="brand-secondary">
+                          View Details
+                        </Button>
+                        <Button className="w-full" variant="brand-primary">
                           Take Action
                         </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
           </Tabs>
         </div>
       </div>

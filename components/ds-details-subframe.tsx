@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { useState } from 'react';
+import React, { useState } from "react";
 import { DropdownMenu } from "@/subframe/components/DropdownMenu";
 import * as SubframeCore from "@subframe/core";
 import { IconButton } from "@/subframe/components/IconButton";
@@ -141,41 +140,80 @@ const DataStorageDetailsView: React.FC<DetailViewWithActivityProps> = ({ onClose
       title: "Unencrypted Sensitive Data",
       finding: "5% of sensitive data remains unencrypted in certain storage locations.",
       response: "Implement comprehensive encryption for all sensitive data at rest and in transit.",
-      impact: "Critical"
+      impact: "Critical",
+      businessContext: {
+        description: "Data encryption is fundamental to our data privacy compliance and customer trust initiatives. This directly impacts our ability to maintain GDPR, HIPAA, and other regulatory compliance.",
+        strategyLink: "/strategy/data-privacy.pdf#encryption",
+        strategyName: "Data Privacy & Protection Framework"
+      }
     },
     {
       title: "Excessive Access Permissions",
       finding: "20% of users have unnecessarily broad access to data storage systems.",
       response: "Review and implement least privilege access controls across all data storage systems.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "Access control optimization is crucial for our data governance strategy and compliance requirements. This affects our data breach prevention KPIs.",
+        strategyLink: "/strategy/data-governance.pdf#access-control",
+        strategyName: "Data Governance Strategy"
+      }
     },
     {
       title: "Incomplete Data Classification",
       finding: "22% of stored data lacks proper classification and labeling.",
       response: "Accelerate data classification efforts and implement automated classification tools.",
-      impact: "Medium"
+      impact: "Medium",
+      businessContext: {
+        description: "Data classification is essential for our information lifecycle management strategy. This impacts our ability to efficiently protect and manage sensitive data.",
+        strategyLink: "/strategy/data-lifecycle.pdf#classification",
+        strategyName: "Information Lifecycle Management"
+      }
     },
     {
       title: "Cloud Storage Misconfigurations",
       finding: "Several cloud storage buckets found with public access enabled.",
       response: "Conduct a comprehensive review of cloud storage configurations and implement strict access controls.",
-      impact: "Critical"
+      impact: "Critical",
+      businessContext: {
+        description: "Cloud storage security directly impacts our cloud adoption strategy and data protection goals. This is crucial for maintaining customer data privacy and preventing breaches.",
+        strategyLink: "/strategy/cloud-security.pdf#storage",
+        strategyName: "Cloud Security Framework"
+      }
     },
     {
       title: "Inadequate Data Backup Verification",
       finding: "Data backup integrity checks are performed inconsistently.",
       response: "Implement automated, regular integrity checks for all data backups.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "Backup verification is key to our business continuity strategy and disaster recovery KPIs. This affects our ability to meet recovery time objectives (RTO).",
+        strategyLink: "/strategy/business-continuity.pdf#backup-verification",
+        strategyName: "Business Continuity Plan"
+      }
     },
     {
       title: "Shadow IT Data Storage",
       finding: "Employees using unauthorized cloud storage services for work data.",
       response: "Enhance DLP and CASB implementations to detect and prevent use of unauthorized storage services.",
-      impact: "High"
+      impact: "High",
+      businessContext: {
+        description: "Shadow IT control is crucial for our data sovereignty and compliance strategy. This impacts our ability to maintain control over sensitive data and meet regulatory requirements.",
+        strategyLink: "/strategy/shadow-it.pdf#data-control",
+        strategyName: "Shadow IT Management Strategy"
+      }
     }
   ]
 
   const [activeTab, setActiveTab] = useState("compliance");
+
+  const sortByImpactLevel = (items: any[]) => {
+    const impactOrder = { 'Critical': 0, 'High': 1, 'Medium': 2, 'Low': 3 };
+    return [...items].sort((a, b) => {
+      const aOrder = impactOrder[a.impact as keyof typeof impactOrder] ?? 4;
+      const bOrder = impactOrder[b.impact as keyof typeof impactOrder] ?? 4;
+      return aOrder - bOrder;
+    });
+  };
 
   return (
     <div className="flex h-full w-full flex-col items-start bg-default-background">
@@ -240,97 +278,125 @@ const DataStorageDetailsView: React.FC<DetailViewWithActivityProps> = ({ onClose
       <div className="flex w-full grow shrink-0 basis-0 flex-col items-start">
         <div className="flex w-full items-end">
           <div className="flex h-px w-6 flex-none flex-col items-center gap-2 bg-neutral-200" />
-          {/* <Tabs>
-            <Tabs.Item active={true}>Findings (6)</Tabs.Item>
-            <Tabs.Item active={false}>Metrics (9)</Tabs.Item>
-            <Tabs.Item>Resources (6)</Tabs.Item>
-            <Tabs.Item>Compliance (3)</Tabs.Item> */}
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList>
-                <TabsTrigger value="compliance">Frameworks</TabsTrigger>
-                <TabsTrigger value="resources">Security Resources</TabsTrigger>
-                <TabsTrigger value="metrics">Metrics</TabsTrigger>
-                <TabsTrigger value="analysis">Analysis</TabsTrigger>
-              </TabsList>
-              <TabsContent value="compliance">
-                {compliance.map((func, index) => (
-                  <div key={index} className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">{func.function}</h3>
-                    {func.categories.map((category, catIndex) => (
-                      <div key={catIndex} className="ml-4 mb-2">
-                        <h4 className="text-md font-medium mb-1">{category.name}</h4>
-                        <ul className="list-disc list-inside ml-4">
-                          {category.controls.map((control, controlIndex) => (
-                            <li key={controlIndex} className="text-sm mb-2">
-                              <strong>{control.id}:</strong> {control.description}
-                              <p className="ml-6 text-muted-foreground">{control.details}</p>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </TabsContent>
-              <TabsContent value="resources">
-                {resources.map((resource, index) => (
-                  <div key={index} className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">{resource.category}</h3>
-                    <ul className="list-disc list-inside ml-4">
-                      {resource.tools.map((tool, toolIndex) => (
-                        <li key={toolIndex} className="text-sm mb-1">
-                          {tool}
-                          <p className="ml-6 text-muted-foreground">{resource.details}</p>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </TabsContent>
-              <TabsContent value="metrics">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {metrics.map((metric, index) => (
-                    <Card key={index}>
-                      <CardHeader>
-                        <CardTitle className="text-lg">{metric.category}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-2xl font-bold">{metric.value}</p>
-                        <p className="text-sm text-muted-foreground">{metric.description}</p>
-                        <p className={`text-sm ${metric.trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
-                          {metric.trend === 'up' ? '↑' : '↓'} Trend
-                        </p>
-                      </CardContent>
-                    </Card>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList>
+              <TabsTrigger value="compliance">Frameworks</TabsTrigger>
+              <TabsTrigger value="resources">Security Resources</TabsTrigger>
+              <TabsTrigger value="metrics">Metrics</TabsTrigger>
+              <TabsTrigger value="analysis">Analysis</TabsTrigger>
+            </TabsList>
+            <TabsContent value="compliance">
+              {compliance.map((func, index) => (
+                <div key={index} className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">{func.function}</h3>
+                  {func.categories.map((category, catIndex) => (
+                    <div key={catIndex} className="ml-4 mb-2">
+                      <h4 className="text-md font-medium mb-1">{category.name}</h4>
+                      <ul className="list-disc list-inside ml-4">
+                        {category.controls.map((control, controlIndex) => (
+                          <li key={controlIndex} className="text-sm mb-2">
+                            <strong>{control.id}:</strong> {control.description}
+                            <p className="ml-6 text-muted-foreground">{control.details}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   ))}
                 </div>
-              </TabsContent>
-              <TabsContent value="analysis">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {analysis.map((item, index) => (
-                    <Card key={index}>
-                      <CardHeader>
-                        <CardTitle className="text-lg">{item.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm mb-2"><strong>Finding:</strong> {item.finding}</p>
-                        <p className="text-sm mb-2"><strong>Response:</strong> {item.response}</p>
-                        <p className={`text-sm font-semibold ${
-                          item.impact === 'Critical' ? 'text-red-500' :
-                          item.impact === 'High' ? 'text-orange-500' :
-                          item.impact === 'Medium' ? 'text-yellow-500' :
-                          'text-green-500'
-                        }`}>
-                          Impact: {item.impact}
-                        </p>
-                        <Button className="w-full mt-4 px-4 py-2" variant="brand-secondary">
+              ))}
+            </TabsContent>
+            <TabsContent value="resources">
+              {resources.map((resource, index) => (
+                <div key={index} className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">{resource.category}</h3>
+                  <ul className="list-disc list-inside ml-4">
+                    {resource.tools.map((tool, toolIndex) => (
+                      <li key={toolIndex} className="text-sm mb-1">
+                        {tool}
+                        <p className="ml-6 text-muted-foreground">{resource.details}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </TabsContent>
+            <TabsContent value="metrics">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {metrics.map((metric, index) => (
+                  <Card key={index}>
+                    <CardHeader>
+                      <CardTitle className="text-lg">{metric.category}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-2xl font-bold">{metric.value}</p>
+                      <p className="text-sm text-muted-foreground">{metric.description}</p>
+                      <p className={`text-sm ${metric.trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
+                        {metric.trend === 'up' ? '↑' : '↓'} Trend
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="analysis">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {sortByImpactLevel(analysis).map((item, index) => (
+                  <Card key={index} className="bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-2">
+                      <div className="flex justify-between items-start">
+                        <CardTitle className="text-lg font-semibold">{item.title}</CardTitle>
+                        <Badge variant={
+                          item.impact === 'Critical' ? 'error' :
+                          item.impact === 'High' ? 'warning' :
+                          item.impact === 'Medium' ? 'neutral' :
+                          'brand'
+                        }>
+                          {item.impact}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="bg-muted/50 p-3 rounded-md">
+                          <p className="text-sm font-medium">Finding</p>
+                          <p className="text-sm text-muted-foreground">{item.finding}</p>
+                        </div>
+                        
+                        <div className="bg-muted/50 p-3 rounded-md">
+                          <p className="text-sm font-medium">Response</p>
+                          <p className="text-sm text-muted-foreground">{item.response}</p>
+                        </div>
+
+                        <div className="bg-muted/50 p-3 rounded-md">
+                          <p className="text-sm font-medium">Business Context</p>
+                          <p className="text-sm text-muted-foreground">{item.businessContext.description}</p>
+                          <div className="mt-2">
+                            <a 
+                              href={item.businessContext.strategyLink}
+                              className="text-sm text-primary hover:underline inline-flex items-center gap-1"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <span className="text-primary">📄</span>
+                              {item.businessContext.strategyName}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 flex gap-2">
+                        <Button className="w-full" variant="brand-secondary">
+                          View Details
+                        </Button>
+                        <Button className="w-full" variant="brand-primary">
                           Take Action
                         </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
           </Tabs>
         </div>
       </div>
