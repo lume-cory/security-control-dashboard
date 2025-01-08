@@ -6,12 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
-import { PlusCircle, ArrowLeft, FileText } from 'lucide-react'
+import { PlusCircle, ArrowLeft, FileText, ExternalLink } from 'lucide-react'
 import { options as hardcodedOptions, getRequirements, type Requirement } from './compliance-data';
 import { ComplianceDetailsView } from "./compliance-details-view";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface DetailedViewProps {
   requirement: {
@@ -45,6 +46,8 @@ const DetailedView: React.FC<DetailedViewProps> = ({ requirement, onClose, regul
     securityResources: true,
     supportingMetrics: true
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedPolicyText, setEditedPolicyText] = useState(requirement.suggestedPolicyText || '');
 
   const handleReportFieldChange = (field: keyof typeof selectedReportFields) => {
     setSelectedReportFields(prev => ({
@@ -420,7 +423,20 @@ const DetailedView: React.FC<DetailedViewProps> = ({ requirement, onClose, regul
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <p><strong>Name:</strong> {companyPolicy}</p>
+                    <p>
+                      <strong>Name:</strong>{' '}
+                      <a 
+                        href="#" 
+                        className="text-blue-600 hover:text-blue-800 inline-flex items-center"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          console.log('Policy link clicked:', companyPolicy)
+                        }}
+                      >
+                        {companyPolicy}
+                        <ExternalLink className="h-4 w-4 ml-1" />
+                      </a>
+                    </p>
                     {requirement.confidenceInterval && (
                       <p><strong>Mapping Confidence:</strong> {requirement.confidenceInterval}%</p>
                     )}
@@ -428,11 +444,56 @@ const DetailedView: React.FC<DetailedViewProps> = ({ requirement, onClose, regul
                       <p><strong>{requirement.policyId ? 'Policy Category:' : 'Suggested Policy Category:'}</strong> {requirement.policyId ? requirement.policyCategory : requirement.suggestedPolicyCategory}</p>
                     )}
                     <div>
-                      <p className="font-semibold mb-2">{requirement.policyId ? 'Policy Text:' : 'Suggested Policy Text:'}</p>
+                      <div className="flex justify-between items-center mb-2">
+                        <p className="font-semibold">{requirement.policyId ? 'Policy Text:' : 'Suggested Policy Text:'}</p>
+                        {!requirement.policyId && (
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              if (isEditing) {
+                                // Save changes
+                                console.log('Saving edited policy:', editedPolicyText);
+                                setIsEditing(false);
+                              } else {
+                                setIsEditing(true);
+                              }
+                            }}
+                          >
+                            {isEditing ? 'Save Changes' : 'Modify Suggestion'}
+                          </Button>
+                        )}
+                      </div>
                       <div className="bg-gray-50 p-4 rounded-md">
-                        <pre className="whitespace-pre-wrap break-words text-sm">{requirement.policyId ? requirement.policyText : requirement.suggestedPolicyText}</pre>
+                        {isEditing ? (
+                          <Textarea
+                            value={editedPolicyText}
+                            onChange={(e) => setEditedPolicyText(e.target.value)}
+                            className="min-h-[200px] w-full font-mono text-sm"
+                            placeholder="Enter suggested policy text..."
+                          />
+                        ) : (
+                          <pre className="whitespace-pre-wrap break-words text-sm">
+                            {requirement.policyId ? requirement.policyText : editedPolicyText}
+                          </pre>
+                        )}
                       </div>
                     </div>
+
+                    {/* Add Submit for Review button only for suggested policies */}
+                    {!requirement.policyId && (
+                      <div className="mt-6 pt-4 border-t">
+                        <Button 
+                          className="w-full"
+                          onClick={() => {
+                            // Add your submit for review logic here
+                            console.log('Submit for review clicked with text:', editedPolicyText)
+                          }}
+                        >
+                          Submit for Policy Change Approval
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>

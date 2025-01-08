@@ -586,7 +586,7 @@ const mockTrendData = generateMockTrendData()
             <div className="flex w-full items-center gap-2">
               <div className="flex grow shrink-0 basis-0 items-start gap-2">
                 <span className="grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">
-                  Security Ticket Triage 
+                  Security & Compliance Ticket Triage 
                 </span>
                 <IconButton
                   disabled={false}

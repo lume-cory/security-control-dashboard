@@ -49,6 +49,18 @@ function SecurityHelpDeskAgent() {
       subtitle: "320 files",
       icon: "FeatherFile",
       link: "#"
+    }, 
+    {
+      name: "Security & Compliance Tools",
+      subtitle: "197 configurations",
+      icon: "FeatherTool",
+      link: "#"
+    }, 
+    {
+      name: "Knowledge Base",
+      subtitle: "57 articles",
+      icon: "FeatherBook",
+      link: "#"
     }
   ])
   const [newIntegration, setNewIntegration] = useState('')

@@ -24,7 +24,7 @@ export default function AddIntegrationDialog({
   return (
     <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
       <DialogTrigger asChild>
-        <Button>Add New</Button>
+        {/* <Button>Add New</Button> */}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

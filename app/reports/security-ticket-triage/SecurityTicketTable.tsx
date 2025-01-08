@@ -56,6 +56,42 @@ const mockData: SecurityTicket[] = [
     slaStatus: "Met",
     triage: "Medium",
     source: "Email to security-helpdesk alias"
+  },
+  {
+    summary: "New vendor assessment - MongoDB Atlas",
+    user: "James Wilson",
+    ticketType: "Vendor Review",
+    inboundTeam: "Engineering",
+    slaStatus: "Not Met",
+    triage: "High",
+    source: "Slack #ask-security channel"
+  },
+  {
+    summary: "Vendor security review for Snowflake",
+    user: "Rachel Kim",
+    ticketType: "Vendor Review",
+    inboundTeam: "Data",
+    slaStatus: "Met",
+    triage: "High",
+    source: "Security review ticket"
+  },
+  {
+    summary: "DocuSign enterprise license security assessment",
+    user: "Tom Baker",
+    ticketType: "Vendor Review",
+    inboundTeam: "Legal",
+    slaStatus: "Met",
+    triage: "Low",
+    source: "Email to security-helpdesk alias"
+  },
+  {
+    summary: "Vendor approval for Notion team workspace",
+    user: "Priya Patel",
+    ticketType: "Vendor Review",
+    inboundTeam: "Product",
+    slaStatus: "Met",
+    triage: "Medium",
+    source: "Security review ticket"
   }
 ];
 
