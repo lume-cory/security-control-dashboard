@@ -1,4 +1,4 @@
-import { HomeViewWrapper } from "./home-view-wrapper";
+import HomeViewWrapper from "./home-view-wrapper";
 
 export default function CompliancePolicyReviewPage() {
   return (

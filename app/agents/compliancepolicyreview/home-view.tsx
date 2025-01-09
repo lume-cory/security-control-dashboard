@@ -1,31 +1,43 @@
 'use client'
 
+import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Line, LineChart, XAxis, YAxis, ResponsiveContainer } from "recharts"
-// import { Button } from "@/components/ui/button"
+import { Button } from "@/subframe/components/Button"
+import { enrichedHippaArticles } from './hippa-detail-view'
+import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { ComplianceMapperComponent } from './compliance-mapper'
 
 const regulationsData = [
   { name: 'NIS2', alignment: 95, effectiveDate: 'October 17, 2024', status: 'Upcoming', nonAlignedCount: 3, color: 'hsl(var(--chart-2))' },
   { name: 'DORA', alignment: 98, effectiveDate: 'January 2025', status: 'Upcoming', nonAlignedCount: 2, color: 'hsl(var(--chart-1))' },
+  { 
+    name: 'HIPAA', 
+    alignment: 96, 
+    effectiveDate: 'April 2003', 
+    status: 'Active', 
+    nonAlignedCount: enrichedHippaArticles.reduce((sum, item) => sum + (item.nonCompliantInstances?.length || 0), 0),
+    color: 'hsl(var(--chart-6))' 
+  },  
   { name: 'UK GDPR', alignment: 100, effectiveDate: 'May 2018', status: 'Active', nonAlignedCount: 0, color: 'hsl(var(--chart-3))' },
   { name: 'EU GDPR', alignment: 100, effectiveDate: 'May 2018', status: 'Active', nonAlignedCount: 0, color: 'hsl(var(--chart-4))' },
   { name: 'CCPA', alignment: 100, effectiveDate: 'January 2020', status: 'Active', nonAlignedCount: 0, color: 'hsl(var(--chart-5))' },
 ]
 
 const alignmentOverTime = [
-  { month: 'Nov', NIS2: 75, UKGDPR: 95, EUGDPR: 98, CCPA: 90 },
-  { month: 'Dec', NIS2: 75, UKGDPR: 95, EUGDPR: 98, CCPA: 90 },
-  { month: 'Jan', NIS2: 75, UKGDPR: 95, EUGDPR: 98, CCPA: 90 },
-  { month: 'Feb', NIS2: 80, UKGDPR: 98, EUGDPR: 100, CCPA: 95 },
-  { month: 'Mar', NIS2: 85, UKGDPR: 100, EUGDPR: 100, CCPA: 98 },
-  { month: 'Apr', NIS2: 88, UKGDPR: 100, EUGDPR: 100, CCPA: 100 },
-  { month: 'May', NIS2: 90, UKGDPR: 100, EUGDPR: 100, CCPA: 98 },
-  { month: 'Jun', NIS2: 86, UKGDPR: 95, EUGDPR: 92, CCPA: 90 },
-  { month: 'Jul', DORA: 72, NIS2: 92, UKGDPR: 100, EUGDPR: 96, CCPA: 92 },
-  { month: 'Aug', DORA: 75, NIS2: 95, UKGDPR: 100, EUGDPR: 100, CCPA: 100 },
-  { month: 'Sept', DORA: 88, NIS2: 95, UKGDPR: 100, EUGDPR: 100, CCPA: 100 },
-  { month: 'Oct', DORA: 95, NIS2: 98, UKGDPR: 100, EUGDPR: 100, CCPA: 100 },
+  { month: 'Nov', HIPAA: 95, NIS2: 75, UKGDPR: 95, EUGDPR: 98, CCPA: 90 },
+  { month: 'Dec', HIPAA: 98, NIS2: 75, UKGDPR: 95, EUGDPR: 98, CCPA: 90 },
+  { month: 'Jan', HIPAA: 100, NIS2: 75, UKGDPR: 95, EUGDPR: 98, CCPA: 90 },
+  { month: 'Feb', HIPAA: 97, NIS2: 80, UKGDPR: 98, EUGDPR: 100, CCPA: 95 },
+  { month: 'Mar', HIPAA: 93, NIS2: 85, UKGDPR: 100, EUGDPR: 100, CCPA: 98 },
+  { month: 'Apr', HIPAA: 95, NIS2: 88, UKGDPR: 100, EUGDPR: 100, CCPA: 100 },
+  { month: 'May', HIPAA: 98, NIS2: 90, UKGDPR: 100, EUGDPR: 100, CCPA: 98 },
+  { month: 'Jun', HIPAA: 94, NIS2: 86, UKGDPR: 95, EUGDPR: 92, CCPA: 90 },
+  { month: 'Jul', HIPAA: 96, DORA: 72, NIS2: 92, UKGDPR: 100, EUGDPR: 96, CCPA: 92 },
+  { month: 'Aug', HIPAA: 99, DORA: 75, NIS2: 95, UKGDPR: 100, EUGDPR: 100, CCPA: 100 },
+  { month: 'Sept', HIPAA: 97, DORA: 88, NIS2: 95, UKGDPR: 100, EUGDPR: 100, CCPA: 100 },
+  { month: 'Oct', HIPAA: 96, DORA: 95, NIS2: 98, UKGDPR: 100, EUGDPR: 100, CCPA: 100 },
 ]
 
 function RegulationCard({ name, alignment, effectiveDate, status, nonAlignedCount, color, onClick }: {
@@ -58,7 +70,7 @@ function RegulationCard({ name, alignment, effectiveDate, status, nonAlignedCoun
             <p className={`text-sm ${status === 'Active' ? 'text-green-600' : 'text-yellow-600'}`}>{status}</p>
           </div>
           <div className="flex justify-between items-center">
-            <p className="text-sm font-medium text-gray-500">Non-aligned Requirements</p>
+            <p className="text-sm font-medium text-gray-500">Non-Compliant Requirements</p>
             <p className="text-sm font-bold text-red-600">{nonAlignedCount}</p>
           </div>
         </div>
@@ -96,26 +108,34 @@ function AlertCard({ title, description, aligned, nonAligned, onClick }: {
   )
 }
 
-interface HomeViewComponentProps {
-  onNavigateToComplianceMapper: () => void;
+export type DetailViewType = 'compliance-mapper' | 'hipaa' | null;
+
+interface HomeViewProps {
+  activeView: DetailViewType;
+  setActiveView: (view: DetailViewType) => void;
 }
 
-export const HomeViewComponent: React.FC<HomeViewComponentProps> = ({ onNavigateToComplianceMapper }) => {
+export const HomeViewComponent: React.FC<HomeViewProps> = ({ activeView, setActiveView }) => {
   const handleRegulationClick = (regulation: string) => {
-    if (regulation === 'DORA' && typeof onNavigateToComplianceMapper === 'function') {
-      onNavigateToComplianceMapper();
+    switch(regulation) {
+      case 'DORA':
+        setActiveView('compliance-mapper');
+        break;
+      case 'HIPAA':
+        setActiveView('hipaa');
+        break;
+      default:
+        setActiveView(null);
     }
   };
 
-  const handleClick = () => {
-    if (typeof onNavigateToComplianceMapper === 'function') {
-      onNavigateToComplianceMapper();
-    }
+  const handleAlertClick = () => {
+    setActiveView('compliance-mapper');
   };
 
   return (
-    <div className="space-y-6 relative p-4 sm:p-6 md:p-8">
-      <Card className="mx-6 sm:mx-8 md:mx-10 lg:mx-12">
+    <div className="space-y-6">
+      <Card>
         <CardHeader>
           <CardTitle>Alerts</CardTitle>
         </CardHeader>
@@ -126,34 +146,41 @@ export const HomeViewComponent: React.FC<HomeViewComponentProps> = ({ onNavigate
               description="The latest revision of the Information Security Policy has resulted in misalignment with the NIST Cybersecurity Frameworks, CRI Profiles, and 3 regulations."
               aligned={94}
               nonAligned={13}
-              onClick={handleClick}
+              onClick={handleAlertClick}
             />
             <AlertCard
               title="NIST CSF v2.0"
               description="A new version of NIST Cybersecurity Framework (CSF) v2.0 security framework was recently published. The Information Security Policy is misaligned with 4 controls."
               aligned={96}
               nonAligned={4}
-              onClick={handleClick}
+              onClick={handleAlertClick}
             />
           </div>
         </CardContent>
       </Card>
       
-      <Card className="mx-6 sm:mx-8 md:mx-10 lg:mx-12">
+      <Card>
         <CardHeader>
-          <CardTitle>Regulation Alignment</CardTitle>
+          <div className="flex justify-between items-center">
+            <CardTitle>Regulation Alignment</CardTitle>
+            <Button
+              size="medium"
+              disabled={false}
+              variant="brand-primary"
+              icon="FeatherMap"
+              loading={false}
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => { setActiveView('compliance-mapper'); }}
+            >
+              Compliance Mapper
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {regulationsData.map((regulation) => (
               <RegulationCard 
                 key={regulation.name}
-                name={regulation.name}
-                alignment={regulation.alignment}
-                effectiveDate={regulation.effectiveDate}
-                status={regulation.status}
-                nonAlignedCount={regulation.nonAlignedCount}
-                color={regulation.color}
+                {...regulation}
                 onClick={() => handleRegulationClick(regulation.name)}
               />
             ))}
@@ -161,7 +188,7 @@ export const HomeViewComponent: React.FC<HomeViewComponentProps> = ({ onNavigate
         </CardContent>
       </Card>
 
-      <Card className="mx-6 sm:mx-8 md:mx-10 lg:mx-12">
+      <Card>
         <CardHeader>
           <CardTitle>Alignment Trend Over Time</CardTitle>
         </CardHeader>
@@ -170,6 +197,7 @@ export const HomeViewComponent: React.FC<HomeViewComponentProps> = ({ onNavigate
             config={{
               DORA: { label: "DORA", color: "hsl(var(--chart-1))" },
               NIS2: { label: "NIS2", color: "hsl(var(--chart-2))" },
+              HIPAA: { label: "HIPAA", color: "hsl(var(--chart-6))" },
               UKGDPR: { label: "UK GDPR", color: "hsl(var(--chart-3))" },
               EUGDPR: { label: "EU GDPR", color: "hsl(var(--chart-4))" },
               CCPA: { label: "CCPA", color: "hsl(var(--chart-5))" },
@@ -187,6 +215,7 @@ export const HomeViewComponent: React.FC<HomeViewComponentProps> = ({ onNavigate
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <Line type="monotone" dataKey="DORA" stroke="hsl(var(--chart-1))" />
                 <Line type="monotone" dataKey="NIS2" stroke="hsl(var(--chart-2))" />
+                <Line type="monotone" dataKey="HIPAA" stroke="hsl(var(--chart-6))" />
                 <Line type="monotone" dataKey="UKGDPR" stroke="hsl(var(--chart-3))" />
                 <Line type="monotone" dataKey="EUGDPR" stroke="hsl(var(--chart-4))" />
                 <Line type="monotone" dataKey="CCPA" stroke="hsl(var(--chart-5))" />
@@ -195,7 +224,6 @@ export const HomeViewComponent: React.FC<HomeViewComponentProps> = ({ onNavigate
           </ChartContainer>
         </CardContent>
       </Card>
-      <button onClick={onNavigateToComplianceMapper}>Go to Compliance Mapper</button>
     </div>
   )
 }

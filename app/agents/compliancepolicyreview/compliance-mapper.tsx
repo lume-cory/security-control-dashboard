@@ -772,7 +772,7 @@ export function ComplianceMapperComponent({ onBack }: ComplianceMapperProps) {
                         <TableHead>Control ID</TableHead>
                         <TableHead>Control Text</TableHead>
                         <TableHead>Security Policy ID</TableHead>
-                        <TableHead>Mapping Confidence Interval</TableHead>
+                        <TableHead>Mapping Confidence</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
