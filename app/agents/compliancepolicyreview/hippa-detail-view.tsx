@@ -7,7 +7,6 @@ import { hippaArticles } from '@/data/regulations/hippa'
 import { useState } from 'react'
 import { ArticleDetailView } from './article-detail-view'
 
-
 export const enrichedHippaArticles = [
   // Administrative Safeguards
   {

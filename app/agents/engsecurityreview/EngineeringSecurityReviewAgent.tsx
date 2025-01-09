@@ -26,10 +26,9 @@ import EngSecurityReviewQuestionsTable from './QuestionsTable';
 import MetricsPanel from './MetricsPanel';
 import { ChatDrawer } from './ChatDrawer'
 import Vulnerabilities from './Vulnerabilities'
-import HomeViewWrapper from '/app/agents/compliancepolicyreview/home-view-wrapper'
-import { HomeViewComponent, DetailViewType } from '/app/agents/compliancepolicyreview/home-view'
-import { ComplianceMapperComponent } from '/app/agents/compliancepolicyreview/compliance-mapper'
-import { HippaDetailView } from '/app/agents/compliancepolicyreview/hippa-detail-view'
+import { HomeViewComponent, DetailViewType } from '../compliancepolicyreview/home-view'
+import { ComplianceMapperComponent } from '../compliancepolicyreview/compliance-mapper'
+import { HippaDetailView } from '../compliancepolicyreview/hippa-detail-view'
 
 
 export default function EngineeringSecurityReviewAgent() {

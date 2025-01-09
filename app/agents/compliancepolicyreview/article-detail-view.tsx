@@ -18,7 +18,6 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
   const [followUpNotes, setFollowUpNotes] = useState("")
 
   const handleFollowUp = (teamContact: string) => {
-    // Implement follow-up logic here
     console.log(`Following up with ${teamContact}`, followUpNotes)
   }
 
@@ -72,32 +71,32 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
         </div>
       )}
 
-        {/* Article Description */}
-        <div>
-          <h3 className="text-xl font-semibold">Description</h3>
-          <p className="text-gray-700 mt-2">{article.text}</p>
-        </div>
+      {/* Article Description */}
+      <div>
+        <h3 className="text-xl font-semibold">Description</h3>
+        <p className="text-gray-700 mt-2">{article.text}</p>
+      </div>
 
-        {/* Company Policies */}
-        <div>
-          <h3 className="text-xl font-semibold">Company Policies</h3>
-          <div className="space-y-4 mt-2">
-            {article.policies.map((policy, index) => (
-              <div key={index} className="border rounded-lg p-4">
-                <h4 className="font-semibold">{policy.name}</h4>
-                <p className="text-sm text-gray-700 mt-1">{policy.description}</p>
-                <a 
-                  href={policy.link}
-                  className="text-sm text-blue-600 hover:underline mt-2 inline-block"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View Policy Document
-                </a>
-              </div>
-            ))}
-          </div>
+      {/* Company Policies */}
+      <div>
+        <h3 className="text-xl font-semibold">Company Policies</h3>
+        <div className="space-y-4 mt-2">
+          {article.policies.map((policy, index) => (
+            <div key={index} className="border rounded-lg p-4">
+              <h4 className="font-semibold">{policy.name}</h4>
+              <p className="text-sm text-gray-700 mt-1">{policy.description}</p>
+              <a 
+                href={policy.link}
+                className="text-sm text-blue-600 hover:underline mt-2 inline-block"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View Policy Document
+              </a>
+            </div>
+          ))}
         </div>
+      </div>
 
       {/* Impacted Systems */}
       <div>
