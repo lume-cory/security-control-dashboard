@@ -531,7 +531,7 @@ export default function VulnerabilitiesTable() {
                       <SelectItem value="Open">Open</SelectItem>
                       <SelectItem value="In Progress">In Progress</SelectItem>
                       <SelectItem value="Resolved">Resolved</SelectItem>
-                      <SelectItem value="Won't Fix">Won't Fix</SelectItem>
+                      <SelectItem value={"Won't Fix"}>Won't Fix</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
