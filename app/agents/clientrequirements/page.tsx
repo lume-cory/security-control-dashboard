@@ -1,4 +1,4 @@
-import ClientSecurityRequirementsCheck from "./client-sec-reqs-agent";
+import ClientSecurityRequirementsCheck from "./client-requirement-agent";
 
 export default function ClientSecurityRequirementsPage() {
   return (
