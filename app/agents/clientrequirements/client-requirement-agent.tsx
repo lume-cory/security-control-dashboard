@@ -25,6 +25,8 @@ import { analyzeContract } from './data/contract-analysis'
 import { ContractAnalysisDrawer } from './components/contract-analysis-drawer'
 import { analyzeUpdatedPolicy } from './data/policy-analysis'
 import { PolicyAnalysisDrawer } from './components/policy-analysis-drawer'
+import { mockClientRequirements, type ClientRequirement } from './data/mock-client-requirements'
+import { ClientRequirementsDrawer } from './components/client-requirements-drawer'
 
 export default function ClientSecurityRequirementsCheck() {
   const router = useRouter()
@@ -55,6 +57,7 @@ export default function ClientSecurityRequirementsCheck() {
   const [selectedConflict, setSelectedConflict] = useState<ClientConflict | null>(null)
   const [isChatbotOpen, setIsChatbotOpen] = useState(false)
   const [chatHistory, setChatHistory] = useState(mockChatHistory)
+  const [selectedClient, setSelectedClient] = useState<ClientRequirement | null>(null)
 
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>, type: string) => {
     const files = event.target.files
@@ -132,28 +135,6 @@ export default function ClientSecurityRequirementsCheck() {
         </div>
 
     <div className="container mx-auto p-4">
-      
-      {/* Metrics Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Unmet Client Requirements</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-yellow-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{contractAnalysis ? contractAnalysis.unmetRequirements : 0}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Client Requirements Met</CardTitle>
-            <CheckSquare className="h-4 w-4 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{contractAnalysis ? contractAnalysis.metRequirements : 0}</div>
-          </CardContent>
-        </Card>
-      </div>
 
       {/* Action Buttons */}
       <div className="flex space-x-4 mb-6">
@@ -206,6 +187,86 @@ export default function ClientSecurityRequirementsCheck() {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Client Requirements Overview Section */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Client Requirements Overview</CardTitle>
+          <CardDescription>Status of security requirements by client</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-6">
+            {/* Metrics Section - Left Side */}
+            <div className="flex flex-col gap-4 w-1/3 pt-6">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Client Requirements Not Met</CardTitle>
+                  <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {mockClientRequirements.reduce((total, client) => 
+                      total + client.requirements.filter(r => r.status === 'unmet').length, 0
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Client Requirements Met</CardTitle>
+                  <CheckSquare className="h-4 w-4 text-green-500" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {mockClientRequirements.reduce((total, client) => 
+                      total + client.requirements.filter(r => r.status === 'met').length, 0
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Client Requirements Table - Right Side */}
+            <div className="flex-1">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Client</TableHead>
+                    <TableHead>Met Requirements</TableHead>
+                    <TableHead>Unmet Requirements</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {mockClientRequirements.map((client) => {
+                    const metCount = client.requirements.filter(r => r.status === 'met').length
+                    const unmetCount = client.requirements.filter(r => r.status === 'unmet').length
+                    
+                    return (
+                      <TableRow 
+                        key={client.id} 
+                        className="cursor-pointer hover:bg-muted"
+                        onClick={() => setSelectedClient(client)}
+                      >
+                        <TableCell className="font-medium">{client.name}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="bg-green-100 text-green-800">
+                            {metCount}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="bg-red-100 text-red-800">
+                            {unmetCount}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Company Policies Section */}
       <Card className="mb-6">
@@ -292,6 +353,12 @@ export default function ClientSecurityRequirementsCheck() {
         onRecommendationChange={handlePolicyRecommendationChange}
       />
 
+      {/* Client Requirements Drawer */}
+      <ClientRequirementsDrawer 
+        client={selectedClient}
+        onOpenChange={() => setSelectedClient(null)}
+      />
+
       {/* Company Policy Detail Drawer */}
       <PolicyDetailDrawer 
         policy={selectedPolicy}
@@ -322,6 +389,7 @@ export default function ClientSecurityRequirementsCheck() {
         chatHistory={chatHistory}
         onChatHistoryChange={setChatHistory}  // Add this prop to allow ChatDrawer to update the history
       />
+
     </div>
     </div>
     </DefaultPageLayout>

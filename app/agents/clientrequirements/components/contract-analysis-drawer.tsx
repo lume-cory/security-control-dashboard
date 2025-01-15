@@ -61,13 +61,23 @@ const generateContractReport = () => {
     alert("Report generated! Check the console for details.")
     }
 
+const handleUpdateContract = () => {
+    if (!contractAnalysis) return;
+    
+    // TODO: Implement contract update logic
+    console.log("Updating contract with recommendations:", contractRecommendations);
+    alert("Updates have been added to the contract. A new contract will be generated and downloaded shortly");
+    };
+
   return (
         <Sheet open={isOpen} onOpenChange={onOpenChange}>
         <SheetContent style={{ maxWidth: 'min(33vw, 1200px)' }} className="w-full overflow-hidden" side="right">
           <SheetHeader>
             <SheetTitle>Contract Analysis</SheetTitle>
             <SheetDescription>
-              Requirements met: {contractAnalysis ? `${contractAnalysis.metRequirements} / ${contractAnalysis.totalRequirements}` : ''}
+              Requirements met: {contractAnalysis ? 
+                `${contractAnalysis.details.filter((detail: ContractDetail) => detail.status === "Met").length} / ${contractAnalysis.details.length}` 
+                : ''}
             </SheetDescription>
           </SheetHeader>
           <ScrollArea className="h-[calc(100vh-200px)] mt-6">
@@ -139,7 +149,7 @@ const generateContractReport = () => {
               </div>
             ))}
           </ScrollArea>
-          <SheetFooter>
+          <SheetFooter className="flex gap-2">
             <Button 
               variant="brand-secondary"
               icon="FeatherFileText"
@@ -147,6 +157,14 @@ const generateContractReport = () => {
               className="mt-4"
             >
               Generate Report
+            </Button>
+            <Button 
+              variant="brand-primary"
+              icon="FeatherSave"
+              onClick={handleUpdateContract} 
+              className="mt-4"
+            >
+              Update Contract
             </Button>
           </SheetFooter>
         </SheetContent>
