@@ -190,6 +190,123 @@ const AccessManagementDetailsView: React.FC<DetailViewWithActivityProps> = ({ on
     }
   ]
 
+  const securityPolicies = [
+    {
+      id: "SP-1",
+      title: "Access Control Policy",
+      description: "Defines the requirements for access control to ensure that only authorized users have access to sensitive information.",
+      approvalStatus: "Approved",
+      approvalDate: "2023-01-15",
+      version: "1.0",
+      requirements: [
+        {
+          id: "AC-1",
+          title: "Identity Management",
+          description: "Requirements for managing digital identities within the organization",
+          subRequirements: [
+            { id: "AC-1.1", description: "All user accounts must be uniquely identifiable" },
+            { id: "AC-1.2", description: "Regular review of user access rights must be conducted quarterly" },
+            { id: "AC-1.3", description: "Immediate revocation of access upon employee termination" }
+          ]
+        },
+        {
+          id: "AC-2",
+          title: "Authentication Controls",
+          description: "Standards for authentication mechanisms",
+          subRequirements: [
+            { id: "AC-2.1", description: "Multi-factor authentication required for all privileged access" },
+            { id: "AC-2.2", description: "Password complexity requirements must be enforced" },
+            { id: "AC-2.3", description: "Password rotation every 90 days" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "SP-2",
+      title: "Data Protection Policy",
+      description: "Outlines the measures for protecting sensitive data from unauthorized access and breaches.",
+      approvalStatus: "Approved",
+      approvalDate: "2023-02-20",
+      version: "1.1",
+      requirements: [
+        {
+          id: "DP-1",
+          title: "Data Classification",
+          description: "Requirements for data classification and handling",
+          subRequirements: [
+            { id: "DP-1.1", description: "All data must be classified according to sensitivity level" },
+            { id: "DP-1.2", description: "Handling procedures must be defined for each classification level" }
+          ]
+        },
+        {
+          id: "DP-2",
+          title: "Data Encryption",
+          description: "Standards for data encryption",
+          subRequirements: [
+            { id: "DP-2.1", description: "All sensitive data must be encrypted at rest" },
+            { id: "DP-2.2", description: "Encryption key management procedures must be documented" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "SP-3",
+      title: "Incident Response Policy",
+      description: "Details the procedures for responding to security incidents and breaches.",
+      approvalStatus: "Pending",
+      approvalDate: "2023-03-10",
+      version: "0.9",
+      requirements: [
+        {
+          id: "IR-1",
+          title: "Incident Detection",
+          description: "Requirements for detecting security incidents",
+          subRequirements: [
+            { id: "IR-1.1", description: "Automated monitoring systems must be in place" },
+            { id: "IR-1.2", description: "Incident detection procedures must be documented" }
+          ]
+        },
+        {
+          id: "IR-2",
+          title: "Incident Response",
+          description: "Procedures for responding to incidents",
+          subRequirements: [
+            { id: "IR-2.1", description: "Incident response team must be established" },
+            { id: "IR-2.2", description: "Response procedures must be tested annually" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "SP-4",
+      title: "Remote Access Policy",
+      description: "Establishes guidelines for secure remote access to company resources.",
+      approvalStatus: "Approved",
+      approvalDate: "2023-04-05",
+      version: "1.2",
+      requirements: [
+        {
+          id: "RA-1",
+          title: "Remote Connection Security",
+          description: "Requirements for secure remote connections",
+          subRequirements: [
+            { id: "RA-1.1", description: "VPN must be used for all remote access" },
+            { id: "RA-1.2", description: "Remote sessions must timeout after 30 minutes of inactivity" }
+          ]
+        },
+        {
+          id: "RA-2",
+          title: "Device Security",
+          description: "Requirements for remote devices",
+          subRequirements: [
+            { id: "RA-2.1", description: "All remote devices must have current antivirus software" },
+            { id: "RA-2.2", description: "Remote devices must maintain current security patches" }
+          ]
+        }
+      ]
+    }
+  ];
+
   const [activeTab, setActiveTab] = useState("compliance");
 
   const sortByImpactLevel = (items: any[]) => {
@@ -267,9 +384,11 @@ const AccessManagementDetailsView: React.FC<DetailViewWithActivityProps> = ({ on
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList>
               <TabsTrigger value="compliance">Frameworks</TabsTrigger>
+              <TabsTrigger value="security-policies">Policies</TabsTrigger>
               <TabsTrigger value="resources">Security Resources</TabsTrigger>
               <TabsTrigger value="metrics">Metrics</TabsTrigger>
               <TabsTrigger value="analysis">Analysis</TabsTrigger>
+              <TabsTrigger value="security-policies">Security Policies</TabsTrigger>
             </TabsList>
             <TabsContent value="compliance">
               {compliance.map((func, index) => (
@@ -377,6 +496,43 @@ const AccessManagementDetailsView: React.FC<DetailViewWithActivityProps> = ({ on
                         <Button className="w-full" variant="brand-primary">
                           Take Action
                         </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="security-policies">
+              <div className="grid grid-cols-1 gap-4">
+                {securityPolicies.map((policy, index) => (
+                  <Card key={index}>
+                    <CardHeader>
+                      <CardTitle className="text-lg">{policy.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div>
+                          <p className="text-sm"><strong>Description:</strong> {policy.description}</p>
+                          <p className="text-sm"><strong>Approval Status:</strong> {policy.approvalStatus}</p>
+                          <p className="text-sm"><strong>Approval Date:</strong> {policy.approvalDate}</p>
+                          <p className="text-sm"><strong>Version:</strong> {policy.version}</p>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          {policy.requirements.map((req, reqIndex) => (
+                            <div key={reqIndex} className="bg-muted/50 p-4 rounded-lg">
+                              <h4 className="font-medium mb-2">{req.id}: {req.title}</h4>
+                              <p className="text-sm text-muted-foreground mb-2">{req.description}</p>
+                              <ul className="list-disc list-inside space-y-1">
+                                {req.subRequirements.map((subReq, subReqIndex) => (
+                                  <li key={subReqIndex} className="text-sm text-muted-foreground">
+                                    {subReq.id}: {subReq.description}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

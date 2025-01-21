@@ -204,6 +204,129 @@ const DataStorageDetailsView: React.FC<DetailViewWithActivityProps> = ({ onClose
     }
   ]
 
+  const securityPolicies = [
+    {
+      id: "DSP-1",
+      title: "Data Protection and Encryption Policy",
+      description: "Comprehensive policy for protecting data at rest and in transit through encryption and access controls.",
+      approvalStatus: "Approved",
+      approvalDate: "2024-01-15",
+      version: "2.1",
+      requirements: [
+        {
+          id: "DSP-1.1",
+          title: "Data-at-Rest Protection",
+          description: "Requirements for protecting stored data",
+          subRequirements: [
+            { id: "DSP-1.1.1", description: "All sensitive data must be encrypted using approved algorithms" },
+            { id: "DSP-1.1.2", description: "Encryption keys must be stored separately from encrypted data" },
+            { id: "DSP-1.1.3", description: "Regular audits of encryption implementation must be conducted" }
+          ]
+        },
+        {
+          id: "DSP-1.2",
+          title: "Data Leak Prevention",
+          description: "Controls to prevent unauthorized data exfiltration",
+          subRequirements: [
+            { id: "DSP-1.2.1", description: "DLP solutions must be implemented for all data storage systems" },
+            { id: "DSP-1.2.2", description: "Regular monitoring of data access and transfer patterns" },
+            { id: "DSP-1.2.3", description: "Automated alerts for suspicious data access patterns" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "DSP-2",
+      title: "Data Storage Access Control Policy",
+      description: "Defines access control requirements and permissions management for data storage systems.",
+      approvalStatus: "Approved",
+      approvalDate: "2024-02-01",
+      version: "1.3",
+      requirements: [
+        {
+          id: "DSP-2.1",
+          title: "Remote Access Management",
+          description: "Requirements for secure remote access to storage systems",
+          subRequirements: [
+            { id: "DSP-2.1.1", description: "Multi-factor authentication required for all remote access" },
+            { id: "DSP-2.1.2", description: "Remote access sessions must be logged and monitored" },
+            { id: "DSP-2.1.3", description: "Regular review of remote access permissions" }
+          ]
+        },
+        {
+          id: "DSP-2.2",
+          title: "Privilege Management",
+          description: "Implementation of least privilege principles",
+          subRequirements: [
+            { id: "DSP-2.2.1", description: "Role-based access control must be implemented" },
+            { id: "DSP-2.2.2", description: "Quarterly review of user privileges" },
+            { id: "DSP-2.2.3", description: "Automated privilege revocation upon role change" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "DSP-3",
+      title: "Data Storage Environment Policy",
+      description: "Guidelines for maintaining separate development and production environments.",
+      approvalStatus: "Approved",
+      approvalDate: "2024-01-30",
+      version: "1.1",
+      requirements: [
+        {
+          id: "DSP-3.1",
+          title: "Environment Separation",
+          description: "Requirements for maintaining separate environments",
+          subRequirements: [
+            { id: "DSP-3.1.1", description: "Physical or logical separation of development and production data" },
+            { id: "DSP-3.1.2", description: "Different access credentials for each environment" },
+            { id: "DSP-3.1.3", description: "Regular validation of environment separation" }
+          ]
+        },
+        {
+          id: "DSP-3.2",
+          title: "Data Integrity",
+          description: "Measures to ensure data integrity across environments",
+          subRequirements: [
+            { id: "DSP-3.2.1", description: "Regular integrity checks of stored data" },
+            { id: "DSP-3.2.2", description: "Version control for all environment configurations" },
+            { id: "DSP-3.2.3", description: "Automated monitoring of data consistency" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "DSP-4",
+      title: "Data Storage Asset Management Policy",
+      description: "Requirements for inventorying and managing data storage assets.",
+      approvalStatus: "Approved",
+      approvalDate: "2024-01-20",
+      version: "1.0",
+      requirements: [
+        {
+          id: "DSP-4.1",
+          title: "Asset Inventory",
+          description: "Requirements for maintaining asset inventory",
+          subRequirements: [
+            { id: "DSP-4.1.1", description: "Maintain current inventory of all storage devices and systems" },
+            { id: "DSP-4.1.2", description: "Regular updates to asset inventory documentation" },
+            { id: "DSP-4.1.3", description: "Automated discovery of storage assets" }
+          ]
+        },
+        {
+          id: "DSP-4.2",
+          title: "Software Management",
+          description: "Requirements for storage software management",
+          subRequirements: [
+            { id: "DSP-4.2.1", description: "Inventory of all storage management software" },
+            { id: "DSP-4.2.2", description: "Regular software updates and patch management" },
+            { id: "DSP-4.2.3", description: "License compliance monitoring" }
+          ]
+        }
+      ]
+    }
+  ];
+
   const [activeTab, setActiveTab] = useState("compliance");
 
   const sortByImpactLevel = (items: any[]) => {
@@ -281,6 +404,7 @@ const DataStorageDetailsView: React.FC<DetailViewWithActivityProps> = ({ onClose
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList>
               <TabsTrigger value="compliance">Frameworks</TabsTrigger>
+              <TabsTrigger value="policies">Policies</TabsTrigger>
               <TabsTrigger value="resources">Security Resources</TabsTrigger>
               <TabsTrigger value="metrics">Metrics</TabsTrigger>
               <TabsTrigger value="analysis">Analysis</TabsTrigger>
@@ -391,6 +515,43 @@ const DataStorageDetailsView: React.FC<DetailViewWithActivityProps> = ({ onClose
                         <Button className="w-full" variant="brand-primary">
                           Take Action
                         </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="policies">
+              <div className="grid grid-cols-1 gap-4">
+                {securityPolicies.map((policy, index) => (
+                  <Card key={index}>
+                    <CardHeader>
+                      <CardTitle className="text-lg">{policy.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div>
+                          <p className="text-sm"><strong>Description:</strong> {policy.description}</p>
+                          <p className="text-sm"><strong>Approval Status:</strong> {policy.approvalStatus}</p>
+                          <p className="text-sm"><strong>Approval Date:</strong> {policy.approvalDate}</p>
+                          <p className="text-sm"><strong>Version:</strong> {policy.version}</p>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          {policy.requirements.map((req, reqIndex) => (
+                            <div key={reqIndex} className="bg-muted/50 p-4 rounded-lg">
+                              <h4 className="font-medium mb-2">{req.id}: {req.title}</h4>
+                              <p className="text-sm text-muted-foreground mb-2">{req.description}</p>
+                              <ul className="list-disc list-inside space-y-1">
+                                {req.subRequirements.map((subReq, subReqIndex) => (
+                                  <li key={subReqIndex} className="text-sm text-muted-foreground">
+                                    {subReq.id}: {subReq.description}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

@@ -158,6 +158,26 @@ export const criIspRequirements: Requirement[] = [
     policyCategory: ispSections[2].category,
     confidenceInterval: 95,
     policyText: ispSections[2].text
+  }, 
+  {
+    id: '4',
+    article: '',
+    subArticle: '',
+    regulationText: '',
+    controlId: 'PR.PS-01.04',
+    controlCategory: 'PROTECT',
+    controlText: 'PR.PS-01.04: The organization documents its requirements for accurate and resilient time services.',
+    suggestedPolicyCategory: 'PROTECT / Platform Security / Configuration Management',    
+    confidenceInterval: 97,
+    suggestedPolicyText: `1. Time Service Requirements
+    1.1. All systems must:
+      - Use approved time synchronization services
+      - Maintain accurate time within defined tolerances
+      - Log time synchronization events
+    1.2. Time service infrastructure must:
+      - Be redundant and resilient
+      - Use secure protocols
+      - Be monitored for accuracy`
   }
 ];
 

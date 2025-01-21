@@ -306,6 +306,129 @@ const EndpointProtectionDetailsView: React.FC<DetailViewWithActivityProps> = ({ 
     }
   ]
 
+  const securityPolicies = [
+    {
+      id: "EPP-1",
+      title: "Endpoint Data Protection Policy",
+      description: "Comprehensive policy for protecting data on endpoint devices through encryption and security controls.",
+      approvalStatus: "Approved",
+      approvalDate: "2024-02-15",
+      version: "2.0",
+      requirements: [
+        {
+          id: "EPP-1.1",
+          title: "Endpoint Data Security",
+          description: "Requirements for protecting data stored on endpoints",
+          subRequirements: [
+            { id: "EPP-1.1.1", description: "Full disk encryption must be enabled on all endpoint devices" },
+            { id: "EPP-1.1.2", description: "Regular backup of endpoint data to approved storage locations" },
+            { id: "EPP-1.1.3", description: "Implementation of data loss prevention controls" }
+          ]
+        },
+        {
+          id: "EPP-1.2",
+          title: "Data Leak Prevention",
+          description: "Controls to prevent unauthorized data exfiltration from endpoints",
+          subRequirements: [
+            { id: "EPP-1.2.1", description: "USB device control and monitoring must be implemented" },
+            { id: "EPP-1.2.2", description: "File transfer monitoring and restrictions" },
+            { id: "EPP-1.2.3", description: "Cloud storage access controls and monitoring" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "EPP-2",
+      title: "Endpoint Configuration Management Policy",
+      description: "Standards for maintaining secure configurations on endpoint devices.",
+      approvalStatus: "Approved",
+      approvalDate: "2024-01-30",
+      version: "1.4",
+      requirements: [
+        {
+          id: "EPP-2.1",
+          title: "Baseline Configurations",
+          description: "Requirements for endpoint baseline security configurations",
+          subRequirements: [
+            { id: "EPP-2.1.1", description: "Standard secure configuration templates must be maintained" },
+            { id: "EPP-2.1.2", description: "Regular validation of endpoint configurations" },
+            { id: "EPP-2.1.3", description: "Automated configuration compliance monitoring" }
+          ]
+        },
+        {
+          id: "EPP-2.2",
+          title: "Change Management",
+          description: "Procedures for managing configuration changes",
+          subRequirements: [
+            { id: "EPP-2.2.1", description: "All configuration changes must follow change management process" },
+            { id: "EPP-2.2.2", description: "Documentation of approved configuration changes" },
+            { id: "EPP-2.2.3", description: "Regular review of configuration change effectiveness" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "EPP-3",
+      title: "Malicious Code Protection Policy",
+      description: "Requirements for detecting and preventing malicious code on endpoints.",
+      approvalStatus: "Approved",
+      approvalDate: "2024-02-01",
+      version: "2.1",
+      requirements: [
+        {
+          id: "EPP-3.1",
+          title: "Malware Detection",
+          description: "Requirements for malware detection capabilities",
+          subRequirements: [
+            { id: "EPP-3.1.1", description: "Approved antivirus software must be installed and active" },
+            { id: "EPP-3.1.2", description: "Real-time scanning of files and downloads" },
+            { id: "EPP-3.1.3", description: "Regular updates to malware signatures" }
+          ]
+        },
+        {
+          id: "EPP-3.2",
+          title: "Mobile Code Security",
+          description: "Controls for managing mobile code execution",
+          subRequirements: [
+            { id: "EPP-3.2.1", description: "Implementation of application whitelisting" },
+            { id: "EPP-3.2.2", description: "Mobile code execution restrictions" },
+            { id: "EPP-3.2.3", description: "Regular monitoring of unauthorized code execution attempts" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "EPP-4",
+      title: "Endpoint Monitoring and Response Policy",
+      description: "Guidelines for continuous monitoring and incident response on endpoints.",
+      approvalStatus: "Approved",
+      approvalDate: "2024-01-25",
+      version: "1.2",
+      requirements: [
+        {
+          id: "EPP-4.1",
+          title: "Continuous Monitoring",
+          description: "Requirements for endpoint monitoring",
+          subRequirements: [
+            { id: "EPP-4.1.1", description: "Implementation of endpoint detection and response (EDR) solutions" },
+            { id: "EPP-4.1.2", description: "Regular review of endpoint security logs" },
+            { id: "EPP-4.1.3", description: "Automated alerting for suspicious activities" }
+          ]
+        },
+        {
+          id: "EPP-4.2",
+          title: "Incident Response",
+          description: "Procedures for responding to endpoint security incidents",
+          subRequirements: [
+            { id: "EPP-4.2.1", description: "Defined incident response procedures for endpoint threats" },
+            { id: "EPP-4.2.2", description: "Regular testing of incident response procedures" },
+            { id: "EPP-4.2.3", description: "Documentation of incident handling and lessons learned" }
+          ]
+        }
+      ]
+    }
+  ];
+
   const sortByImpactLevel = (items: any[]) => {
     const impactOrder = { 'Critical': 0, 'High': 1, 'Medium': 2, 'Low': 3 };
     return [...items].sort((a, b) => {
@@ -383,6 +506,7 @@ const EndpointProtectionDetailsView: React.FC<DetailViewWithActivityProps> = ({ 
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList>
               <TabsTrigger value="compliance">Frameworks</TabsTrigger>
+              <TabsTrigger value="policies">Policies</TabsTrigger>
               <TabsTrigger value="resources">Security Resources</TabsTrigger>
               <TabsTrigger value="metrics">Metrics</TabsTrigger>
               <TabsTrigger value="analysis">Analysis</TabsTrigger>
@@ -493,6 +617,43 @@ const EndpointProtectionDetailsView: React.FC<DetailViewWithActivityProps> = ({ 
                         <Button className="w-full" variant="brand-primary">
                           Take Action
                         </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="policies">
+              <div className="grid grid-cols-1 gap-4">
+                {securityPolicies.map((policy, index) => (
+                  <Card key={index}>
+                    <CardHeader>
+                      <CardTitle className="text-lg">{policy.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div>
+                          <p className="text-sm"><strong>Description:</strong> {policy.description}</p>
+                          <p className="text-sm"><strong>Approval Status:</strong> {policy.approvalStatus}</p>
+                          <p className="text-sm"><strong>Approval Date:</strong> {policy.approvalDate}</p>
+                          <p className="text-sm"><strong>Version:</strong> {policy.version}</p>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          {policy.requirements.map((req, reqIndex) => (
+                            <div key={reqIndex} className="bg-muted/50 p-4 rounded-lg">
+                              <h4 className="font-medium mb-2">{req.id}: {req.title}</h4>
+                              <p className="text-sm text-muted-foreground mb-2">{req.description}</p>
+                              <ul className="list-disc list-inside space-y-1">
+                                {req.subRequirements.map((subReq, subReqIndex) => (
+                                  <li key={subReqIndex} className="text-sm text-muted-foreground">
+                                    {subReq.id}: {subReq.description}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

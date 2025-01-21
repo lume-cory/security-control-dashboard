@@ -27,6 +27,7 @@ import { analyzeUpdatedPolicy } from './data/policy-analysis'
 import { PolicyAnalysisDrawer } from './components/policy-analysis-drawer'
 import { mockClientRequirements, type ClientRequirement } from './data/mock-client-requirements'
 import { ClientRequirementsDrawer } from './components/client-requirements-drawer'
+import { mockPolicyExceptions } from './data/mock-policy-exceptions'
 
 export default function ClientSecurityRequirementsCheck() {
   const router = useRouter()
@@ -124,7 +125,7 @@ export default function ClientSecurityRequirementsCheck() {
             Acme Inc
           </span>
         </div>
-        <div className="flex w-full items-center justify-between overflow-x-auto" >
+        <div className="flex w-full items-center justify-between" >
           <Breadcrumbs>
             <Breadcrumbs.Item onClick={() => router.push('/agents')}>Agents </Breadcrumbs.Item>
             < Breadcrumbs.Divider />
@@ -145,7 +146,7 @@ export default function ClientSecurityRequirementsCheck() {
               variant="brand-secondary"
               icon="FeatherCheckSquare"
             >
-              Check Contract Requirements
+              Check New Client Contract
             </Button>
           </DialogTrigger>
           <DialogContent>
@@ -306,25 +307,37 @@ export default function ClientSecurityRequirementsCheck() {
       {/* Requirement Conflicts Section */}
       <Card>
         <CardHeader>
-          <CardTitle>Conflicting Requirements</CardTitle>
-          <CardDescription>Conflicts across different client contract requirements</CardDescription>
+          <CardTitle>Policy Exceptions</CardTitle>
+          <CardDescription>Exceptions to company security policies across different client contracts</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Requirement</TableHead>
-                <TableHead>Conflicting Client Requirements</TableHead>
+                <TableHead>Company Policy</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead>Exceptions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockConflicts.map((conflict, index) => (
-                <TableRow key={index} className="cursor-pointer hover:bg-muted" onClick={() => handleConflictClick(conflict)}>
-                  <TableCell className="font-medium">{conflict.requirement}</TableCell>
+              {mockPolicyExceptions.map((exception, index) => (
+                <TableRow 
+                  key={index} 
+                  className="cursor-pointer hover:bg-muted" 
+                  onClick={() => handleConflictClick({
+                    requirement: exception.policy,
+                    customers: exception.exceptions,
+                    currentPolicy: exception.policyLanguage
+                  })}
+                >
+                  <TableCell className="font-medium">{exception.policy}</TableCell>
+                  <TableCell>{exception.policyLanguage}</TableCell>
                   <TableCell>
                     <div className="flex flex-col space-y-1">
-                      {conflict.customers.map((customer, customerIndex) => (
-                        <span key={customerIndex}>{customer.name}: {customer.requirement}</span>
+                      {exception.exceptions.map((client, clientIndex) => (
+                        <span key={clientIndex}>
+                          {client.name}: {client.requirement}
+                        </span>
                       ))}
                     </div>
                   </TableCell>
@@ -377,7 +390,7 @@ export default function ClientSecurityRequirementsCheck() {
       <Button 
         onClick={() => setIsChatbotOpen(true)} 
         size="large"
-        className="fixed bottom-4 right-4 rounded-full p-4"
+        className="fixed bottom-7 right-10 rounded-full p-4"
         icon="FeatherMessageSquare"
         variant="brand-primary"
       />

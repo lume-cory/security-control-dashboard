@@ -174,6 +174,16 @@ export const mockClientRequirements: ClientRequirement[] = [
         exceedsFramework: true,
         exceedingFrameworks: ["ISO 27001"],
         suggestedPolicy: "Data Backup Policy"
+      },
+      {
+        id: "req7",
+        category: "Encryption",
+        description: "Data must be encrypted at rest with AES-256",
+        status: "met",
+        evidence: "Using AES-256 encryption across all storage systems",
+        policyLink: "/policies/encryption",
+        policyLanguage: "All data must be encrypted at rest using AES-256",
+        policy: "Encryption Policy"
       }
     ]
   },
@@ -234,6 +244,16 @@ export const mockClientRequirements: ClientRequirement[] = [
         policyLink: "/policies/change-management",
         policyLanguage: "All changes must be approved through change management",
         policy: "Change Management Policy"
+      },
+      {
+        id: "req6",
+        category: "Encryption",
+        description: "Data must be encrypted at rest with AES-256",
+        status: "met",
+        evidence: "Using AES-256 encryption across all storage systems",
+        policyLink: "/policies/encryption",
+        policyLanguage: "All data must be encrypted at rest using AES-256",
+        policy: "Encryption Policy"
       }
     ]
   },
@@ -284,6 +304,16 @@ export const mockClientRequirements: ClientRequirement[] = [
         policyLink: "/policies/secret-management",
         policyLanguage: "Hardware security modules required for key storage",
         policy: "Secret Management Policy"
+      },
+      {
+        id: "req5",
+        category: "Encryption",
+        description: "Data must be encrypted at rest with AES-256",
+        status: "met",
+        evidence: "Using AES-256 encryption across all storage systems",
+        policyLink: "/policies/encryption",
+        policyLanguage: "All data must be encrypted at rest using AES-256",
+        policy: "Encryption Policy"
       }
     ]
   },
@@ -354,6 +384,16 @@ export const mockClientRequirements: ClientRequirement[] = [
         policyLink: "/policies/dlp",
         suggestion: "Implement comprehensive DLP solution",
         suggestedPolicy: "Data Loss Prevention Policy"
+      },
+      {
+        id: "req7",
+        category: "Encryption",
+        description: "Data must be encrypted at rest with AES-256",
+        status: "met",
+        evidence: "Using AES-256 encryption across all storage systems",
+        policyLink: "/policies/encryption",
+        policyLanguage: "All data must be encrypted at rest using AES-256",
+        policy: "Encryption Policy"
       }
     ]
   },
@@ -394,6 +434,16 @@ export const mockClientRequirements: ClientRequirement[] = [
         policyLink: "/policies/mobile-security",
         policyLanguage: "Mobile app security testing must be tested by QA before production deployments",
         policy: "Mobile Security Policy"
+      },
+      {
+        id: "req4",
+        category: "Encryption",
+        description: "Data must be encrypted at rest with AES-256",
+        status: "met",
+        evidence: "Using AES-256 encryption across all storage systems",
+        policyLink: "/policies/encryption",
+        policyLanguage: "All data must be encrypted at rest using AES-256",
+        policy: "Encryption Policy"
       }
     ]
   }

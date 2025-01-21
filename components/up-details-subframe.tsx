@@ -167,6 +167,129 @@ const ProvisioningDetailsView: React.FC<DetailViewWithActivityProps> = ({ onClos
     }
   ]
 
+  const securityPolicies = [
+    {
+      id: "UPP-1",
+      title: "Identity and Access Management Policy",
+      description: "Core policy governing the management of user identities and access rights across the organization.",
+      approvalStatus: "Approved",
+      approvalDate: "2024-02-10",
+      version: "2.2",
+      requirements: [
+        {
+          id: "UPP-1.1",
+          title: "Identity Management",
+          description: "Requirements for managing user identities",
+          subRequirements: [
+            { id: "UPP-1.1.1", description: "Unique identifiers required for all user accounts" },
+            { id: "UPP-1.1.2", description: "Regular validation of user identity information" },
+            { id: "UPP-1.1.3", description: "Automated identity lifecycle management processes" }
+          ]
+        },
+        {
+          id: "UPP-1.2",
+          title: "Access Control",
+          description: "Standards for managing access rights",
+          subRequirements: [
+            { id: "UPP-1.2.1", description: "Implementation of role-based access control (RBAC)" },
+            { id: "UPP-1.2.2", description: "Regular access rights review and certification" },
+            { id: "UPP-1.2.3", description: "Enforcement of least privilege principle" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "UPP-2",
+      title: "User Lifecycle Management Policy",
+      description: "Guidelines for managing the complete lifecycle of user accounts from creation to termination.",
+      approvalStatus: "Approved",
+      approvalDate: "2024-01-25",
+      version: "1.5",
+      requirements: [
+        {
+          id: "UPP-2.1",
+          title: "Account Provisioning",
+          description: "Requirements for new account creation",
+          subRequirements: [
+            { id: "UPP-2.1.1", description: "Standardized process for account requests and approval" },
+            { id: "UPP-2.1.2", description: "Integration with HR systems for automated provisioning" },
+            { id: "UPP-2.1.3", description: "Documentation of all provisioning actions" }
+          ]
+        },
+        {
+          id: "UPP-2.2",
+          title: "Account Deprovisioning",
+          description: "Requirements for account termination",
+          subRequirements: [
+            { id: "UPP-2.2.1", description: "Immediate access revocation upon termination" },
+            { id: "UPP-2.2.2", description: "Automated deprovisioning workflow" },
+            { id: "UPP-2.2.3", description: "Regular audit of deprovisioning effectiveness" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "UPP-3",
+      title: "Privileged Account Management Policy",
+      description: "Specific requirements for managing accounts with elevated privileges.",
+      approvalStatus: "Approved",
+      approvalDate: "2024-02-01",
+      version: "2.0",
+      requirements: [
+        {
+          id: "UPP-3.1",
+          title: "Privileged Access Control",
+          description: "Requirements for privileged account management",
+          subRequirements: [
+            { id: "UPP-3.1.1", description: "Enhanced approval process for privileged access" },
+            { id: "UPP-3.1.2", description: "Time-limited privileged access grants" },
+            { id: "UPP-3.1.3", description: "Regular review of privileged account usage" }
+          ]
+        },
+        {
+          id: "UPP-3.2",
+          title: "Privileged Session Management",
+          description: "Controls for privileged account sessions",
+          subRequirements: [
+            { id: "UPP-3.2.1", description: "Session recording for privileged account activities" },
+            { id: "UPP-3.2.2", description: "Enhanced monitoring of privileged sessions" },
+            { id: "UPP-3.2.3", description: "Automatic session termination after inactivity" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "UPP-4",
+      title: "Access Monitoring and Compliance Policy",
+      description: "Requirements for monitoring user access patterns and ensuring compliance.",
+      approvalStatus: "Approved",
+      approvalDate: "2024-01-20",
+      version: "1.3",
+      requirements: [
+        {
+          id: "UPP-4.1",
+          title: "Access Monitoring",
+          description: "Requirements for monitoring user access",
+          subRequirements: [
+            { id: "UPP-4.1.1", description: "Continuous monitoring of access patterns" },
+            { id: "UPP-4.1.2", description: "Automated detection of unusual access attempts" },
+            { id: "UPP-4.1.3", description: "Regular access activity reporting" }
+          ]
+        },
+        {
+          id: "UPP-4.2",
+          title: "Compliance Reporting",
+          description: "Requirements for access compliance reporting",
+          subRequirements: [
+            { id: "UPP-4.2.1", description: "Regular compliance status reporting" },
+            { id: "UPP-4.2.2", description: "Automated compliance checking" },
+            { id: "UPP-4.2.3", description: "Documentation of compliance exceptions" }
+          ]
+        }
+      ]
+    }
+  ];
+
   const [activeTab, setActiveTab] = useState("compliance");
 
   const sortByImpactLevel = (items: any[]) => {
@@ -244,6 +367,7 @@ const ProvisioningDetailsView: React.FC<DetailViewWithActivityProps> = ({ onClos
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList>
               <TabsTrigger value="compliance">Frameworks</TabsTrigger>
+              <TabsTrigger value="policies">Policies</TabsTrigger>
               <TabsTrigger value="resources">Security Resources</TabsTrigger>
               <TabsTrigger value="metrics">Metrics</TabsTrigger>
               <TabsTrigger value="analysis">Analysis</TabsTrigger>
@@ -354,6 +478,43 @@ const ProvisioningDetailsView: React.FC<DetailViewWithActivityProps> = ({ onClos
                         <Button className="w-full" variant="brand-primary">
                           Take Action
                         </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="policies">
+              <div className="grid grid-cols-1 gap-4">
+                {securityPolicies.map((policy, index) => (
+                  <Card key={index}>
+                    <CardHeader>
+                      <CardTitle className="text-lg">{policy.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div>
+                          <p className="text-sm"><strong>Description:</strong> {policy.description}</p>
+                          <p className="text-sm"><strong>Approval Status:</strong> {policy.approvalStatus}</p>
+                          <p className="text-sm"><strong>Approval Date:</strong> {policy.approvalDate}</p>
+                          <p className="text-sm"><strong>Version:</strong> {policy.version}</p>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          {policy.requirements.map((req, reqIndex) => (
+                            <div key={reqIndex} className="bg-muted/50 p-4 rounded-lg">
+                              <h4 className="font-medium mb-2">{req.id}: {req.title}</h4>
+                              <p className="text-sm text-muted-foreground mb-2">{req.description}</p>
+                              <ul className="list-disc list-inside space-y-1">
+                                {req.subRequirements.map((subReq, subReqIndex) => (
+                                  <li key={subReqIndex} className="text-sm text-muted-foreground">
+                                    {subReq.id}: {subReq.description}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
