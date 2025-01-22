@@ -489,7 +489,10 @@ const ProvisioningDetailsView: React.FC<DetailViewWithActivityProps> = ({ onClos
                 {securityPolicies.map((policy, index) => (
                   <Card key={index}>
                     <CardHeader>
-                      <CardTitle className="text-lg">{policy.title}</CardTitle>
+                      <div className="flex items-center gap-2">
+                        <CardTitle className="text-lg">{policy.title}</CardTitle>
+                        <span className="text-sm text-muted-foreground">({policy.id})</span>
+                      </div>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">

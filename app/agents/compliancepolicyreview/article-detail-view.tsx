@@ -39,6 +39,80 @@ interface ArticleDetailViewProps {
   onClose: () => void;
 }
 
+interface PolicyCardProps {
+  policy: {
+    id: string;
+    name: string;
+    description: string;
+    policyText: string;
+    link: string;
+    status?: string;
+  };
+}
+
+const PolicyCard: React.FC<PolicyCardProps> = ({ policy }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedText, setEditedText] = useState(policy.policyText);
+
+  const handleSaveModification = () => {
+    // TODO: API call to save modified policy
+    console.log('Saving modified policy:', editedText);
+    setIsEditing(false);
+  };
+
+  const isStatusSuggested = (policy.status || '').toLowerCase() === 'suggested';
+
+  return (
+    <div className="border rounded-lg p-4">
+      <div className="flex items-center gap-2">
+        <h4 className="font-semibold">{policy.name}</h4>
+        <span className="text-sm text-muted-foreground">({policy.id})</span>
+        {isStatusSuggested && (
+          <span className="text-sm text-yellow-600">(Suggested)</span>
+        )}
+      </div>
+      <p className="text-sm text-gray-500 mt-1">{policy.description}</p>
+      
+      {isStatusSuggested ? (
+        isEditing ? (
+          <div className="mt-2">
+            <Textarea
+              value={editedText}
+              onChange={(e) => setEditedText(e.target.value)}
+              className="min-h-[100px] text-sm"
+            />
+            <div className="flex gap-2 mt-2">
+              <Button size="sm" onClick={handleSaveModification}>Save Changes</Button>
+              <Button size="sm" variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <p className="text-sm text-gray-700 mt-2">{policy.policyText}</p>
+            <div className="flex gap-2 mt-2">
+              <Button size="sm" onClick={() => setIsEditing(true)}>Modify</Button>
+              <Button size="sm" variant="outline">Accept</Button>
+              <Button size="sm" variant="outline">Ignore</Button>
+            </div>
+          </>
+        )
+      ) : (
+        <>
+          <p className="text-sm text-gray-700 mt-2">{policy.policyText}</p>
+          <a 
+            href={policy.link}
+            className="text-sm text-blue-600 hover:underline mt-2 inline-block"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Policy Document
+          </a>
+        </>
+      )}
+    </div>
+  );
+};
+
 export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
   article,
   onClose,
@@ -122,18 +196,7 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
             <h3 className="text-xl font-semibold">Company Policies</h3>
             <div className="space-y-4 mt-2">
             {article.policies.map((policy, index) => (
-                <div key={index} className="border rounded-lg p-4">
-                <h4 className="font-semibold">{policy.name}</h4>
-                <p className="text-sm text-gray-700 mt-1">{policy.description}</p>
-                <a 
-                    href={policy.link}
-                    className="text-sm text-blue-600 hover:underline mt-2 inline-block"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    View Policy Document
-                </a>
-                </div>
+              <PolicyCard key={index} policy={policy} />
             ))}
             </div>
         </div>

@@ -388,7 +388,6 @@ const AccessManagementDetailsView: React.FC<DetailViewWithActivityProps> = ({ on
               <TabsTrigger value="resources">Security Resources</TabsTrigger>
               <TabsTrigger value="metrics">Metrics</TabsTrigger>
               <TabsTrigger value="analysis">Analysis</TabsTrigger>
-              <TabsTrigger value="security-policies">Security Policies</TabsTrigger>
             </TabsList>
             <TabsContent value="compliance">
               {compliance.map((func, index) => (

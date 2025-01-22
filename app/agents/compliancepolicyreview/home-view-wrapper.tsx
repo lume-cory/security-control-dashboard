@@ -6,6 +6,7 @@ import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { HomeViewComponent, DetailViewType } from './home-view'
 import { ComplianceMapperComponent } from './compliance-mapper'
 import { HippaDetailView } from './hippa-detail-view'
+import { DoraDetailView } from './dora-detail-view'
 import { DefaultPageLayout } from '@/components/ui/subframe/layouts/DefaultPageLayout'
 import { IconWithBackground } from '@/components/ui/subframe/components/IconWithBackground'
 import { Breadcrumbs } from '@/components/ui/subframe/components/Breadcrumbs'
@@ -51,6 +52,7 @@ export default function HomeViewWrapper() {
               <ComplianceMapperComponent onBack={() => setActiveView(null)} />
             )}
             {activeView === 'hipaa' && <HippaDetailView />}
+            {activeView === 'dora' && <DoraDetailView />}
           </SheetContent>
         </Sheet>
       </div>

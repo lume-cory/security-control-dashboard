@@ -11,7 +11,7 @@ interface HippaArticle {
   id: string;
   name: string;
   text: string;
-  policies: Array<{ name: string; description: string; link: string }>;
+  policies: Array<PolicyItem>;
   impactedSystems: Array<{
     name: string;
     type: string;
@@ -54,20 +54,35 @@ interface HippaArticle {
   };
 }
 
+interface PolicyItem {
+  id: string;
+  name: string;
+  description: string;
+  policyText: string;
+  link: string;
+  status: 'active' | 'suggested';
+}
+
 export const enrichedHippaArticles = [
   // Administrative Safeguards
   {
     ...hippaArticles.find(a => a.id === '164.308.a.1'),
     policies: [
       {
+        id: "IS-001",
         name: 'Security Risk Assessment Policy',
         description: 'Annual security risk assessment procedures and documentation requirements',
-        link: '/policies/security-risk-assessment-v2.pdf'
+        policyText: 'The organization shall conduct comprehensive security risk assessments at least annually, documenting all identified risks, vulnerabilities, and mitigation strategies in the enterprise risk register. All findings must be reviewed by the Security Officer and remediated within 90 days.',
+        link: '/policies/security-risk-assessment-v2.pdf',
+        status: 'active'
       },
       {
+        id: "IR-002",
         name: 'Security Incident Response Plan',
         description: 'Procedures for identifying, responding to, and documenting security incidents',
-        link: '/policies/incident-response-v1.pdf'
+        policyText: 'All security incidents must be reported within 1 hour of detection. The incident response team shall categorize, investigate, and document each incident following the NIST incident handling guide. Post-incident reviews are mandatory for all severity 1 and 2 incidents.',
+        link: '/policies/incident-response-v1.pdf',
+        status: 'active'
       }
     ],
     impactedSystems: [
@@ -175,9 +190,12 @@ export const enrichedHippaArticles = [
     ...hippaArticles.find(a => a.id === '164.308.a.2'),
     policies: [
       {
+        id: "IS-003",
         name: 'Security Officer Responsibilities',
         description: 'Defines roles and responsibilities of the Security Officer',
-        link: '/policies/security-officer-duties-v1.pdf'
+        policyText: 'The Security Officer shall oversee all aspects of information security, conduct quarterly program reviews, maintain all security policies and procedures, and report security status to the board bi-annually. The Security Officer has authority to make critical security decisions during incidents.',
+        link: '/policies/security-officer-duties-v1.pdf',
+        status: 'active'
       }
     ],
     impactedSystems: [
@@ -235,14 +253,20 @@ export const enrichedHippaArticles = [
     ...hippaArticles.find(a => a.id === '164.308.a.3'),
     policies: [
       {
+        id: "IS-004",
         name: 'Access Control Policy',
         description: 'Procedures for granting and revoking system access',
-        link: '/policies/access-control-v3.pdf'
+        policyText: 'Access to systems containing PHI shall be granted based on the principle of least privilege. All access requests must be documented and approved by both the resource owner and Security team. Access reviews must be conducted quarterly, and all access must be immediately revoked upon termination.',
+        link: '/policies/access-control-v3.pdf',
+        status: 'active'
       },
       {
+        id: "IS-005",
         name: 'Employee Termination Procedures',
         description: 'Protocol for removing access upon employee departure',
-        link: '/policies/termination-procedures-v2.pdf'
+        policyText: 'Upon employee termination, all system access must be revoked within 24 hours. HR must notify IT and Security teams immediately upon termination decision. Access audit logs must be reviewed to ensure no unauthorized data access occurred prior to departure.',
+        link: '/policies/termination-procedures-v2.pdf',
+        status: 'active'
       }
     ],
     impactedSystems: [
@@ -328,9 +352,12 @@ export const enrichedHippaArticles = [
     ...hippaArticles.find(a => a.id === '164.310.a.1'),
     policies: [
       {
+        id: "PS-006",
         name: 'Facility Security Plan',
         description: 'Physical security measures for protected health information',
-        link: '/policies/facility-security-v2.pdf'
+        policyText: 'All facilities storing PHI must implement multi-factor authentication for entry, maintain visitor logs, and utilize 24/7 video surveillance. Server rooms must have additional biometric access controls and environmental monitoring systems.',
+        link: '/policies/facility-security-v2.pdf',
+        status: 'active'
       }
     ],
     impactedSystems: [
@@ -348,9 +375,12 @@ export const enrichedHippaArticles = [
     ...hippaArticles.find(a => a.id === '164.310.b'),
     policies: [
       {
+        id: "IS-007",
         name: 'Workstation Security Policy',
         description: 'Guidelines for secure workstation usage and placement',
-        link: '/policies/workstation-security-v1.pdf'
+        policyText: 'All workstations must use full-disk encryption, automatic screen locks after 5 minutes of inactivity, and privacy screens in public areas. Workstations must be positioned to prevent unauthorized viewing of PHI and locked when unattended.',
+        link: '/policies/workstation-security-v1.pdf',
+        status: 'active'
       }
     ],
     impactedSystems: [
@@ -369,14 +399,20 @@ export const enrichedHippaArticles = [
     ...hippaArticles.find(a => a.id === '164.312.a.1'),
     policies: [
       {
+        id: "IS-008",
         name: 'Authentication Standards',
         description: 'Technical requirements for system authentication',
-        link: '/policies/authentication-standards-v3.pdf'
+        policyText: 'All systems must implement multi-factor authentication. Passwords must be at least 14 characters, include special characters, and expire every 90 days. Failed login attempts must be limited to 5 before account lockout.',
+        link: '/policies/authentication-standards-v3.pdf',
+        status: 'active'
       },
       {
+        id: "IS-009",
         name: 'Automatic Logoff Policy',
         description: 'Requirements for automatic session termination',
-        link: '/policies/auto-logoff-v1.pdf'
+        policyText: 'All systems must automatically terminate sessions after 15 minutes of inactivity. Remote sessions must terminate after 4 hours regardless of activity. Re-authentication is required after session termination.',
+        link: '/policies/auto-logoff-v1.pdf',
+        status: 'active'
       }
     ],
     impactedSystems: [
@@ -506,9 +542,12 @@ export const enrichedHippaArticles = [
     ...hippaArticles.find(a => a.id === '164.312.b'),
     policies: [
       {
+        id: "IS-010",
         name: 'Audit Logging Standards',
         description: 'Requirements for system activity logging and monitoring',
-        link: '/policies/audit-logging-v2.pdf'
+        policyText: 'All systems must maintain detailed audit logs of PHI access, including user ID, timestamp, action taken, and data accessed. Logs must be retained for 7 years and protected against tampering. Real-time alerts must be configured for suspicious activities.',
+        link: '/policies/audit-logging-v2.pdf',
+        status: 'active'
       }
     ],
     impactedSystems: [
@@ -637,9 +676,12 @@ export const enrichedHippaArticles = [
     ...hippaArticles.find(a => a.id === '164.314.a'),
     policies: [
       {
+        id: "VRM-011",
         name: 'Business Associate Agreement Template',
         description: 'Standard agreement for business associates handling PHI',
-        link: '/policies/baa-template-v4.pdf'
+        policyText: 'All business associates must sign the standard BAA before accessing PHI. The agreement requires compliance with HIPAA security rules, breach notification procedures, and regular security assessments. Associates must maintain security controls equivalent to our standards.',
+        link: '/policies/baa-template-v4.pdf',
+        status: 'active'
       }
     ],
     impactedSystems: [
@@ -658,9 +700,12 @@ export const enrichedHippaArticles = [
     ...hippaArticles.find(a => a.id === '164.316.a'),
     policies: [
       {
+        id: "IS-012",
         name: 'Policy Management Framework',
         description: 'Standards for creating and maintaining security policies',
-        link: '/policies/policy-framework-v1.pdf'
+        policyText: 'All security policies must be reviewed annually, version controlled, and approved by the Security Officer. Changes must be documented and communicated to affected parties. Policies must include scope, purpose, roles and responsibilities, and compliance requirements.',
+        link: '/policies/policy-framework-v1.pdf',
+        status: 'active'
       }
     ],
     impactedSystems: [
@@ -679,14 +724,20 @@ export const enrichedHippaArticles = [
     ...hippaArticles.find(a => a.id === '164.400'),
     policies: [
       {
+        id: "POL-013",
         name: 'Breach Notification Procedures',
         description: 'Steps to follow in case of a data breach',
-        link: '/policies/breach-notification-v2.pdf'
+        policyText: 'Any suspected breach must be reported within 1 hour. Risk assessment must be completed within 24 hours. Affected individuals must be notified within 60 days. HHS notification required for breaches affecting 500+ individuals.',
+        link: '/policies/breach-notification-v2.pdf',
+        status: 'active'
       },
       {
+        id: "IR-014",
         name: 'Incident Response Plan',
         description: 'Comprehensive guide for handling security incidents',
-        link: '/policies/incident-response-v3.pdf'
+        policyText: 'The incident response team must follow established procedures for identification, containment, eradication, and recovery. Post-incident analysis required for all confirmed breaches. Quarterly incident response drills mandatory.',
+        link: '/policies/incident-response-v3.pdf',
+        status: 'active'
       }
     ],
     impactedSystems: [
@@ -787,6 +838,45 @@ export const HippaDetailView: React.FC = () => {
       <ScrollArea className="flex-1 pr-4">
         <div className="space-y-6">
 
+        {/* Policy Status Overview */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold mb-4">Policy Status Overview</h3>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">
+                    {enrichedHippaArticles.reduce((count, article) => 
+                      count + article.policies.filter(policy => policy.status === 'active').length, 0
+                    )}
+                  </div>
+                  <div className="text-sm text-gray-500">Active Policies</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-yellow-600">
+                    {enrichedHippaArticles.reduce((count, article) => 
+                      count + article.policies.filter(policy => policy.status === 'suggested').length, 0
+                    )}
+                  </div>
+                  <div className="text-sm text-gray-500">Suggested Policies</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-red-600">
+                    {enrichedHippaArticles.reduce((count, article) => 
+                      count + article.nonCompliantInstances.length, 0
+                    )}
+                  </div>
+                  <div className="text-sm text-gray-500">Non-compliant Systems</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">92%</div>
+                  <div className="text-sm text-gray-500">Overall Alignment</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Non compliant articles */}
         <div className="mb-8">
             <h3 className="text-lg font-semibold mb-4">Non-Compliant Articles</h3>
@@ -852,9 +942,18 @@ export const HippaDetailView: React.FC = () => {
                     <Accordion type="single" collapsible>
                       {article.policies.map((policy, index) => (
                         <AccordionItem key={index} value={`${article.id}-policy-${index}`}>
-                          <AccordionTrigger>{policy.name}</AccordionTrigger>
+                          <AccordionTrigger>
+                            <span className="flex items-center gap-2">
+                              <span>{policy.name}</span>
+                              <span className="text-sm text-muted-foreground">({policy.id})</span>
+                              {policy.status === 'suggested' && (
+                                <span className="text-sm text-yellow-600">(Suggested)</span>
+                              )}
+                            </span>
+                          </AccordionTrigger>
                           <AccordionContent>
                             <p className="text-sm text-gray-500 mb-2">{policy.description}</p>
+                            <p className="text-sm text-gray-700 mb-2">{policy.policyText}</p>
                             <a 
                               href={policy.link}
                               className="text-sm text-blue-600 hover:underline"

@@ -6,12 +6,21 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { Line, LineChart, XAxis, YAxis, ResponsiveContainer } from "recharts"
 import { Button } from "@/subframe/components/Button"
 import { enrichedHippaArticles } from './hippa-detail-view'
+import { enrichedDoraArticles } from './dora-detail-view'
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { ComplianceMapperComponent } from './compliance-mapper'
 
 const regulationsData = [
-  { name: 'NIS2', alignment: 95, effectiveDate: 'October 17, 2024', status: 'Upcoming', nonAlignedCount: 3, color: 'hsl(var(--chart-2))' },
-  { name: 'DORA', alignment: 98, effectiveDate: 'January 2025', status: 'Upcoming', nonAlignedCount: 2, color: 'hsl(var(--chart-1))' },
+  { name: 'NIS2', alignment: 95, effectiveDate: 'October 17, 2024', status: 'Active', nonAlignedCount: 3, color: 'hsl(var(--chart-2))' },
+ // { name: 'DORA', alignment: 98, effectiveDate: 'January 2025', status: 'Active', nonAlignedCount: 2, color: 'hsl(var(--chart-1))' },
+  { 
+    name: 'DORA', 
+    alignment: 92, 
+    effectiveDate: 'January 2025', 
+    status: 'Active', 
+    nonAlignedCount: enrichedDoraArticles.reduce((sum, item) => sum + (item.nonCompliantInstances?.length || 0), 0),
+    color: 'hsl(var(--chart-1))' 
+  },  
   { 
     name: 'HIPAA', 
     alignment: 96, 
@@ -108,7 +117,7 @@ function AlertCard({ title, description, aligned, nonAligned, onClick }: {
   )
 }
 
-export type DetailViewType = 'compliance-mapper' | 'hipaa' | null;
+export type DetailViewType = 'compliance-mapper' | 'hipaa' | 'dora' | null;
 
 interface HomeViewProps {
   activeView: DetailViewType;
@@ -119,7 +128,7 @@ export const HomeViewComponent: React.FC<HomeViewProps> = ({ activeView, setActi
   const handleRegulationClick = (regulation: string) => {
     switch(regulation) {
       case 'DORA':
-        setActiveView('compliance-mapper');
+        setActiveView('dora');
         break;
       case 'HIPAA':
         setActiveView('hipaa');
