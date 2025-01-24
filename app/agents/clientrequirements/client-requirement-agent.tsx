@@ -28,6 +28,7 @@ import { PolicyAnalysisDrawer } from './components/policy-analysis-drawer'
 import { mockClientRequirements, type ClientRequirement } from './data/mock-client-requirements'
 import { ClientRequirementsDrawer } from './components/client-requirements-drawer'
 import { mockPolicyExceptions } from './data/mock-policy-exceptions'
+import { cn } from '@/lib/utils'
 
 export default function ClientSecurityRequirementsCheck() {
   const router = useRouter()
@@ -232,36 +233,44 @@ export default function ClientSecurityRequirementsCheck() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Client</TableHead>
+                    <TableHead>Client Name</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead>Met Requirements</TableHead>
                     <TableHead>Unmet Requirements</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockClientRequirements.map((client) => {
-                    const metCount = client.requirements.filter(r => r.status === 'met').length
-                    const unmetCount = client.requirements.filter(r => r.status === 'unmet').length
-                    
-                    return (
-                      <TableRow 
-                        key={client.id} 
-                        className="cursor-pointer hover:bg-muted"
-                        onClick={() => setSelectedClient(client)}
-                      >
-                        <TableCell className="font-medium">{client.name}</TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className="bg-green-100 text-green-800">
-                            {metCount}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className="bg-red-100 text-red-800">
-                            {unmetCount}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })}
+                  {mockClientRequirements.map((client) => (
+                    <TableRow 
+                      key={client.id}
+                      className="cursor-pointer hover:bg-muted"
+                      onClick={() => setSelectedClient(client)}
+                    >
+                      <TableCell>{client.name}</TableCell>
+                      <TableCell>
+                        <span className={cn(
+                          "px-2 py-1 rounded-full text-sm capitalize",
+                          {
+                            "bg-green-100 text-green-800": client.status === 'active',
+                            "bg-yellow-100 text-yellow-800": client.status === 'pending',
+                            "bg-gray-100 text-gray-800": client.status === 'inactive'
+                          }
+                        )}>
+                          {client.status}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="bg-green-100 text-green-800">
+                          {client.requirements.filter(r => r.status === 'met').length}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="bg-red-100 text-red-800">
+                          {client.requirements.filter(r => r.status === 'unmet').length}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </div>

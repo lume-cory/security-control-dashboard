@@ -96,7 +96,7 @@ export const enrichedDoraArticles = [
         status: "active"
       },
       {
-        id: "SUGGESTED-001",
+        id: "IS-007",
         name: "ICT Resilience Testing Policy",
         description: "Regular testing of ICT system resilience",
         policyText: "The organization shall conduct regular resilience testing of critical ICT systems, including stress testing and recovery scenarios, at least bi-annually.",
@@ -187,7 +187,7 @@ export const enrichedDoraArticles = [
         status: "active"
       },
       {
-        id: "SUGGESTED-002",
+        id: "IS-008",
         name: "ICT Risk Committee Charter",
         description: "Establishment of dedicated ICT risk committee",
         policyText: "A dedicated ICT Risk Committee shall be established to oversee ICT risk management activities and report directly to the board.",
@@ -307,7 +307,7 @@ export const enrichedDoraArticles = [
         status: "active"
       },
       {
-        id: "SUGGESTED-003",
+        id: "OPS-003",
         name: "Stress Testing Policy",
         description: "Regular stress testing of critical systems",
         policyText: "Critical systems shall undergo quarterly stress testing to validate performance under peak conditions.",
@@ -341,7 +341,7 @@ export const enrichedDoraArticles = [
     status: 'Active',
     policies: [
       {
-        id: "SEC-001",
+        id: "DS-001",
         name: "Data Security Controls",
         description: "Controls for data protection across lifecycle",
         policyText: "All sensitive data must be encrypted at rest and in transit using approved algorithms and key management procedures.",
@@ -349,7 +349,7 @@ export const enrichedDoraArticles = [
         status: "active"
       },
       {
-        id: "SUGGESTED-004",
+        id: "DS-004",
         name: "Advanced Encryption Standards",
         description: "Enhanced encryption requirements",
         policyText: "Implementation of quantum-resistant encryption algorithms for critical data storage and transmission.",

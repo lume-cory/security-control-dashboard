@@ -10,6 +10,14 @@ import { ExternalLink, MessageSquare, Mail, Ticket, Phone, Fish, ArrowUpDown, Ch
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Accordion } from "@/subframe/components/Accordion";
 
+interface ResponseSection {
+  text: string;
+  supportingDocs: Array<{
+    name: string;
+    link: string;
+  }>;
+}
+
 interface Question {
   id: number;
   question: string;
@@ -18,11 +26,11 @@ interface Question {
   source: string;
   sourceLink: string;
   triage?: 'urgent' | 'high' | 'medium' | 'low';
+  suggestedResponse: Array<ResponseSection>;
 }
 
 interface OutstandingQuestion extends Question {
   dueDate: string;
-  suggestedResponse: string;
   supportingDocs: Array<{ name: string; link: string }>;
   otherDocs: Array<{ name: string; link: string }>;
   policyOwner: PolicyOwner;
@@ -34,6 +42,7 @@ interface ResolvedQuestion extends Question {
   decision: string;
   documentationLink: string;
   policyOwner: PolicyOwner;
+  suggestedResponse: Array<ResponseSection>;
 }
 
 interface Confidence {
@@ -74,7 +83,26 @@ const outstandingQuestions: OutstandingQuestion[] = [
       },
       signOffStatus: 'Pending'
     },
-    suggestedResponse: "Using a third-party authentication service can have both benefits and risks. Benefits include reduced development time and potentially more robust security measures. However, risks include potential data breaches at the third-party provider, loss of control over the authentication process, and potential service outages. It's crucial to thoroughly vet the provider, understand their security measures, and have contingency plans in place.",
+    suggestedResponse: [
+      {
+        text: "Using a third-party authentication service can have both benefits and risks. Benefits include reduced development time and potentially more robust security measures.",
+        supportingDocs: [
+          { name: "Security Policy #AUTH-001", link: "https://docs.company.com/security/AUTH-001" }
+        ]
+      },
+      {
+        text: "However, risks include potential data breaches at the third-party provider, loss of control over the authentication process, and potential service outages.",
+        supportingDocs: [
+          { name: "Prior Review #PR-789", link: "https://reviews.company.com/PR-789" }
+        ]
+      },
+      {
+        text: "It's crucial to thoroughly vet the provider, understand their security measures, and have contingency plans in place.",
+        supportingDocs: [
+          { name: "Third-Party Integration Guidelines", link: "https://docs.company.com/integration/guidelines" }
+        ]
+      }
+    ],
     supportingDocs: [
       { name: "Security Policy #AUTH-001", link: "https://docs.company.com/security/AUTH-001" },
       { name: "Prior Review #PR-789", link: "https://reviews.company.com/PR-789" }
@@ -108,7 +136,26 @@ const outstandingQuestions: OutstandingQuestion[] = [
       },
       signOffStatus: 'N/A'
     },
-    suggestedResponse: "All external websites must go through our Website Governance Process. This includes domain registration (which must be done through IT), security assessment of the hosting platform, and compliance review. Please submit a Website Request Form to initiate this process. Self-hosted solutions are not permitted due to security and maintenance concerns.",
+    suggestedResponse: [
+      {
+        text: "All external websites must go through our Website Governance Process. This includes domain registration (which must be done through IT) and security assessment of the hosting platform.",
+        supportingDocs: [
+          { name: "Website Governance Policy", link: "https://docs.company.com/security/WEB-001" }
+        ]
+      },
+      {
+        text: "Self-hosted solutions are not permitted due to security and maintenance concerns. Please submit a Website Request Form to initiate this process.",
+        supportingDocs: [
+          { name: "Domain Management Guidelines", link: "https://docs.company.com/it/domains" }
+        ]
+      },
+      {
+        text: "Our approved hosting platforms provide necessary security controls and monitoring capabilities required for company websites.",
+        supportingDocs: [
+          { name: "Cloud Hosting Standards", link: "https://docs.company.com/cloud/standards" }
+        ]
+      }
+    ],
     supportingDocs: [
       { name: "Website Governance Policy", link: "https://docs.company.com/security/WEB-001" },
       { name: "Domain Management Guidelines", link: "https://docs.company.com/it/domains" }
@@ -142,10 +189,30 @@ const outstandingQuestions: OutstandingQuestion[] = [
       },
       signOffStatus: 'N/A'
     },
-    suggestedResponse: "Yes, you can bring your work phone to Mexico, but specific security measures are required. You must: 1) Enable full disk encryption, 2) Install our travel VPN profile, 3) Enable remote wipe capability, and 4) Register your travel in the Travel Security Portal. Avoid using public WiFi and consider a travel burner phone for personal use.",
+    suggestedResponse: [
+      {
+        text: "Yes, you can bring your work phone to Mexico, but specific security measures are required. You must: 1) Enable full disk encryption, 2) Install our travel VPN profile.",
+        supportingDocs: [
+          { name: "Device Protection Guidelines", link: "https://docs.company.com/security/devices" }
+        ]
+      },
+      {
+        text: "You must also: 3) Enable remote wipe capability, and 4) Register your travel in the Travel Security Portal.",
+        supportingDocs: [
+          { name: "International Travel Security Policy", link: "https://docs.company.com/security/TRAVEL-002" }
+        ]
+      },
+      {
+        text: "Avoid using public WiFi and consider a travel burner phone for personal use. Use our travel VPN when connecting to any network.",
+        supportingDocs: [
+          { name: "VPN Configuration Guide", link: "https://docs.company.com/vpn/setup" },
+          { name: "Country-Specific Security Advisories", link: "https://docs.company.com/security/advisories" }
+        ]
+      }
+    ],
     supportingDocs: [
-      { name: "International Travel Security Policy", link: "https://docs.company.com/security/TRAVEL-002" },
-      { name: "Device Protection Guidelines", link: "https://docs.company.com/security/devices" }
+      { name: "Device Protection Guidelines", link: "https://docs.company.com/security/devices" },
+      { name: "International Travel Security Policy", link: "https://docs.company.com/security/TRAVEL-002" }
     ],
     otherDocs: [
       { name: "VPN Configuration Guide", link: "https://docs.company.com/vpn/setup" },
@@ -176,7 +243,26 @@ const outstandingQuestions: OutstandingQuestion[] = [
       },
       signOffStatus: 'Pending'
     },
-    suggestedResponse: "External file sharing must use our approved secure file transfer solution (SecureShare). You'll need to: 1) Request access through IT Service Portal, 2) Complete the External Sharing Agreement form, 3) Use time-limited links (max 7 days), and 4) Enable download tracking. All shared documents must be logged in the Data Sharing Register.",
+    suggestedResponse: [
+      {
+        text: "External file sharing must use our approved secure file transfer solution (SecureShare). You'll need to: 1) Request access through IT Service Portal, 2) Complete the External Sharing Agreement form.",
+        supportingDocs: [
+          { name: "External Data Sharing Policy", link: "https://docs.company.com/security/DATA-002" }
+        ]
+      },
+      {
+        text: "All shared documents must be logged in the Data Sharing Register and use time-limited links (max 7 days).",
+        supportingDocs: [
+          { name: "Auditor Security Requirements", link: "https://docs.company.com/security/audit-requirements" }
+        ]
+      },
+      {
+        text: "Enable download tracking and ensure all documents are properly classified according to our data classification guidelines.",
+        supportingDocs: [
+          { name: "Data Classification Guidelines", link: "https://docs.company.com/security/data-classification" }
+        ]
+      }
+    ],
     supportingDocs: [
       { name: "External Data Sharing Policy", link: "https://docs.company.com/security/DATA-002" },
       { name: "Auditor Security Requirements", link: "https://docs.company.com/security/audit-requirements" }
@@ -210,7 +296,26 @@ const outstandingQuestions: OutstandingQuestion[] = [
       },
       signOffStatus: 'No'
     },
-    suggestedResponse: "Contractor device access requires: 1) Completed Contractor Security Agreement, 2) Background check confirmation from HR, 3) Completion of Security Awareness Training, 4) Device must be company-issued or meet our BYOD requirements. Submit requests through Contractor Access Portal at least 3 business days before start date.",
+    suggestedResponse: [
+      {
+        text: "Contractor device access requires: 1) Completed Contractor Security Agreement, 2) Background check confirmation from HR.",
+        supportingDocs: [
+          { name: "Contractor Security Policy", link: "https://docs.company.com/security/CONTRACTOR-001" }
+        ]
+      },
+      {
+        text: "Device must be company-issued or meet our BYOD requirements. Submit requests through Contractor Access Portal at least 3 business days before start date.",
+        supportingDocs: [
+          { name: "Device Access Requirements", link: "https://docs.company.com/security/device-access" }
+        ]
+      },
+      {
+        text: "All contractors must complete Security Awareness Training before access is granted.",
+        supportingDocs: [
+          { name: "Security Training Portal", link: "https://training.company.com/security" }
+        ]
+      }
+    ],
     supportingDocs: [
       { name: "Contractor Security Policy", link: "https://docs.company.com/security/CONTRACTOR-001" },
       { name: "Device Access Requirements", link: "https://docs.company.com/security/device-access" }
@@ -244,7 +349,26 @@ const outstandingQuestions: OutstandingQuestion[] = [
       },
       signOffStatus: 'Pending'
     },
-    suggestedResponse: "No, personal password managers cannot be used for company credentials under any circumstances. This violates our security policy and creates significant risks. For temporary credential sharing, use the approved interim solution (KeyPass with encrypted file on approved share). Enterprise password manager rollout is scheduled for completion in 2 weeks.",
+    suggestedResponse: [
+      {
+        text: "No, personal password managers cannot be used for company credentials under any circumstances. This violates our security policy and creates significant risks.",
+        supportingDocs: [
+          { name: "Password Management Policy", link: "https://docs.company.com/security/PASS-001" }
+        ]
+      },
+      {
+        text: "For temporary credential sharing, use the approved interim solution (KeyPass with encrypted file on approved share).",
+        supportingDocs: [
+          { name: "Credential Sharing Guidelines", link: "https://docs.company.com/security/cred-sharing" }
+        ]
+      },
+      {
+        text: "Enterprise password manager rollout is scheduled for completion in 2 weeks.",
+        supportingDocs: [
+          { name: "Enterprise Password Manager Rollout Plan", link: "https://docs.company.com/projects/password-manager" }
+        ]
+      }
+    ],
     supportingDocs: [
       { name: "Password Management Policy", link: "https://docs.company.com/security/PASS-001" },
       { name: "Credential Sharing Guidelines", link: "https://docs.company.com/security/cred-sharing" }
@@ -278,7 +402,27 @@ const outstandingQuestions: OutstandingQuestion[] = [
       },
       signOffStatus: 'Yes'
     },
-    suggestedResponse: "1) Block sender domains immediately via email gateway, 2) Send company-wide alert about DocuSign phishing campaign, 3) Check email logs for click-throughs, 4) Reset passwords for any affected accounts, 5) Update phishing detection rules to catch similar patterns.",
+    suggestedResponse: [
+      {
+        text: "1) Block sender domains immediately via email gateway, 2) Send company-wide alert about DocuSign phishing campaign.",
+        supportingDocs: [
+          { name: "Phishing Response Playbook", link: "https://docs.company.com/security/phishing-response" },
+          { name: "Email Security Controls", link: "https://docs.company.com/security/email-controls" }
+        ]
+      },
+      {
+        text: "3) Check email logs for click-throughs, 4) Reset passwords for any affected accounts.",
+        supportingDocs: [
+          { name: "Email Security Controls", link: "https://docs.company.com/security/email-controls" }
+        ]
+      },
+      {
+        text: "5) Update phishing detection rules to catch similar patterns.",
+        supportingDocs: [
+          { name: "DocuSign Security Guidelines", link: "https://docs.company.com/security/docusign" }
+        ]
+      }
+    ],
     supportingDocs: [
       { name: "Phishing Response Playbook", link: "https://docs.company.com/security/phishing-response" },
       { name: "Email Security Controls", link: "https://docs.company.com/security/email-controls" }
@@ -312,7 +456,26 @@ const outstandingQuestions: OutstandingQuestion[] = [
       },
       signOffStatus: 'N/A'
     },
-    suggestedResponse: "Immediate actions required: 1) Verify fire suppression system activation, 2) Initiate emergency shutdown procedures for affected racks, 3) Notify on-call facilities team, 4) Activate disaster recovery procedures if needed, 5) Prepare for failover to backup data center if situation escalates.",
+    suggestedResponse: [
+      {
+        text: "Immediate actions required: 1) Verify fire suppression system activation, 2) Initiate emergency shutdown procedures for affected racks.",
+        supportingDocs: [
+          { name: "Data Center Emergency Procedures", link: "https://docs.company.com/facilities/dc-emergency" }
+        ]
+      },
+      {
+        text: "3) Notify on-call facilities team, 4) Activate disaster recovery procedures if needed.",
+        supportingDocs: [
+          { name: "Business Continuity Plan", link: "https://docs.company.com/security/bcp" }
+        ]
+      },
+      {
+        text: "5) Prepare for failover to backup data center if situation escalates.",
+        supportingDocs: [
+          { name: "Emergency Contact List", link: "https://docs.company.com/facilities/emergency-contacts" }
+        ]
+      }
+    ],
     supportingDocs: [
       { name: "Data Center Emergency Procedures", link: "https://docs.company.com/facilities/dc-emergency" },
       { name: "Business Continuity Plan", link: "https://docs.company.com/security/bcp" }
@@ -353,7 +516,8 @@ const resolvedQuestions: ResolvedQuestion[] = [
         reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`]
       },
       signOffStatus: 'Yes'
-    }
+    },
+    suggestedResponse: []
   },
   {
     id: 2,
@@ -381,7 +545,8 @@ const resolvedQuestions: ResolvedQuestion[] = [
         reasons: [`Manager of team assumed to own policy`]
       },
       signOffStatus: 'N/A'
-    }
+    },
+    suggestedResponse: []
   },
   {
     id: 3,
@@ -409,7 +574,8 @@ const resolvedQuestions: ResolvedQuestion[] = [
         reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`]
       },
       signOffStatus: 'Yes'
-    }
+    },
+    suggestedResponse: []
   },
   {
     id: 4,
@@ -437,7 +603,8 @@ const resolvedQuestions: ResolvedQuestion[] = [
         reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`, `Has answered similar questions on previous tickets`, `Author on a design doc for this policy area`]
       },
       signOffStatus: 'Yes'
-    }
+    },
+    suggestedResponse: []
   },
   {
     id: 5,
@@ -465,7 +632,8 @@ const resolvedQuestions: ResolvedQuestion[] = [
         reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`, `Has answered similar questions on previous tickets`, `Author on a design doc for this policy area`]
       },
       signOffStatus: 'Yes'
-    }
+    },
+    suggestedResponse: []
   },
   {
     id: 6,
@@ -493,7 +661,8 @@ const resolvedQuestions: ResolvedQuestion[] = [
         reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`, `Has answered similar questions on previous tickets`, `Author on a design doc for this policy area`]
       },
       signOffStatus: 'Yes'
-    }
+    },
+    suggestedResponse: []
   },
   {
     id: 7,
@@ -521,7 +690,8 @@ const resolvedQuestions: ResolvedQuestion[] = [
         reasons: [`Prior contributor to similar tickets`, `Author of KB articles for similar issues`, `Has answered similar questions on previous tickets`, `Author on a design doc for this policy area`]
       },
       signOffStatus: 'Yes'
-    }
+    },
+    suggestedResponse: []
   }
 ]
 
@@ -550,13 +720,13 @@ export function QuestionsTable() {
 
   const handleUseResponse = () => {
     if (selectedQuestion && 'suggestedResponse' in selectedQuestion) {
-      setResponse(selectedQuestion.suggestedResponse)
+      setResponse(selectedQuestion.suggestedResponse.map(section => section.text).join('\n'))
     }
   }
 
   const handleModifyResponse = () => {
     if (selectedQuestion && 'suggestedResponse' in selectedQuestion) {
-      setResponse(selectedQuestion.suggestedResponse)
+      setResponse(selectedQuestion.suggestedResponse.map(section => section.text).join('\n'))
     }
   }
 
@@ -996,11 +1166,29 @@ export function QuestionsTable() {
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label className="text-right font-semibold self-start pt-1">Suggested Response:</Label>
-                    <div className="col-span-3 space-y-2">
+                    <div className="col-span-3 space-y-4">
                       {'suggestedResponse' in selectedQuestion && (
                         <>
-                          <p>{selectedQuestion.suggestedResponse}</p>
-                          <div className="flex space-x-2">
+                          {selectedQuestion.suggestedResponse.map((section, index) => (
+                            <div key={index} className="space-y-2">
+                              <p className="text-sm text-gray-700">{section.text}</p>
+                              <div className="flex gap-2">
+                                {section.supportingDocs.map((doc, docIndex) => (
+                                  <a 
+                                    key={docIndex}
+                                    href={doc.link} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="text-xs text-blue-500 hover:underline flex items-center bg-blue-50 px-2 py-1 rounded"
+                                  >
+                                    <span>{doc.name}</span>
+                                    <ExternalLink className="h-3 w-3 ml-1" />
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                          <div className="flex space-x-2 mt-4">
                             <Button variant="brand-secondary" onClick={handleUseResponse}>Use This Response</Button>
                             <Button variant="neutral-secondary" onClick={handleModifyResponse}>Modify Response</Button>
                           </div>
@@ -1014,10 +1202,10 @@ export function QuestionsTable() {
                       <span className="block text-sm text-gray-500">Content that was referenced to create this response</span>
                     </Label>
                     <div className="col-span-3">
-                      {'supportingDocs' in selectedQuestion && selectedQuestion.supportingDocs.map((doc, index) => (
+                      {'suggestedResponse' in selectedQuestion && selectedQuestion.suggestedResponse.map((section, index) => (
                         <div key={index} className="flex items-center space-x-2 mb-2">
-                          <a href={doc.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline flex items-center">
-                            {doc.name}
+                          <a href={section.supportingDocs[0].link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline flex items-center">
+                            {section.supportingDocs[0].name}
                             <ExternalLink className="h-4 w-4 ml-1" />
                           </a>
                         </div>

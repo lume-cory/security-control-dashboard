@@ -9,6 +9,7 @@ import { Button } from "@/subframe/components/Button"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Textarea } from "@/components/ui/textarea"
 import { useState } from 'react'
+import { cn } from "@/lib/utils"
 
 interface ClientRequirementsDrawerProps {
   client: ClientRequirement | null;
@@ -90,7 +91,17 @@ export function ClientRequirementsDrawer({
       <SheetContent style={{ maxWidth: 'min(50vw, 1200px)' }} className="w-full overflow-hidden" side="right">
         <SheetHeader>
           <SheetTitle>{client?.name} Requirements</SheetTitle>
-          <SheetDescription>
+          <SheetDescription className="flex gap-4">
+            <span className={cn(
+              "px-2 py-1 rounded-full text-sm capitalize",
+              {
+                "bg-green-100 text-green-800": client?.status === 'active',
+                "bg-yellow-100 text-yellow-800": client?.status === 'pending',
+                "bg-gray-100 text-gray-800": client?.status === 'inactive'
+              }
+            )}>
+              {client?.status}
+            </span>
             <a 
               href={client?.contractLink} 
               className="text-blue-500 hover:underline flex items-center"

@@ -1,6 +1,7 @@
 export interface ClientRequirement {
   id: string;
   name: string;
+  status: 'active' | 'pending' | 'inactive';
   contractLink: string;
   totalRequirements: number;
   metRequirements: number;
@@ -26,6 +27,7 @@ export const mockClientRequirements: ClientRequirement[] = [
   {
     id: "client1",
     name: "Acme Corp",
+    status: 'pending',
     contractLink: "/contracts/acme-corp-2024.pdf",
     totalRequirements: 7,
     metRequirements: 5,
@@ -108,6 +110,7 @@ export const mockClientRequirements: ClientRequirement[] = [
   {
     id: "client2",
     name: "TechGiant Inc",
+    status: 'active',
     contractLink: "/contracts/techgiant-2024.pdf",
     totalRequirements: 6,
     metRequirements: 5,
@@ -190,6 +193,7 @@ export const mockClientRequirements: ClientRequirement[] = [
   {
     id: "client3",
     name: "Bravo Corp",
+    status: 'active',
     contractLink: "/contracts/bravo-corp-2024.pdf",
     totalRequirements: 5,
     metRequirements: 4,
@@ -260,6 +264,7 @@ export const mockClientRequirements: ClientRequirement[] = [
   {
     id: "client4",
     name: "Tech Inc",
+    status: 'active',
     contractLink: "/contracts/tech-inc-2024.pdf",
     totalRequirements: 4,
     metRequirements: 3,
@@ -320,6 +325,7 @@ export const mockClientRequirements: ClientRequirement[] = [
   {
     id: "client5",
     name: "SecureData Ltd",
+    status: 'active',
     contractLink: "/contracts/securedata-2024.pdf",
     totalRequirements: 6,
     metRequirements: 3,
@@ -400,6 +406,7 @@ export const mockClientRequirements: ClientRequirement[] = [
   {
     id: "client6",
     name: "Design Co",
+    status: 'active',
     contractLink: "/contracts/design-co-2024.pdf",
     totalRequirements: 3,
     metRequirements: 2,

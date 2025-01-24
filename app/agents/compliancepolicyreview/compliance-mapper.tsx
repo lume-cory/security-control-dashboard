@@ -424,7 +424,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({ requirement, onClose, regul
                 <CardContent>
                   <div className="space-y-4">
                     <p>
-                      <strong>Name:</strong>{' '}
+                      <strong>Policy Name:</strong>{' '}
                       <a 
                         href="#" 
                         className="text-blue-600 hover:text-blue-800 inline-flex items-center"
@@ -483,6 +483,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({ requirement, onClose, regul
                     {/* Add Submit for Review button only for suggested policies */}
                     {!requirement.policyId && (
                       <div className="mt-6 pt-4 border-t">
+                        <p className="text-md text-gray-500 mb-2">Once approved by the policy approval board, this change will be applied to the policy document listed above. </p>
                         <Button 
                           className="w-full"
                           onClick={() => {

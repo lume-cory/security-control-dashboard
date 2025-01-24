@@ -91,9 +91,10 @@ const PolicyCard: React.FC<PolicyCardProps> = ({ policy }) => {
             <p className="text-sm text-gray-700 mt-2">{policy.policyText}</p>
             <div className="flex gap-2 mt-2">
               <Button size="sm" onClick={() => setIsEditing(true)}>Modify</Button>
-              <Button size="sm" variant="outline">Accept</Button>
+              <Button size="sm" variant="outline">Submit for Approval</Button>
               <Button size="sm" variant="outline">Ignore</Button>
             </div>
+            <p className="text-sm text-gray-500 mt-2">Once approved by the policy approval board, this change will be applied to the policy document listed above. </p>
           </>
         )
       ) : (
