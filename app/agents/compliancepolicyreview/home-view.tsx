@@ -12,23 +12,23 @@ import { ComplianceMapperComponent } from './compliance-mapper'
 
 const regulationsData = [
   { name: 'NIS2', alignment: 95, effectiveDate: 'October 17, 2024', status: 'Active', nonAlignedCount: 3, color: 'hsl(var(--chart-2))' },
- // { name: 'DORA', alignment: 98, effectiveDate: 'January 2025', status: 'Active', nonAlignedCount: 2, color: 'hsl(var(--chart-1))' },
-  { 
-    name: 'DORA', 
-    alignment: 92, 
-    effectiveDate: 'January 2025', 
-    status: 'Active', 
+  // { name: 'DORA', alignment: 98, effectiveDate: 'January 2025', status: 'Active', nonAlignedCount: 2, color: 'hsl(var(--chart-1))' },
+  {
+    name: 'DORA',
+    alignment: 92,
+    effectiveDate: 'January 2025',
+    status: 'Active',
     nonAlignedCount: enrichedDoraArticles.reduce((sum, item) => sum + (item.nonCompliantInstances?.length || 0), 0),
-    color: 'hsl(var(--chart-1))' 
-  },  
-  { 
-    name: 'HIPAA', 
-    alignment: 96, 
-    effectiveDate: 'April 2003', 
-    status: 'Active', 
+    color: 'hsl(var(--chart-1))'
+  },
+  {
+    name: 'HIPAA',
+    alignment: 96,
+    effectiveDate: 'April 2003',
+    status: 'Active',
     nonAlignedCount: enrichedHippaArticles.reduce((sum, item) => sum + (item.nonCompliantInstances?.length || 0), 0),
-    color: 'hsl(var(--chart-6))' 
-  },  
+    color: 'hsl(var(--chart-6))'
+  },
   { name: 'UK GDPR', alignment: 100, effectiveDate: 'May 2018', status: 'Active', nonAlignedCount: 0, color: 'hsl(var(--chart-3))' },
   { name: 'EU GDPR', alignment: 100, effectiveDate: 'May 2018', status: 'Active', nonAlignedCount: 0, color: 'hsl(var(--chart-4))' },
   { name: 'CCPA', alignment: 100, effectiveDate: 'January 2020', status: 'Active', nonAlignedCount: 0, color: 'hsl(var(--chart-5))' },
@@ -126,7 +126,7 @@ interface HomeViewProps {
 
 export const HomeViewComponent: React.FC<HomeViewProps> = ({ activeView, setActiveView }) => {
   const handleRegulationClick = (regulation: string) => {
-    switch(regulation) {
+    switch (regulation) {
       case 'DORA':
         setActiveView('dora');
         break;
@@ -143,13 +143,13 @@ export const HomeViewComponent: React.FC<HomeViewProps> = ({ activeView, setActi
   };
 
   return (
-    <div className="space-y-6">
-      <Card>
+    <div className="w-full transition-all duration-200 space-y-6">
+      <Card className="transition-all duration-200">
         <CardHeader>
           <CardTitle>Alerts</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 transition-all duration-200">
             <AlertCard
               title="Security Policy v7"
               description="The latest revision of the Information Security Policy has resulted in misalignment with the NIST Cybersecurity Frameworks, CRI Profiles, and 3 regulations."
@@ -167,8 +167,8 @@ export const HomeViewComponent: React.FC<HomeViewProps> = ({ activeView, setActi
           </div>
         </CardContent>
       </Card>
-      
-      <Card>
+
+      <Card className="transition-all duration-200">
         <CardHeader>
           <div className="flex justify-between items-center">
             <CardTitle>Regulation Alignment</CardTitle>
@@ -185,9 +185,9 @@ export const HomeViewComponent: React.FC<HomeViewProps> = ({ activeView, setActi
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid auto-rows-fr grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 transition-all duration-200">
             {regulationsData.map((regulation) => (
-              <RegulationCard 
+              <RegulationCard
                 key={regulation.name}
                 {...regulation}
                 onClick={() => handleRegulationClick(regulation.name)}
@@ -197,7 +197,7 @@ export const HomeViewComponent: React.FC<HomeViewProps> = ({ activeView, setActi
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="transition-all duration-200">
         <CardHeader>
           <CardTitle>Alignment Trend Over Time</CardTitle>
         </CardHeader>
@@ -211,7 +211,7 @@ export const HomeViewComponent: React.FC<HomeViewProps> = ({ activeView, setActi
               EUGDPR: { label: "EU GDPR", color: "hsl(var(--chart-4))" },
               CCPA: { label: "CCPA", color: "hsl(var(--chart-5))" },
             }}
-            className="h-[300px] w-full"
+            className="h-[300px] w-full transition-all duration-200"
           >
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={alignmentOverTime} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
