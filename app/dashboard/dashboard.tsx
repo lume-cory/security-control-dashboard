@@ -15,16 +15,16 @@ import { Progress } from "@/subframe/components/Progress";
 import { DropdownMenu } from "@/subframe/components/DropdownMenu";
 import * as SubframeCore from "@subframe/core";
 import { Table } from "@/subframe/components/Table";
-import AccessManagementDetailsView from "@/components/am-details-subframe"; 
-import EndpointProtectionDetailsView from "@/components/ep-details-subframe"; 
-import DataStorageDetailsView from "@/components/ds-details-subframe"; 
-import ProvisioningDetailsView from "@/components/up-details-subframe"; 
+import AccessManagementDetailsView from "@/app/agents/controlgroups/am-details-subframe";
+import EndpointProtectionDetailsView from "@/app/agents/controlgroups/ep-details-subframe";
+import DataStorageDetailsView from "@/app/agents/controlgroups/ds-details-subframe";
+import ProvisioningDetailsView from "@/app/agents/controlgroups/up-details-subframe";
 
 const distinctColors = [
-    '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', 
-    '#F06292', '#AED581', '#7986CB', '#FFD54F', '#4DB6AC',
-    '#9575CD', '#4DD0E1', '#81C784', '#DCE775', '#64B5F6'
-  ];
+  '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8',
+  '#F06292', '#AED581', '#7986CB', '#FFD54F', '#4DB6AC',
+  '#9575CD', '#4DD0E1', '#81C784', '#DCE775', '#64B5F6'
+];
 
 function DashboardWithAnalytics() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -65,8 +65,8 @@ function DashboardWithAnalytics() {
         return <DataStorageDetailsView onClose={closeDrawer} />
       case "Provisioning":
         return <ProvisioningDetailsView onClose={closeDrawer} />
-    //   case "Data Protection":
-    //     return <DetailViewWithActivity onClose={() => setSelectedTheme(null)} />
+      //   case "Data Protection":
+      //     return <DetailViewWithActivity onClose={() => setSelectedTheme(null)} />
       default:
         return null
     }
@@ -87,7 +87,7 @@ function DashboardWithAnalytics() {
             variant="brand-secondary"
             size="medium"
             icon="FeatherSend"
-            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+            onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
           >
             Share report
           </Button>
@@ -96,7 +96,7 @@ function DashboardWithAnalytics() {
             variant="neutral-secondary"
             size="medium"
             icon="FeatherBuilding"
-            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+            onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
           >
             Business Coverage
           </Button>
@@ -105,7 +105,7 @@ function DashboardWithAnalytics() {
             variant="neutral-secondary"
             size="medium"
             icon="FeatherSprout"
-            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+            onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
           >
             Control Maturity
           </Button>
@@ -114,7 +114,7 @@ function DashboardWithAnalytics() {
             variant="neutral-secondary"
             size="medium"
             icon="FeatherActivity"
-            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+            onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
           >
             Test Findings &amp; Actions
           </Button>
@@ -169,7 +169,7 @@ function DashboardWithAnalytics() {
         <div className="flex w-full items-center gap-4">
           <div className="flex grow shrink-0 basis-0 flex-col items-start gap-6 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm">
             <div className="flex w-full items-center gap-2">
-            <span className="grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">
+              <span className="grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">
                 Asset Revenue by Type ($M)
               </span>
             </div>
@@ -187,9 +187,9 @@ function DashboardWithAnalytics() {
           <div className="flex grow shrink-0 basis-0 flex-col items-start gap-6 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm">
             <div className="flex w-full items-center gap-2">
               <span className="grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">
-              Revenue Covered by Resource Type (%)
+                Revenue Covered by Resource Type (%)
               </span>
-              <ToggleGroup value="" onValueChange={(value: string) => {}}>
+              <ToggleGroup value="" onValueChange={(value: string) => { }}>
                 <ToggleGroup.Item disabled={true} icon={null} value="95e4937b">
                   Current
                 </ToggleGroup.Item>
@@ -214,7 +214,7 @@ function DashboardWithAnalytics() {
               className="h-64 w-full flex-none"
               stacked={true}
               categories={[
-                "N/A", "Insurance", "Audit", "3P Pentests", "Op. Costs", 
+                "N/A", "Insurance", "Audit", "3P Pentests", "Op. Costs",
                 "MSSP", "Headcount", "R&D", "License", "Tooling"
               ]}
               data={[
@@ -234,11 +234,11 @@ function DashboardWithAnalytics() {
                 Cost by Resource Type ($M)
               </span>
               <div className="flex w-full grow shrink-0 basis-0 flex-col items-center justify-center gap-2">
-              <PieChart
+                <PieChart
                   className="w-full grow shrink-0 basis-0"
                   category={"Cost"}
                   data={[
-                    { Type: "Tooling", Cost: 39.50},
+                    { Type: "Tooling", Cost: 39.50 },
                     { Type: "Licensing", Cost: 5.43 },
                     { Type: "R&D", Cost: 38.70 },
                     { Type: "Headcount", Cost: 38.70 },
@@ -264,16 +264,16 @@ function DashboardWithAnalytics() {
             <BarChart
               categories={["Revenue Covered", "Cost"]}
               data={[
-                { Type: "N/A", "Revenue Covered": 20, Cost: 0},
-                { Type: "Insurance", "Revenue Covered": 8, Cost: 2.3},
-                { Type: "Audit", "Revenue Covered": 4, Cost: 1.525},
-                { Type: "3P Pentests", "Revenue Covered": 5, Cost: .938},
-                { Type: "Op. Costs", "Revenue Covered": 5, Cost: 1.975},
-                { Type: "MSSP", "Revenue Covered": 3, Cost: 1.700},
-                { Type: "Headcount", "Revenue Covered": 17, Cost: 1.500},
-                { Type: "R&D", "Revenue Covered": 6, Cost: 3.870},
-                { Type: "Licensing", "Revenue Covered": 1, Cost: .543},
-                { Type: "Tooling", "Revenue Covered": 32, Cost: 3.950},
+                { Type: "N/A", "Revenue Covered": 20, Cost: 0 },
+                { Type: "Insurance", "Revenue Covered": 8, Cost: 2.3 },
+                { Type: "Audit", "Revenue Covered": 4, Cost: 1.525 },
+                { Type: "3P Pentests", "Revenue Covered": 5, Cost: .938 },
+                { Type: "Op. Costs", "Revenue Covered": 5, Cost: 1.975 },
+                { Type: "MSSP", "Revenue Covered": 3, Cost: 1.700 },
+                { Type: "Headcount", "Revenue Covered": 17, Cost: 1.500 },
+                { Type: "R&D", "Revenue Covered": 6, Cost: 3.870 },
+                { Type: "Licensing", "Revenue Covered": 1, Cost: .543 },
+                { Type: "Tooling", "Revenue Covered": 32, Cost: 3.950 },
               ]}
               index={"Type"}
               colors={distinctColors}
@@ -318,7 +318,7 @@ function DashboardWithAnalytics() {
               <span className="grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">
                 Control Coverage Maturity (%)
               </span>
-              <ToggleGroup value="" onValueChange={(value: string) => {}}>
+              <ToggleGroup value="" onValueChange={(value: string) => { }}>
                 <ToggleGroup.Item disabled={true} icon={null} value="305aa703">
                   3mo
                 </ToggleGroup.Item>
@@ -333,7 +333,7 @@ function DashboardWithAnalytics() {
             <LineChart
               className="h-64 w-full flex-none mobile:h-auto mobile:w-full mobile:flex-none"
               categories={[
-                "Insurance", "Audit", "3P Pentests", "Op. Costs", 
+                "Insurance", "Audit", "3P Pentests", "Op. Costs",
                 "MSSP", "Headcount", "R&D", "License", "Tooling"
               ]}
               data={[
@@ -359,7 +359,7 @@ function DashboardWithAnalytics() {
               <span className="grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">
                 Control Effectiveness (%)
               </span>
-              <ToggleGroup value="" onValueChange={(value: string) => {}}>
+              <ToggleGroup value="" onValueChange={(value: string) => { }}>
                 <ToggleGroup.Item disabled={true} icon={null} value="fbc3d95e">
                   3mo
                 </ToggleGroup.Item>
@@ -374,7 +374,7 @@ function DashboardWithAnalytics() {
             <LineChart
               className="h-64 w-full flex-none"
               categories={[
-                "Insurance", "Audit", "3P Pentests", "Op. Costs", 
+                "Insurance", "Audit", "3P Pentests", "Op. Costs",
                 "MSSP", "Headcount", "R&D", "License", "Tooling"
               ]}
               data={[
@@ -435,7 +435,7 @@ function DashboardWithAnalytics() {
                     Daily automated red team performed
                   </span>
                   <span className="w-full text-body font-body text-default-font">
-                    357/357 security controls tested 
+                    357/357 security controls tested
                   </span>
                 </div>
                 <span className="text-caption font-caption text-subtext-color">
@@ -465,7 +465,7 @@ function DashboardWithAnalytics() {
                   variant="neutral-secondary"
                   size="small"
                   iconRight="FeatherChevronRight"
-                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
                 >
                   View details
                 </Button>
@@ -501,7 +501,7 @@ function DashboardWithAnalytics() {
                     variant="neutral-secondary"
                     size="small"
                     iconRight="FeatherChevronRight"
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
                   >
                     View details
                   </Button>
@@ -525,7 +525,7 @@ function DashboardWithAnalytics() {
                   variant="neutral-secondary"
                   size="small"
                   iconRight="FeatherChevronRight"
-                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
                 >
                   View details
                 </Button>
@@ -543,7 +543,7 @@ function DashboardWithAnalytics() {
                     Daily automated red team performed
                   </span>
                   <span className="w-full text-body font-body text-default-font">
-                    350/350 security controls tested 
+                    350/350 security controls tested
                   </span>
                 </div>
                 <span className="text-caption font-caption text-subtext-color">
@@ -571,7 +571,7 @@ function DashboardWithAnalytics() {
             variant="brand-secondary"
             size="medium"
             iconRight="FeatherChevronRight"
-            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+            onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
           >
             See more
           </Button>
@@ -701,7 +701,7 @@ function DashboardWithAnalytics() {
                 </div>
               </div>
             </div>
-            </div>
+          </div>
         </div>
         <div className="flex w-full items-start gap-4">
           <div
@@ -763,7 +763,7 @@ function DashboardWithAnalytics() {
                 </div>
               </div>
             </div>
-            </div>
+          </div>
           <div
             className="flex grow shrink-0 basis-0 flex-col items-start gap-6 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm cursor-pointer"
             onClick={() => handleCardClick("Data Storage")}
@@ -813,7 +813,7 @@ function DashboardWithAnalytics() {
                 </span>
                 <span className="w-full text-body font-body text-default-font">
                   The last data backup integrity check was performed 35 days
-                  ago. 
+                  ago.
                 </span>
                 <div className="flex w-full items-center gap-2">
                   <span className="text-body-bold font-body-bold text-error-700">
@@ -825,7 +825,7 @@ function DashboardWithAnalytics() {
                 </div>
               </div>
             </div>
-            </div>
+          </div>
         </div>
         <div className="flex w-full items-start gap-4">
           <div className="flex grow shrink-0 basis-0 flex-col items-start gap-6 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm">
@@ -1077,7 +1077,7 @@ function DashboardWithAnalytics() {
                   variant="neutral-secondary"
                   icon={null}
                   iconRight="FeatherChevronDown"
-                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
                 >
                   Group by
                 </Button>
@@ -1249,7 +1249,7 @@ function DashboardWithAnalytics() {
                 variant="neutral-secondary"
                 size="medium"
                 icon={null}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
               >
                 Prev
               </Button>
@@ -1257,7 +1257,7 @@ function DashboardWithAnalytics() {
                 variant="neutral-secondary"
                 size="medium"
                 iconRight={null}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => { }}
               >
                 Next
               </Button>

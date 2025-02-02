@@ -50,6 +50,12 @@ function AgentsLandingPage() {
       description: "This agent is designed to aggregate questions from customers about the organization's security posture and suggest responses",
       thumbnail: "/thumbnails/6.svg",
       path: "/agents/clientsecurityinquiries"
+    },
+    {
+      title: "Security Control Groups",
+      description: "This agent displays security control groups and methods to increase effectiveness considering business context",
+      thumbnail: "/thumbnails/8.svg",
+      path: "/agents/controlgroups"
     }
   ];
 
