@@ -521,7 +521,7 @@ export const DoraDetailView: React.FC = () => {
 
           {/* Articles and company policies */}
           <div className="mb-8">
-            <h3 className="text-lg font-semibold mb-4">Articles & Company Policy</h3>
+            <h3 className="text-lg font-semibold mb-4">DORA Articles & Company Policy</h3>
             <div className="space-y-6">
               {enrichedDoraArticles.map(article => (
                 <Card key={article.id} className="cursor-default">

@@ -920,7 +920,7 @@ export const HippaDetailView: React.FC = () => {
 
           {/* Articles and company policies */}
           <div className="mb-8">
-            <h3 className="text-lg font-semibold mb-4">Articles & Company Policy</h3>
+            <h3 className="text-lg font-semibold mb-4">HIPPA Articles & Company Policy</h3>
             <div className="space-y-6">
               {enrichedHippaArticles.map(article => (
                 <Card key={article.id} className="cursor-default">
