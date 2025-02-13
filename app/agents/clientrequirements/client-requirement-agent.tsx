@@ -131,7 +131,7 @@ export default function ClientSecurityRequirementsCheck() {
             <Breadcrumbs.Item onClick={() => router.push('/agents')}>Agents </Breadcrumbs.Item>
             < Breadcrumbs.Divider />
             <Breadcrumbs.Item active={true}>
-              Client Contract Review
+               Customer Requirement Review Agent
             </Breadcrumbs.Item>
           </Breadcrumbs>
         </div>
@@ -147,13 +147,13 @@ export default function ClientSecurityRequirementsCheck() {
               variant="brand-secondary"
               icon="FeatherCheckSquare"
             >
-              Check New Client Contract
+              Check New Customer RFP, Questionnaire, or Contract
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Check Contract Requirements</DialogTitle>
-              <DialogDescription>Upload a contract to check its requirements against existing policies.</DialogDescription>
+              <DialogTitle>Check Customer Requirements</DialogTitle>
+              <DialogDescription>Upload a contract, questionnaire, or RFP to check its requirements against existing policies.</DialogDescription>
             </DialogHeader>
             <Label htmlFor="contract-check" className="cursor-pointer">
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
@@ -171,7 +171,7 @@ export default function ClientSecurityRequirementsCheck() {
               variant="brand-secondary"
               icon="FeatherCheckSquare"
             >
-              Check Updated Policy
+              Analyze Impact of Org Policy Updates
             </Button>
           </DialogTrigger>
           <DialogContent>
@@ -235,8 +235,8 @@ export default function ClientSecurityRequirementsCheck() {
                   <TableRow>
                     <TableHead>Client Name</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Met Requirements</TableHead>
-                    <TableHead>Unmet Requirements</TableHead>
+                    <TableHead>Met</TableHead>
+                    <TableHead>Unmet</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

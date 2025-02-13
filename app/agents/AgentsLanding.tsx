@@ -34,8 +34,8 @@ function AgentsLandingPage() {
       path: "/agents/compliancepolicyreview"
     },
     {
-      title: "Customer Contract Reviewer",
-      description: "Search customer contracts for specific queries or requirements that may not be met by current policies",
+      title: "Customer Requirement Review Agent",
+      description: "Parse RFP, Questionnaire, or contract from customers for specific questions or requirements, analyzing them against the organization's security policy and generating suggested responses",
       thumbnail: "/thumbnails/4.svg",
       path: "/agents/clientrequirements"
     },

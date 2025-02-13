@@ -11,7 +11,13 @@ export const analyzeContract = (_content: File) => {
           status: "Met", 
           policy: "Encryption", 
           policyLanguage: "All data must be encrypted at rest and in transit using industry-standard protocols.",
-          policyLink: "/policies/encryption"
+          policyLink: "/policies/encryption",
+          owner: {
+            team: "Security Engineering",
+            contact: "Sarah Chen",
+            email: "schen@company.com",
+            approvalStatus: "approved"
+          }
         },
         { 
           requirement: "Multi-factor authentication",
@@ -19,7 +25,13 @@ export const analyzeContract = (_content: File) => {
           status: "Met", 
           policy: "Access Control",
           policyLanguage: "Multi-factor authentication is required for all user accounts.",
-          policyLink: "/policies/access-control"
+          policyLink: "/policies/access-control",
+          owner: {
+            team: "IAM Team",
+            contact: "Michael Rodriguez",
+            email: "mrodriguez@company.com",
+            approvalStatus: "pending"
+          }
         },
         { 
           requirement: "Annual security audit",
@@ -28,7 +40,13 @@ export const analyzeContract = (_content: File) => {
           suggestion: "Add annual third-party security audit to policies",
           suggestedPolicy: "Security Audit",
           suggestedPolicyLink: "/policies/security-audit",
-          exceedsFramework: false
+          exceedsFramework: false,
+          owner: {
+            team: "Security Operations",
+            contact: "Alex Kim",
+            email: "akim@company.com",
+            approvalStatus: "not_requested"
+          }
         },
         { 
           requirement: "Data retention for 5 years",
@@ -38,7 +56,13 @@ export const analyzeContract = (_content: File) => {
           suggestedPolicy: "Data Retention",
           suggestedPolicyLink: "/policies/data-retention",
           exceedsFramework: true,
-          exceedingFrameworks: ["NIST CSF", "CIS RAM"]
+          exceedingFrameworks: ["NIST CSF", "CIS RAM"],
+          owner: {
+            team: "Data Governance",
+            contact: "Emily Watson",
+            email: "ewatson@company.com",
+            approvalStatus: "not_requested"
+          }
         },
         { 
           requirement: "Access logs retention",
@@ -46,7 +70,13 @@ export const analyzeContract = (_content: File) => {
           status: "Met", 
           policy: "Data Retention",
           policyLanguage: "All data must be retained for a minimum of 1 year.",
-          policyLink: "/policies/data-retention"
+          policyLink: "/policies/data-retention",
+          owner: {
+            team: "Security Operations",
+            contact: "David Park",
+            email: "dpark@company.com",
+            approvalStatus: "approved"
+          }
         }
       ]
     }

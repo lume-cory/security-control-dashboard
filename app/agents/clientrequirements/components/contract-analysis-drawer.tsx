@@ -6,7 +6,9 @@ import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/subframe/components/Button"
 import { Textarea } from "@/components/ui/textarea"
-import { AlertTriangle, ExternalLink } from 'lucide-react'
+import { AlertTriangle, ExternalLink, Mail } from 'lucide-react'
+import { useState } from 'react'
+import { Input } from "@/components/ui/input"
 
 interface ContractDetail {
     requirement: string;
@@ -20,6 +22,12 @@ interface ContractDetail {
     suggestedPolicyLink?: string;
     exceedsFramework?: boolean;
     exceedingFrameworks?: string[];
+    owner: {
+      team: string;
+      contact: string;
+      email: string;
+      approvalStatus: 'approved' | 'pending' | 'not_requested';
+    };
   }
 
 interface ContractAnalysisDrawerProps {
@@ -45,6 +53,8 @@ export function ContractAnalysisDrawer({
   onRecommendationChange,
 }: ContractAnalysisDrawerProps) {
 
+const [editState, setEditState] = useState<{ field: 'team' | 'contact' | 'email' | null, index: number | null }>({ field: null, index: null })
+
 const generateContractReport = () => {
     const acceptedChanges = contractAnalysis.details
         .filter((detail: ContractDetail, index: number) => detail.status === "Unmet" && contractRecommendations[index].action !== 'ignore')
@@ -69,11 +79,22 @@ const handleUpdateContract = () => {
     alert("Updates have been added to the contract. A new contract will be generated and downloaded shortly");
     };
 
+const handleRequestApproval = (email: string, requirement: string) => {
+  console.log(`Requesting approval from ${email} for requirement: ${requirement}`);
+  alert(`Approval request sent to ${email}`);
+};
+
+const handleSaveEdit = (index: number, field: 'team' | 'contact' | 'email', value: string) => {
+  // TODO: Implement actual update logic
+  console.log(`Updating ${field} to:`, value);
+  setEditState({ field: null, index: null });
+};
+
   return (
         <Sheet open={isOpen} onOpenChange={onOpenChange}>
         <SheetContent style={{ maxWidth: 'min(33vw, 1200px)' }} className="w-full overflow-hidden" side="right">
           <SheetHeader>
-            <SheetTitle>Contract Analysis</SheetTitle>
+            <SheetTitle>Customer Requirement Analysis</SheetTitle>
             <SheetDescription>
               Requirements met: {contractAnalysis ? 
                 `${contractAnalysis.details.filter((detail: ContractDetail) => detail.status === "Met").length} / ${contractAnalysis.details.length}` 
@@ -92,6 +113,8 @@ const handleUpdateContract = () => {
                   )}
                 </div>
                 <p className="mb-2"><strong>Requirement:</strong> {detail.requirementText}</p>
+
+                {/* Rest of the requirement details */}
                 {detail.status === "Met" ? (
                   <>
                     <p><strong>Matched Policy:</strong> {detail.policy}</p>
@@ -146,25 +169,102 @@ const handleUpdateContract = () => {
                     )}
                   </>
                 )}
+                {/* Requirement Owner Section */}
+                <div className="mt-4 p-3 bg-gray-50 rounded-md">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold">Requirement Owner</h4>
+                    {detail.owner.approvalStatus === 'approved' && (
+                      <Badge variant="outline" className="bg-green-100 text-green-800">Approved</Badge>
+                    )}
+                    {detail.owner.approvalStatus === 'pending' && (
+                      <Badge variant="outline" className="bg-yellow-100 text-yellow-800">Pending Approval</Badge>
+                    )}
+                    {detail.owner.approvalStatus === 'not_requested' && (
+                      <Badge variant="outline" className="bg-gray-100 text-gray-800">Not Requested</Badge>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div className="flex items-center justify-left">
+                      <p><strong>Team:</strong></p>
+                      {editState.field === 'team' && editState.index === index ? (
+                        <Input
+                          className="w-[150px] h-7 text-sm"
+                          defaultValue={detail.owner.team}
+                          autoFocus
+                          onBlur={(e) => handleSaveEdit(index, 'team', e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleSaveEdit(index, 'team', e.currentTarget.value);
+                            }
+                          }}
+                        />
+                      ) : (
+                        <span 
+                          className="cursor-pointer hover:text-blue-500"
+                          onClick={() => setEditState({ field: 'team', index })}
+                        >
+                          {detail.owner.team}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-left">
+                      <p><strong>Contact:</strong></p>
+                      {editState.field === 'contact' && editState.index === index ? (
+                        <Input
+                          className="w-[150px] h-7 text-sm"
+                          defaultValue={detail.owner.contact}
+                          autoFocus
+                          onBlur={(e) => handleSaveEdit(index, 'contact', e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleSaveEdit(index, 'contact', e.currentTarget.value);
+                            }
+                          }}
+                        />
+                      ) : (
+                        <span 
+                          className="cursor-pointer hover:text-blue-500"
+                          onClick={() => setEditState({ field: 'contact', index })}
+                        >
+                          {detail.owner.contact}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-2">
+                    {detail.owner.approvalStatus === 'not_requested' && (
+                      <Button
+                        size="medium"
+                        variant="brand-secondary"
+                        onClick={() => handleRequestApproval(detail.owner.email, detail.requirement)}
+                      >
+                        Request Approval
+                      </Button>
+                    )}
+                    {detail.owner.approvalStatus === 'pending' && (
+                      <Button
+                        size="medium"
+                        variant="brand-secondary"
+                        onClick={() => handleRequestApproval(detail.owner.email, detail.requirement)}
+                      >
+                        Modify Approval
+                      </Button>
+                    )}
+                  </div>
+                </div>
               </div>
             ))}
           </ScrollArea>
           <SheetFooter className="flex gap-2">
-            <Button 
-              variant="brand-secondary"
-              icon="FeatherFileText"
-              onClick={generateContractReport} 
-              className="mt-4"
-            >
-              Generate Report
-            </Button>
             <Button 
               variant="brand-primary"
               icon="FeatherSave"
               onClick={handleUpdateContract} 
               className="mt-4"
             >
-              Update Contract
+              Generate Response to Request
             </Button>
           </SheetFooter>
         </SheetContent>

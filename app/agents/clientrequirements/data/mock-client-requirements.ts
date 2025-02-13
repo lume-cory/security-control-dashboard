@@ -32,6 +32,12 @@ export interface ClientRequirement {
       description: string;
       link: string;
     }>;
+    owner?: {
+      team: string;
+      contact: string;
+      email: string;
+      approvalStatus: 'approved' | 'pending' | 'not_requested';
+    };
   }>;
 }
 
@@ -55,7 +61,13 @@ export const mockClientRequirements: ClientRequirement[] = [
         suggestedPolicyLink: "/policies/data-retention",
         suggestion: "Update Data Retention policy to extend retention period to 5 years",
         exceedsFramework: true,
-        exceedingFrameworks: ["NIST CSF", "CIS RAM"]
+        exceedingFrameworks: ["NIST CSF", "CIS RAM"],
+        owner: {
+          team: "Data Governance",
+          contact: "Emily Watson",
+          email: "ewatson@company.com",
+          approvalStatus: "not_requested"
+        }
       },
       {
         id: "req2",
@@ -66,6 +78,12 @@ export const mockClientRequirements: ClientRequirement[] = [
         policyLink: "/policies/encryption",
         policyLanguage: "All data must be encrypted at rest using AES-256",
         policy: "Encryption Policy",
+        owner: {
+          team: "Security Engineering",
+          contact: "Sarah Chen",
+          email: "schen@company.com",
+          approvalStatus: "approved"
+        },
         frameworkAssociations: [
           {
             framework: "NIST CSF",
@@ -125,7 +143,13 @@ export const mockClientRequirements: ClientRequirement[] = [
             description: "Secure all individual non-console administrative access using MFA",
             link: "/regulations/pci-dss/req-8-3"
           }
-        ]
+        ],
+        owner: {
+          team: "IAM Team",
+          contact: "Michael Rodriguez",
+          email: "mrodriguez@company.com",
+          approvalStatus: "approved"
+        }
       },
       {
         id: "req4",
@@ -157,7 +181,13 @@ export const mockClientRequirements: ClientRequirement[] = [
             description: "Password/Passphrase Requirements",
             link: "/regulations/pci-dss/req-8-2-3"
           }
-        ]
+        ],
+        owner: {
+          team: "IAM Team",
+          contact: "Michael Rodriguez",
+          email: "mrodriguez@company.com",
+          approvalStatus: "approved"
+        }
       },
       {
         id: "req5",
@@ -189,7 +219,13 @@ export const mockClientRequirements: ClientRequirement[] = [
             description: "Address web application vulnerabilities - WAF requirement",
             link: "/regulations/pci-dss/req-6-6"
           }
-        ]
+        ],
+        owner: {
+          team: "Network Security",
+          contact: "James Wilson",
+          email: "jwilson@company.com",
+          approvalStatus: "approved"
+        }
       },
       {
         id: "req6",
@@ -227,7 +263,13 @@ export const mockClientRequirements: ClientRequirement[] = [
             description: "Information system activity review",
             link: "/regulations/hipaa/164-308"
           }
-        ]
+        ],
+        owner: {
+          team: "Security Operations",
+          contact: "Alex Kim",
+          email: "akim@company.com",
+          approvalStatus: "approved"
+        }
       },
       {
         id: "req7",
@@ -259,7 +301,13 @@ export const mockClientRequirements: ClientRequirement[] = [
             description: "COSO Principle 16: Organization performs ongoing and/or separate evaluations",
             link: "/regulations/soc2/cc4-1"
           }
-        ]
+        ],
+        owner: {
+          team: "Security Operations",
+          contact: "Alex Kim",
+          email: "akim@company.com",
+          approvalStatus: "not_requested"
+        }
       }
     ]
   },
