@@ -7,15 +7,22 @@ import { FrameworkAlignmentSection } from './components/framework-alignment-sect
 import { AlignmentTrendSection } from './components/alignment-trend-section'
 import { frameworkAlignmentData } from './data/framework-alignment-data'
 import { FrameworkSelector } from './components/framework-selector'
+import { CommonControlFrameworkSection } from './components/common-control-framework-section'
+import { CCFRequirement } from './data/common-control-framework'
 
-export type DetailViewType = 'compliance-mapper' | 'hippa' | 'dora' | null;
+export type DetailViewType = 'compliance-mapper' | 'hippa' | 'dora' | 'ccf' | null;
 
 interface HomeViewProps {
   activeView: DetailViewType;
   setActiveView: (view: DetailViewType) => void;
+  setSelectedCCFRequirement: (requirement: CCFRequirement | null) => void;
 }
 
-export const HomeViewComponent: React.FC<HomeViewProps> = ({ activeView, setActiveView }) => {
+export const HomeViewComponent: React.FC<HomeViewProps> = ({ 
+  activeView, 
+  setActiveView,
+  setSelectedCCFRequirement 
+}) => {
   const handleRegulationClick = (regulation: string) => {
     switch (regulation) {
       case 'DORA':
@@ -41,6 +48,11 @@ export const HomeViewComponent: React.FC<HomeViewProps> = ({ activeView, setActi
     saveSelectedFrameworks(newSelection);
   };
 
+  const handleCCFClick = (requirement: CCFRequirement) => {
+    setActiveView('ccf');
+    setSelectedCCFRequirement(requirement);
+  };
+
   return (
     <div className="w-full transition-all duration-200 space-y-6">
       <AlertsSection onAlertClick={() => setActiveView('compliance-mapper')} />
@@ -52,7 +64,12 @@ export const HomeViewComponent: React.FC<HomeViewProps> = ({ activeView, setActi
         onSelectorClick={() => setShowSelector(true)}
         onMapperClick={() => setActiveView('compliance-mapper')}
       />
-      
+
+      <CommonControlFrameworkSection 
+        selectedItems={selectedItems} 
+        onRequirementClick={handleCCFClick}
+      />
+
       <AlignmentTrendSection selectedItems={selectedItems} />
 
       <FrameworkSelector
@@ -62,6 +79,7 @@ export const HomeViewComponent: React.FC<HomeViewProps> = ({ activeView, setActi
         selected={selectedItems}
         onSelectionChange={handleSelectionChange}
       />
+
     </div>
   )
 }

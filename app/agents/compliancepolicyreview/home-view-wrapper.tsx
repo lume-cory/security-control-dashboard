@@ -10,10 +10,13 @@ import { DoraDetailView } from './components/dora-detail-view'
 import { DefaultPageLayout } from '@/components/ui/subframe/layouts/DefaultPageLayout'
 import { IconWithBackground } from '@/components/ui/subframe/components/IconWithBackground'
 import { Breadcrumbs } from '@/components/ui/subframe/components/Breadcrumbs'
+import { CCFDetailView } from './components/ccf-detail-view'
+import { CCFRequirement } from './data/common-control-framework'
 
 export default function HomeViewWrapper() {
   const router = useRouter();
   const [activeView, setActiveView] = useState<DetailViewType>(null);
+  const [selectedCCFRequirement, setSelectedCCFRequirement] = useState<CCFRequirement | null>(null);
 
   return (
     <DefaultPageLayout>
@@ -37,6 +40,7 @@ export default function HomeViewWrapper() {
         <HomeViewComponent 
           activeView={activeView}
           setActiveView={setActiveView}
+          setSelectedCCFRequirement={setSelectedCCFRequirement}
         />
 
         <Sheet open={activeView !== null} onOpenChange={() => setActiveView(null)}>
@@ -53,6 +57,7 @@ export default function HomeViewWrapper() {
             )}
             {activeView === 'hippa' && <HippaDetailView />}
             {activeView === 'dora' && <DoraDetailView />}
+            {activeView === 'ccf' && <CCFDetailView requirement={selectedCCFRequirement} />}
           </SheetContent>
         </Sheet>
       </div>

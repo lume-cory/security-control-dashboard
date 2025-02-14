@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/subframe/components/Button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronLeft, TrendingUp, TrendingDown, Minus } from "lucide-react"
@@ -82,17 +82,17 @@ const PolicyCard: React.FC<PolicyCardProps> = ({ policy }) => {
               className="min-h-[100px] text-sm"
             />
             <div className="flex gap-2 mt-2">
-              <Button size="sm" onClick={handleSaveModification}>Save Changes</Button>
-              <Button size="sm" variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
+              <Button size="small" onClick={handleSaveModification}>Save Changes</Button>
+              <Button size="small" variant="brand-secondary" onClick={() => setIsEditing(false)}>Cancel</Button>
             </div>
           </div>
         ) : (
           <>
             <p className="text-sm text-gray-700 mt-2">{policy.policyText}</p>
             <div className="flex gap-2 mt-2">
-              <Button size="sm" onClick={() => setIsEditing(true)}>Modify</Button>
-              <Button size="sm" variant="outline">Submit for Approval</Button>
-              <Button size="sm" variant="outline">Ignore</Button>
+              <Button size="small" onClick={() => setIsEditing(true)}>Modify</Button>
+              <Button size="small" variant="brand-secondary">Submit for Approval</Button>
+              <Button size="small" variant="brand-secondary">Ignore</Button>
             </div>
             <p className="text-sm text-gray-500 mt-2">Once approved by the policy approval board, this change will be applied to the policy document listed above. </p>
           </>
@@ -137,16 +137,16 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
     <div className="flex flex-col h-[calc(100vh-2rem)]">
       <div className="flex items-center space-x-4 flex-shrink-0">
         <Button 
-          variant="ghost" 
-          size="sm" 
+          variant="brand-secondary" 
+          size="small" 
+          icon="FeatherChevronLeft"
           onClick={onClose}
           className="hover:bg-transparent p-0"
         >
-          <ChevronLeft className="h-6 w-6" />
         </Button>
         <div>
           <h2 className="text-2xl font-bold">{article.name}</h2>
-          <p className="text-sm text-gray-500">Article ID: {article.id}</p>
+          <p className="text-sm text-gray-500">ID: {article.id}</p>
         </div>
       </div>
 
@@ -294,6 +294,13 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
         )}
         </div>
       </ScrollArea>
+
+      {/* Footer */}
+      <div className="flex justify-end gap-4 p-6">
+        <Button variant="brand-primary" icon="FeatherFile" onClick={() => console.log('Generate Report')}>
+          Generate Report
+        </Button>
+      </div>
     </div>
   )
 } 
