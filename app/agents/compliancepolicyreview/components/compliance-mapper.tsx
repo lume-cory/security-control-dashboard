@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { PlusCircle, ArrowLeft, FileText, ExternalLink } from 'lucide-react'
-import { options as hardcodedOptions, getRequirements, type Requirement } from './compliance-data';
+import { options as hardcodedOptions, getRequirements, type Requirement } from '../data/compliance-data';
 import { ComplianceDetailsView } from "./compliance-details-view";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";

@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { HomeViewComponent, DetailViewType } from './home-view'
-import { ComplianceMapperComponent } from './compliance-mapper'
-import { HippaDetailView } from './hippa-detail-view'
-import { DoraDetailView } from './dora-detail-view'
+import { ComplianceMapperComponent } from './components/compliance-mapper'
+import { HippaDetailView } from './components/hippa-detail-view'
+import { DoraDetailView } from './components/dora-detail-view'
 import { DefaultPageLayout } from '@/components/ui/subframe/layouts/DefaultPageLayout'
 import { IconWithBackground } from '@/components/ui/subframe/components/IconWithBackground'
 import { Breadcrumbs } from '@/components/ui/subframe/components/Breadcrumbs'
@@ -51,7 +51,7 @@ export default function HomeViewWrapper() {
             {activeView === 'compliance-mapper' && (
               <ComplianceMapperComponent onBack={() => setActiveView(null)} />
             )}
-            {activeView === 'hipaa' && <HippaDetailView />}
+            {activeView === 'hippa' && <HippaDetailView />}
             {activeView === 'dora' && <DoraDetailView />}
           </SheetContent>
         </Sheet>

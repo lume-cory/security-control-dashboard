@@ -1,9 +1,9 @@
-import { doraArticles } from '../../../data/regulations/dora';
-import { criControls } from '../../../data/control-frameworks/cri-profile-v2';
-import { ispSections } from '../../../data/policies/information-security-policy';
-import { iso42001Controls } from '../../../data/control-frameworks/iso-42001';
-import { aiPolicySections } from '../../../data/policies/ai-responsible-use-policy';
-import { nistCsfV2Controls } from '../../../data/control-frameworks/nist-csf-v2';
+import { doraArticles } from '../../../../data/regulations/dora';
+import { criControls } from '../../../../data/control-frameworks/cri-profile-v2';
+import { ispSections } from '../../../../data/policies/information-security-policy';
+import { iso42001Controls } from '../../../../data/control-frameworks/iso-42001';
+import { aiPolicySections } from '../../../../data/policies/ai-responsible-use-policy';
+import { nistCsfV2Controls } from '../../../../data/control-frameworks/nist-csf-v2';
 
 export const options = {
   regulation: ['Digital Operational Resilience Act (DORA)', 'UK General Data Protection Regulation (UK GDPR)', 'EU General Data Protection Regulation (EU GDPR)', 'California Consumer Privacy Act (CCPA)', 'NIS2 Directive', 'EU AI Act','Federal Information Security Management Act (FISMA)', 'Payment Card Industry Data Security Standard (PCI DSS)', 'Health Insurance Portability and Accountability Act (HIPAA)'],
