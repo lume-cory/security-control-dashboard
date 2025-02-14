@@ -27,8 +27,8 @@ import MetricsPanel from './MetricsPanel';
 import { ChatDrawer } from './ChatDrawer'
 import Vulnerabilities from './Vulnerabilities'
 import { HomeViewComponent, DetailViewType } from '../compliancepolicyreview/home-view'
-import { ComplianceMapperComponent } from '../compliancepolicyreview/compliance-mapper'
-import { HippaDetailView } from '../compliancepolicyreview/hippa-detail-view'
+import { ComplianceMapperComponent } from '../compliancepolicyreview/components/compliance-mapper'
+import { HippaDetailView } from '../compliancepolicyreview/components/hippa-detail-view'
 
 
 export default function EngineeringSecurityReviewAgent() {
