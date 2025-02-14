@@ -14,7 +14,7 @@ export const auditChatHistory: AuditChat[] = [
     id: "1",
     title: "BYOD Policy & Evidence",
     timestamp: new Date().toISOString().split('T')[0],
-    question: "What is your policy on accessing internal company resources on a personal phone? Can you show supporting evidence for that?",
+    question: "What is our policy on accessing internal company resources on a personal phone? Can you show supporting evidence for that?",
     conversation: [
       { 
         role: "user", 
@@ -47,6 +47,30 @@ export const auditChatHistory: AuditChat[] = [
       {
         role: "assistant",
         content: "Here's our data retention implementation evidence:\n\n1. Policy Framework:\n- Policy ID: DAT-RET-002\n- Retention periods:\n  * Customer data: 7 years\n  * Transaction logs: 5 years\n  * Audit trails: 3 years\n\n2. Technical Implementation:\n- Storage systems: AWS S3 + Glacier\n- Lifecycle policies: Automated archival\n- Deletion workflows: Documented in SEC-WF-023\n\n3. Recent Audits:\n- Internal audit: January 2024\n- External audit: November 2023\n- Findings: All compliant\n\nWould you like to see the specific AWS lifecycle configurations or audit reports?"
+      }
+    ]
+  }, 
+  {
+    id: "3",
+    title: "Customer Incident Reporting",
+    timestamp: new Date().toISOString().split('T')[0],
+    question: "Can you show me a list of all of the customer reporting requirements from our customer contracts? Which customers has the shortest reporting requirements?",
+    conversation: [
+      {
+        role: "user",
+        content: "Can you show me a list of all of the customer reporting requirements from our customer contracts? Which customers has the shortest reporting requirements?"
+      },
+      {
+        role: "assistant",
+        content: "Here's the list of customer reporting requirements from our customer contracts:\n\n1. Customer A: 24 hours\n2. Customer B: 48 hours\n3. Customer C: 72 hours\n\nThe customer with the shortest reporting requirement is Customer A, with a 24-hour window for incident reporting."
+      },
+      {
+        role: "user",
+        content: "Does the reporting requirement depend on the type of incident or asset involved in the incident?"
+      },
+      {
+        role: "assistant",
+        content: "Yes, the reporting requirement can vary depending on the type of incident or asset involved. For example, incidents involving sensitive data or critical infrastructure may require immediate reporting, while less severe incidents may have a longer reporting window. Additionally, some customers may have specific requirements for reporting incidents related to their assets or data."
       }
     ]
   }
