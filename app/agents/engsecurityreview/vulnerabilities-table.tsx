@@ -397,7 +397,7 @@ export default function VulnerabilitiesTable() {
       // TODO: Add API call to update vulnerability
     }
   };
-
+  
   return (
     <>
       
@@ -534,7 +534,7 @@ export default function VulnerabilitiesTable() {
                       <SelectItem value={"Won&apos;t Fix"}>Won&apos;t Fix</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
+                  </div>
                 <div>
                   <Label className="text-sm font-medium">Due Date</Label>
                   <input
@@ -572,7 +572,7 @@ export default function VulnerabilitiesTable() {
                           <div className="flex items-center gap-2">
                             <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                               {req.regulation} {req.articleId}
-                            </span>
+                      </span>
                           </div>
                           <a 
                             href="#" 
@@ -591,8 +591,8 @@ export default function VulnerabilitiesTable() {
                         </p>
                       </div>
                     ))}
-                  </div>
                 </div>
+              </div>
 
               {/* Mitigation Details */}
               {selectedVuln.mitigation && (

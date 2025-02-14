@@ -9,6 +9,7 @@ import { frameworkAlignmentData } from './data/framework-alignment-data'
 import { FrameworkSelector } from './components/framework-selector'
 import { CommonControlFrameworkSection } from './components/common-control-framework-section'
 import { CCFRequirement } from './data/common-control-framework'
+import { AuditChat } from './components/audit-chat'
 
 export type DetailViewType = 'compliance-mapper' | 'hippa' | 'dora' | 'ccf' | null;
 
@@ -79,6 +80,8 @@ export const HomeViewComponent: React.FC<HomeViewProps> = ({
         selected={selectedItems}
         onSelectionChange={handleSelectionChange}
       />
+
+      <AuditChat />
 
     </div>
   )

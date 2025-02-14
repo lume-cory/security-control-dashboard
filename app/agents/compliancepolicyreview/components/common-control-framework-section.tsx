@@ -8,26 +8,44 @@ interface CommonControlFrameworkSectionProps {
 }
 
 export function CommonControlFrameworkSection({ selectedItems, onRequirementClick }: CommonControlFrameworkSectionProps) {
+  // Filter requirements that have at least one selected regulation
+  const filteredRequirements = commonControlFrameworkData
+    .map(requirement => {
+      const filteredRegulations = requirement.associatedRegulations
+        .filter(reg => selectedItems[reg.name]);
+      
+      // Only keep non-compliant instances related to selected frameworks
+      const filteredNonCompliantInstances = requirement.nonCompliantInstances
+        .filter(instance => 
+          filteredRegulations.some(reg => 
+            requirement.associatedRegulations.find(r => r.name === reg.name)
+          )
+        );
 
-  const filteredRequirements = commonControlFrameworkData.filter(requirement =>
-    requirement.associatedRegulations.some(reg => selectedItems[reg.name])
-  );
+      return {
+        ...requirement,
+        associatedRegulations: filteredRegulations,
+        nonCompliantInstances: filteredNonCompliantInstances
+      };
+    })
+    // Only show requirements that have at least one selected regulation
+    .filter(requirement => requirement.associatedRegulations.length > 0);
 
-  // Calculate totals across all requirements
-  const totalActivePolicies = commonControlFrameworkData.reduce((count, req) => 
+  // Calculate totals using filtered requirements
+  const totalActivePolicies = filteredRequirements.reduce((count, req) => 
     count + req.policies.filter(policy => policy.status === 'active').length, 0
   );
   
-  const totalSuggestedPolicies = commonControlFrameworkData.reduce((count, req) => 
+  const totalSuggestedPolicies = filteredRequirements.reduce((count, req) => 
     count + req.policies.filter(policy => policy.status === 'suggested').length, 0
   );
 
-  const totalNonCompliantSystems = commonControlFrameworkData.reduce((count, req) => 
+  const totalNonCompliantSystems = filteredRequirements.reduce((count, req) => 
     count + req.nonCompliantInstances.length, 0
   );
 
   const totalFrameworks = new Set(
-    commonControlFrameworkData.flatMap(req => req.associatedRegulations.map(reg => reg.name))
+    filteredRequirements.flatMap(req => req.associatedRegulations.map(reg => reg.name))
   ).size;
 
   return (
@@ -76,7 +94,7 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
           <div className="mb-8">
             <h3 className="text-md font-semibold mb-4">Non-Compliant Requirements</h3>
             <div className="grid grid-cols-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {commonControlFrameworkData
+              {filteredRequirements
                 .filter(req => req.nonCompliantInstances.length > 0)
                 .map(req => (
                   <Card key={req.id} className="cursor-pointer" onClick={() => onRequirementClick(req)}>
