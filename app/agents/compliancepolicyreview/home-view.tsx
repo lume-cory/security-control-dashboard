@@ -15,7 +15,7 @@ export type DetailViewType = 'compliance-mapper' | 'hippa' | 'dora' | 'ccf' | nu
 interface HomeViewProps {
   activeView: DetailViewType;
   setActiveView: (view: DetailViewType) => void;
-  setSelectedCCFRequirement: (requirement: CCFRequirement | null) => void;
+  setSelectedCCFRequirement?: (requirement: CCFRequirement | null) => void;
 }
 
 export const HomeViewComponent: React.FC<HomeViewProps> = ({ 
@@ -50,7 +50,7 @@ export const HomeViewComponent: React.FC<HomeViewProps> = ({
 
   const handleCCFClick = (requirement: CCFRequirement) => {
     setActiveView('ccf');
-    setSelectedCCFRequirement(requirement);
+    setSelectedCCFRequirement?.(requirement);
   };
 
   return (
