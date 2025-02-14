@@ -62,7 +62,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
   {
     id: 'CCF-001',
     name: 'Access Control and Authentication',
-    summary: 'Access Control and Authentication placeholder',
+    summary: 'This requirement outlines the necessary measures for ensuring secure access and authentication to company systems and data.',
     associatedRegulations: [
       { name: 'HIPPA', summary: 'HIPPA placeholder', link: '/regulations/hipaa/access-control', articleId: 'HIPPA-001' },
       { name: 'GDPR', summary: 'GDPR placeholder', link: '/regulations/gdpr/authentication', articleId: 'GDPR-001' },
@@ -89,7 +89,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
     ],
     impactedSystems: [
       {
-        name: 'Identity Provider',
+        name: 'SSO',
         type: 'Service',
         repository: 'github.com/company/idp',
         team: 'IAM Team',
@@ -101,6 +101,20 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         repository: 'github.com/company/customer-portal',
         team: 'Customer Experience',
         teamContact: 'cx@company.com'
+      },
+      {
+        name: 'Employee Portal',
+        type: 'Web Application',
+        repository: 'github.com/company/employee-portal',
+        team: 'Internal Tools',
+        teamContact: 'internal-tools@company.com'
+      },
+      {
+        name: 'API Gateway',
+        type: 'Service',
+        repository: 'github.com/company/api-gateway',
+        team: 'Platform',
+        teamContact: 'platform@company.com'
       }
     ],
     nonCompliantInstances: [
@@ -116,6 +130,32 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         mitigation: 'Implement MFA using corporate IdP',
         status: 'In Progress',
         dueDate: '2024-06-30'
+      },
+      {
+        system: {
+          name: 'Employee Portal',
+          type: 'Web Application',
+          repository: 'github.com/company/employee-portal',
+          team: 'Internal Tools',
+          teamContact: 'internal-tools@company.com'
+        },
+        issue: 'Password complexity requirements not enforced',
+        mitigation: 'Update authentication service to enforce new password policy',
+        status: 'In Progress',
+        dueDate: '2024-05-15'
+      },
+      {
+        system: {
+          name: 'API Gateway',
+          type: 'Service',
+          repository: 'github.com/company/api-gateway',
+          team: 'Platform',
+          teamContact: 'platform@company.com'
+        },
+        issue: 'API key rotation not automated',
+        mitigation: 'Implement automated key rotation system',
+        status: 'Planned',
+        dueDate: '2024-06-01'
       }
     ],
     supportingEvidence: {
@@ -193,7 +233,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
   {
     id: 'CCF-002',
     name: 'Data Encryption and Protection',
-    summary: 'Data Encryption and Protection placeholder',
+    summary: 'This requirement outlines the necessary measures for ensuring secure encryption and protection of company data.',
     associatedRegulations: [
       { name: 'HIPPA', summary: 'HIPPA placeholder', link: '/regulations/hipaa/encryption', articleId: 'HIPPA-002' },
       { name: 'GDPR', summary: 'GDPR placeholder', link: '/regulations/gdpr/data-protection', articleId: 'GDPR-002' },
@@ -217,9 +257,63 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         repository: 'github.com/company/data-lake',
         team: 'Data Platform',
         teamContact: 'data-platform@company.com'
+      },
+      {
+        name: 'Payment Processing Service',
+        type: 'Service',
+        repository: 'github.com/company/payment-service',
+        team: 'Financial Systems',
+        teamContact: 'finance-systems@company.com'
+      },
+      {
+        name: 'Backup System',
+        type: 'Infrastructure',
+        repository: 'github.com/company/backup-system',
+        team: 'Infrastructure',
+        teamContact: 'infra@company.com'
       }
     ],
-    nonCompliantInstances: [],
+    nonCompliantInstances: [
+      {
+        system: {
+          name: 'Data Lake',
+          type: 'Service',
+          repository: 'github.com/company/data-lake',
+          team: 'Data Platform',
+          teamContact: 'data-platform@company.com'
+        },
+        issue: 'Legacy TLS 1.2 still in use',
+        mitigation: 'Upgrade to TLS 1.3 across all endpoints',
+        status: 'In Progress',
+        dueDate: '2024-05-30'
+      },
+      {
+        system: {
+          name: 'Payment Processing Service',
+          type: 'Service',
+          repository: 'github.com/company/payment-service',
+          team: 'Financial Systems',
+          teamContact: 'finance-systems@company.com'
+        },
+        issue: 'Legacy TLS 1.2 still in use',
+        mitigation: 'Upgrade to TLS 1.3 across all endpoints',
+        status: 'In Progress',
+        dueDate: '2024-05-30'
+      },
+      {
+        system: {
+          name: 'Backup System',
+          type: 'Infrastructure',
+          repository: 'github.com/company/backup-system',
+          team: 'Infrastructure',
+          teamContact: 'infra@company.com'
+        },
+        issue: 'Backup encryption keys not rotated regularly',
+        mitigation: 'Implement automated key rotation schedule',
+        status: 'Not Started',
+        dueDate: '2024-07-15'
+      }
+    ],
     supportingEvidence: {
       configurations: [
         {
@@ -971,6 +1065,260 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           scope: 'Disaster Recovery Drill',
           findings: 'DR plan effective with minor gaps in failover times identified.',
           auditor: 'Disaster Recovery Consultant'
+        }
+      ]
+    }
+  },
+  {
+    id: 'CCF-011',
+    name: 'AI Model Risk Assessment and Validation',
+    summary: 'Framework for assessing and validating AI models to ensure compliance with EU AI Act requirements.',
+    associatedRegulations: [
+      { name: 'EU AI Act', summary: 'Requirements for high-risk AI systems', link: '/regulations/eu-ai/model-risk', articleId: 'EUAI-002' },
+      { name: 'ISO 42001', summary: 'Model validation standards', link: '/frameworks/iso42001/validation', articleId: 'ISO42001-002' },
+      { name: 'NIST AI RMF', summary: 'AI model risk assessment guidelines', link: '/frameworks/nist-ai/model-risk', articleId: 'NIST-AIRM-002' }
+    ],
+    policies: [
+      {
+        id: 'POL-016',
+        name: 'AI Model Validation Policy',
+        description: 'Requirements for validating AI models before deployment',
+        policyText: 'All high-risk AI models must undergo validation testing, bias assessment, and performance evaluation before deployment.',
+        link: '/policies/ai/model-validation.pdf',
+        status: 'active'
+      }
+    ],
+    impactedSystems: [
+      {
+        name: 'Model Registry',
+        type: 'Service',
+        repository: 'github.com/company/model-registry',
+        team: 'ML Platform',
+        teamContact: 'ml-platform@company.com'
+      },
+      {
+        name: 'Model Validation Pipeline',
+        type: 'Pipeline',
+        repository: 'github.com/company/validation-pipeline',
+        team: 'ML Platform',
+        teamContact: 'ml-platform@company.com'
+      }
+    ],
+    nonCompliantInstances: [
+      {
+        system: {
+          name: 'Model Registry',
+          type: 'Service',
+          repository: 'github.com/company/model-registry',
+          team: 'ML Platform',
+          teamContact: 'ml-platform@company.com'
+        },
+        issue: 'Missing automated bias detection in validation pipeline',
+        mitigation: 'Implement fairness metrics and bias detection',
+        status: 'In Progress',
+        dueDate: '2024-06-15'
+      }
+    ],
+    supportingEvidence: {
+      configurations: [
+        {
+          tool: 'MLflow',
+          type: 'Model Registry',
+          evidence: {
+            policyName: 'Model Validation Config',
+            settings: [
+              { name: 'Bias Detection', value: 'Enabled' },
+              { name: 'Performance Thresholds', value: 'Strict' }
+            ],
+            lastUpdated: '2024-04-01',
+            version: '2.0'
+          }
+        }
+      ],
+      metrics: [
+        {
+          name: 'Model Validation Pass Rate',
+          current: 75,
+          target: 95,
+          trend: 'increasing',
+          history: [
+            { date: '2024-01', value: 60 },
+            { date: '2024-02', value: 68 },
+            { date: '2024-03', value: 75 }
+          ]
+        }
+      ],
+      audits: [
+        {
+          date: '2024-04-10',
+          type: 'Internal',
+          scope: 'AI Model Validation',
+          findings: 'Validation process needs enhancement for bias detection',
+          auditor: 'AI Governance Team'
+        }
+      ]
+    }
+  },
+  {
+    id: 'CCF-012',
+    name: 'AI Data Management and Privacy',
+    summary: 'Standards for managing training data and ensuring privacy in AI systems.',
+    associatedRegulations: [
+      { name: 'EU AI Act', summary: 'Data quality and privacy requirements', link: '/regulations/eu-ai/data-privacy', articleId: 'EUAI-003' },
+      { name: 'ISO 42001', summary: 'AI data management standards', link: '/frameworks/iso42001/data-management', articleId: 'ISO42001-003' }
+    ],
+    policies: [
+      {
+        id: 'POL-017',
+        name: 'AI Training Data Policy',
+        description: 'Guidelines for collecting and managing AI training data',
+        policyText: 'Training data must be properly labeled, versioned, and screened for PII/sensitive information.',
+        link: '/policies/ai/training-data.pdf',
+        status: 'active'
+      }
+    ],
+    impactedSystems: [
+      {
+        name: 'Feature Store',
+        type: 'Service',
+        repository: 'github.com/company/feature-store',
+        team: 'Data Platform',
+        teamContact: 'data-platform@company.com'
+      }
+    ],
+    nonCompliantInstances: [
+      {
+        system: {
+          name: 'Feature Store',
+          type: 'Service',
+          repository: 'github.com/company/feature-store',
+          team: 'Data Platform',
+          teamContact: 'data-platform@company.com'
+        },
+        issue: 'Incomplete data lineage tracking',
+        mitigation: 'Implement comprehensive data provenance system',
+        status: 'Planned',
+        dueDate: '2024-07-30'
+      }
+    ],
+    supportingEvidence: {
+      configurations: [
+        {
+          tool: 'Feast',
+          type: 'Feature Store',
+          evidence: {
+            policyName: 'Data Privacy Config',
+            settings: [
+              { name: 'PII Detection', value: 'Enabled' },
+              { name: 'Data Versioning', value: 'Required' }
+            ],
+            lastUpdated: '2024-03-15',
+            version: '1.5'
+          }
+        }
+      ],
+      metrics: [
+        {
+          name: 'Data Quality Score',
+          current: 88,
+          target: 95,
+          trend: 'stable',
+          history: [
+            { date: '2024-01', value: 87 },
+            { date: '2024-02', value: 88 },
+            { date: '2024-03', value: 88 }
+          ]
+        }
+      ],
+      audits: [
+        {
+          date: '2024-03-20',
+          type: 'External',
+          scope: 'Data Privacy Review',
+          findings: 'Data handling practices align with EU AI Act requirements',
+          auditor: 'Privacy Consultant'
+        }
+      ]
+    }
+  },
+  {
+    id: 'CCF-013',
+    name: 'AI System Monitoring and Reporting',
+    summary: 'Continuous monitoring and reporting requirements for AI systems as per NIST AI RMF.',
+    associatedRegulations: [
+      { name: 'NIST AI RMF', summary: 'AI system monitoring guidelines', link: '/frameworks/nist-ai/monitoring', articleId: 'NIST-AIRM-003' },
+      { name: 'ISO 42001', summary: 'AI performance monitoring standards', link: '/frameworks/iso42001/monitoring', articleId: 'ISO42001-004' }
+    ],
+    policies: [
+      {
+        id: 'POL-018',
+        name: 'AI Monitoring Policy',
+        description: 'Requirements for monitoring AI system performance and behavior',
+        policyText: 'All production AI systems must be continuously monitored for drift, performance degradation, and unexpected behaviors.',
+        link: '/policies/ai/monitoring.pdf',
+        status: 'suggested'
+      }
+    ],
+    impactedSystems: [
+      {
+        name: 'AI Monitoring Dashboard',
+        type: 'Application',
+        repository: 'github.com/company/ai-monitoring',
+        team: 'ML Ops',
+        teamContact: 'mlops@company.com'
+      }
+    ],
+    nonCompliantInstances: [
+      {
+        system: {
+          name: 'AI Monitoring Dashboard',
+          type: 'Application',
+          repository: 'github.com/company/ai-monitoring',
+          team: 'ML Ops',
+          teamContact: 'mlops@company.com'
+        },
+        issue: 'Lack of automated alerting for model drift',
+        mitigation: 'Implement drift detection and alert system',
+        status: 'Not Started',
+        dueDate: '2024-08-15'
+      }
+    ],
+    supportingEvidence: {
+      configurations: [
+        {
+          tool: 'Prometheus',
+          type: 'Monitoring',
+          evidence: {
+            policyName: 'AI Monitoring Config',
+            settings: [
+              { name: 'Drift Detection', value: 'Enabled' },
+              { name: 'Alert Thresholds', value: 'Configured' }
+            ],
+            lastUpdated: '2024-04-05',
+            version: '1.0'
+          }
+        }
+      ],
+      metrics: [
+        {
+          name: 'Model Performance Stability',
+          current: 92,
+          target: 95,
+          trend: 'increasing',
+          history: [
+            { date: '2024-01', value: 85 },
+            { date: '2024-02', value: 89 },
+            { date: '2024-03', value: 92 }
+          ]
+        }
+      ],
+      audits: [
+        {
+          date: '2024-04-15',
+          type: 'Internal',
+          scope: 'AI System Monitoring',
+          findings: 'Monitoring coverage adequate; alerting needs improvement',
+          auditor: 'ML Ops Team'
         }
       ]
     }

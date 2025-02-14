@@ -20,24 +20,22 @@ function mapRequirementToArticle(requirement: typeof commonControlFrameworkData[
   };
 }
 
-const teamNonComplianceData = commonControlFrameworkData.reduce((acc: { team: string, count: number }[]) => {
-  // Get all non-compliant instances across all articles
-  const allNonCompliantInstances = commonControlFrameworkData.flatMap(article => article.nonCompliantInstances);
-  
-  // Count unique teams
-  const teamCounts = allNonCompliantInstances.reduce((teamAcc: Record<string, number>, instance) => {
-    const team = instance.system.team;
-    teamAcc[team] = (teamAcc[team] || 0) + 1;
-    return teamAcc;
-  }, {});
-
-  // Convert to array format
-  return Object.entries(teamCounts).map(([team, count]) => ({ team, count }));
-}, []);
-
 export function CCFDetailView({ requirement }: { requirement: CCFRequirement | null }) {
   const [selectedRequirement, setSelectedRequirement] = useState<CCFRequirement | null>(null);
   const currentRequirement = requirement || commonControlFrameworkData[0];
+
+  const teamNonComplianceData = currentRequirement.nonCompliantInstances.reduce((acc: { team: string, count: number }[], instance) => {
+    const team = instance.system.team;
+    const existingTeam = acc.find(item => item.team === team);
+    
+    if (existingTeam) {
+      existingTeam.count++;
+    } else {
+      acc.push({ team, count: 1 });
+    }
+    
+    return acc;
+  }, []);
 
   if (selectedRequirement) {
     return (
