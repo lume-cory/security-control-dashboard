@@ -29,7 +29,7 @@ import Vulnerabilities from './Vulnerabilities'
 import { HomeViewComponent, DetailViewType } from '../compliancepolicyreview/home-view'
 import { ComplianceMapperComponent } from '../compliancepolicyreview/components/compliance-mapper'
 import { HippaDetailView } from '../compliancepolicyreview/components/hippa-detail-view'
-
+import { DoraDetailView } from '../compliancepolicyreview/components/dora-detail-view'
 
 export default function EngineeringSecurityReviewAgent() {
   const router = useRouter()
@@ -184,7 +184,8 @@ export default function EngineeringSecurityReviewAgent() {
                 {activeView === 'compliance-mapper' && (
                   <ComplianceMapperComponent onBack={() => setActiveView(null)} />
                 )}
-                {activeView === 'hipaa' && <HippaDetailView />}
+                {activeView === 'hippa' && <HippaDetailView />}
+                {activeView === 'dora' && <DoraDetailView />}
               </SheetContent>
             </Sheet>
           </TabsContent>
