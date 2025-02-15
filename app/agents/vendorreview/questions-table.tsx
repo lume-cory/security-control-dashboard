@@ -3,12 +3,14 @@
 import { useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/subframe/components/Button"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { ExternalLink, MessageSquare, Mail, Ticket, Phone, Fish, ArrowUpDown, CheckIcon, XIcon, ChevronDown, ChevronUp } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Accordion } from "@/subframe/components/Accordion";
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { SheetDescription as SheetDescriptionComponent } from "@/components/ui/sheet"
 
 
 interface RequestForm {
@@ -960,466 +962,480 @@ export function QuestionsTable() {
         </TableBody>
       </Table>
       {selectedRequest && (
-        <Dialog open={!!selectedRequest} onOpenChange={() => setSelectedRequest(null)}>
-          <DialogContent className="max-w-[800px] max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>{selectedRequest.appName}</DialogTitle>
-              <DialogDescription>Review and respond this request to use this vendor</DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right font-semibold self-start pt-1">Requested by:</Label>
-                <span className="col-span-3">{selectedRequest.requestor}</span>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right font-semibold self-start pt-1">Stage:</Label>
-                <div className="col-span-3">
-                  <Select 
-                    value={selectedRequest.stage} 
-                    onValueChange={(value: "New Request" | "Requestor Followup" | "Vendor Assessment" | "Pending" | "Approved" | "Denied") => 
-                      setSelectedRequest(prev => prev ? {...prev, stage: value} : prev)}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select stage" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="New Request">New Request</SelectItem>
-                      <SelectItem value="Requestor Followup">Requestor Followup</SelectItem>
-                      <SelectItem value="Vendor Assessment">Vendor Assessment</SelectItem>
-                      <SelectItem value="Pending">Pending</SelectItem>
-                      <SelectItem value="Approved">Approved</SelectItem>
-                      <SelectItem value="Denied">Denied</SelectItem>
-                    </SelectContent>
-                  </Select>
+        <Sheet open={!!selectedRequest} onOpenChange={() => setSelectedRequest(null)}>
+          <SheetContent style={{ maxWidth: 'min(50vw, 800px)' }} className="w-full overflow-y-auto" side="right">
+            <SheetHeader>
+              <SheetTitle>{selectedRequest.appName}</SheetTitle>
+              <SheetDescription>Review and respond to this request to use this vendor</SheetDescription>
+            </SheetHeader>
+
+            <ScrollArea className="h-[calc(100vh-180px)] pr-4">
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label className="text-right font-semibold self-start pt-1">Requested by:</Label>
+                  <span className="col-span-3">{selectedRequest.requestor}</span>
                 </div>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right font-semibold self-start pt-1">Type:</Label>
-                <div className="col-span-3">
-                  <Select 
-                    value={selectedRequest.type} 
-                    onValueChange={(value: 'New Vendor' | 'New User' | 'Renewal') => 
-                      setSelectedRequest(prev => prev ? {...prev, type: value} : prev)}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="New Vendor">New Vendor</SelectItem>
-                      <SelectItem value="New User">New User</SelectItem>
-                      <SelectItem value="Renewal">Renewal</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label className="text-right font-semibold self-start pt-1">Stage:</Label>
+                  <div className="col-span-3">
+                    <Select 
+                      value={selectedRequest.stage} 
+                      onValueChange={(value: "New Request" | "Requestor Followup" | "Vendor Assessment" | "Pending" | "Approved" | "Denied") => 
+                        setSelectedRequest(prev => prev ? {...prev, stage: value} : prev)}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select stage" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="New Request">New Request</SelectItem>
+                        <SelectItem value="Requestor Followup">Requestor Followup</SelectItem>
+                        <SelectItem value="Vendor Assessment">Vendor Assessment</SelectItem>
+                        <SelectItem value="Pending">Pending</SelectItem>
+                        <SelectItem value="Approved">Approved</SelectItem>
+                        <SelectItem value="Denied">Denied</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right font-semibold self-start pt-1">Users:</Label>
-                <a href="#" className="col-span-3 text-blue-500 hover:underline" onClick={() => alert(selectedRequest.users)}>{selectedRequest.users} users</a>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right font-semibold self-start pt-1">{showResolved ? 'Resolved on:' : 'Due by:'}</Label>
-                <span className="col-span-3">
-                  {showResolved ? 
-                    ('resolvedDate' in selectedRequest ? String(selectedRequest.resolvedDate) : '') : 
-                    ('dueDate' in selectedRequest ? String(selectedRequest.dueDate) : '')}
-                </span>
-              </div>
-              {!showResolved && (
-                <>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label className="text-right font-semibold self-start pt-1">Triage Level:</Label>
-                    <div className="col-span-3">
-                      <Select 
-                        value={selectedTriage || (selectedRequest?.triage || 'medium')} 
-                        onValueChange={setSelectedTriage}
-                      >
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Select triage level" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="urgent">Urgent</SelectItem>
-                          <SelectItem value="high">High</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="low">Low</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label className="text-right font-semibold self-start pt-1">Type:</Label>
+                  <div className="col-span-3">
+                    <Select 
+                      value={selectedRequest.type} 
+                      onValueChange={(value: 'New Vendor' | 'New User' | 'Renewal') => 
+                        setSelectedRequest(prev => prev ? {...prev, type: value} : prev)}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="New Vendor">New Vendor</SelectItem>
+                        <SelectItem value="New User">New User</SelectItem>
+                        <SelectItem value="Renewal">Renewal</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                  {!showResolved && 'dueDate' in selectedRequest && (
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label className="text-right font-semibold self-start pt-1">Users:</Label>
+                  <a href="#" className="col-span-3 text-blue-500 hover:underline" onClick={() => alert(selectedRequest.users)}>{selectedRequest.users} users</a>
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label className="text-right font-semibold self-start pt-1">{showResolved ? 'Resolved on:' : 'Due by:'}</Label>
+                  <span className="col-span-3">
+                    {showResolved ? 
+                      ('resolvedDate' in selectedRequest ? String(selectedRequest.resolvedDate) : '') : 
+                      ('dueDate' in selectedRequest ? String(selectedRequest.dueDate) : '')}
+                  </span>
+                </div>
+                {!showResolved && (
+                  <>
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label className="text-right font-semibold self-start pt-1">SLA Status:</Label>
+                      <Label className="text-right font-semibold self-start pt-1">Triage Level:</Label>
                       <div className="col-span-3">
-                        {(() => {
-                          const status = getSLAStatus(selectedRequest)
-                          return (
-                            <div className="flex items-center space-x-2">
-                              <span className={`font-medium ${status.onTrack ? 'text-green-600' : 'text-red-600'}`}>
-                                {status.onTrack ? '✓ On Track' : '⚠ SLA Missed'}
-                              </span>
-                              <span className="text-gray-600">
-                                ({status.hours}hr SLA, {status.onTrack ? `${status.remaining}hrs remaining` : `${status.remaining}hrs overdue`})
-                              </span>
-                            </div>
-                          )
-                        })()}
+                        <Select 
+                          value={selectedTriage || (selectedRequest?.triage || 'medium')} 
+                          onValueChange={setSelectedTriage}
+                        >
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Select triage level" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="urgent">Urgent</SelectItem>
+                            <SelectItem value="high">High</SelectItem>
+                            <SelectItem value="medium">Medium</SelectItem>
+                            <SelectItem value="low">Low</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
-                  )}
-                  <hr className="border-t border-gray-200 my-4" />
-                  <div className="pt-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label className="text-right font-semibold self-start pt-1">Request Form:</Label>
-                      <div className="col-span-3">
-                        <div className="space-y-4">
-                          <div>
-                            <strong>Overview:</strong>
-                            <p>{selectedRequest.requestForm.overview.appName} - {selectedRequest.requestForm.overview.reasonForAccess}</p>
-                          </div>
-                          <div>
-                            <strong>Financial:</strong>
-                            <p>Cost: ${selectedRequest.requestForm.financial.cost}</p>
-                            <p>Existing License: {selectedRequest.requestForm.financial.existingLicense ? 'Yes' : 'No'}</p>
-                            <p>Manager Approval: {selectedRequest.requestForm.financial.managerApproval ? 'Yes' : 'No'}</p>
-                            <p>Cost Center Approved: {selectedRequest.requestForm.financial.costCenterApproved ? 'Yes' : 'No'}</p>
-                          </div>
-                          <div>
-                            <strong>Users:</strong>
-                            <p>Number of Users: {selectedRequest.requestForm.users.numberOfUsers}</p>
-                            <p>Team Roles: {selectedRequest.requestForm.users.teamRoles.join(', ')}</p>
-                          </div>
-                          <div>
-                            <strong>Resource:</strong>
-                            <p>Access Duration: {selectedRequest.requestForm.resource.accessDuration}</p>
-                          </div>
-                          <div>
-                            <strong>Security:</strong>
-                            <p>Login Method: {selectedRequest.requestForm.security.loginMethod}</p>
-                            <p>Integrations: {selectedRequest.requestForm.security.integrations.join(', ')}</p>
-                            <p>SSO: {selectedRequest.requestForm.security.sso ? 'Yes' : 'No'}</p>
-                            <p>SCIM: {selectedRequest.requestForm.security.scim ? 'Yes' : 'No'}</p>
-                            <p>Data Ingestion: {selectedRequest.requestForm.security.dataIngestion}</p>
-                            <p>Data Type: {selectedRequest.requestForm.security.dataType}</p>
-                            <p>Data Classification: {selectedRequest.requestForm.security.dataClassification}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4 mt-4">
-                      <Label className="text-right font-semibold self-start pt-1">Follow-up Questions:</Label>
-                      <div className="col-span-3">
-                        <Textarea
-                          placeholder="Ask follow-up questions or request more information..."
-                          className="w-full"
-                        />
-                        <Button type="submit" variant="brand-secondary" className="mt-2">Submit</Button>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <hr className="border-t border-gray-200 my-4" />
-                  <div className="pt-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label className="text-right font-semibold self-start pt-1">Vendor Trust Info:</Label>
-                      <div className="col-span-3 space-y-4">
-                        <div>
-                          <h4 className="font-semibold mb-2">Compliance Frameworks</h4>
-                          {selectedRequest.trustInfo.compliance.map((framework, idx) => (
-                            <div key={idx} className="mb-2">
-                              <a href={framework.link} target="_blank" rel="noopener noreferrer" 
-                                 className="text-blue-600 hover:underline flex items-center">
-                                {framework.framework} - {framework.status}
-                                <ExternalLink className="h-4 w-4 ml-1" />
-                              </a>
-                              <span className="text-sm text-gray-500">Last updated: {framework.lastUpdated}</span>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div>
-                          <h4 className="font-semibold mb-2">Data Policies</h4>
-                          <div className="space-y-2">
-                            <div>
-                              <span className="text-sm font-medium">Retention: </span>
-                              <a href={selectedRequest.trustInfo.dataRetention.link} target="_blank" 
-                                 rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                                {selectedRequest.trustInfo.dataRetention.policy}
-                              </a>
-                            </div>
-                            <div>
-                              <span className="text-sm font-medium">Protection: </span>
-                              <a href={selectedRequest.trustInfo.dataProtection.link} target="_blank" 
-                                 rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                                {selectedRequest.trustInfo.dataProtection.policy}
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div>
-                          <h4 className="font-semibold mb-2">Service Level</h4>
-                          <a href={selectedRequest.trustInfo.uptime.link} target="_blank" 
-                             rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                            Uptime: {selectedRequest.trustInfo.uptime.percentage}
-                          </a>
-                        </div>
-
-                        <div>
-                          <h4 className="font-semibold mb-2">Risk Assessment</h4>
-                          <Select 
-                            value={selectedRequest.trustInfo.riskLevel} 
-                            onValueChange={(value: 'Low' | 'Medium' | 'High' | 'Critical') => 
-                              setSelectedRequest(prev => prev ? {...prev, trustInfo: {...prev.trustInfo, riskLevel: value}} : prev)}
-                          >
-                            <SelectTrigger className="w-[180px]">
-                              <SelectValue placeholder="Select risk level" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Low">Low</SelectItem>
-                              <SelectItem value="Medium">Medium</SelectItem>
-                              <SelectItem value="High">High</SelectItem>
-                              <SelectItem value="Critical">Critical</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div>
-                          <Button
-                            variant="brand-secondary"
-                            onClick={() => {
-                              // Add your security questionnaire generation logic here
-                              console.log('Generating security questionnaire');
-                            }}
-                          >
-                            Generate Security Questionnaire
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>                  
-                  <div className="border-t pt-4">
-                    {selectedRequest.policyOwner && (
+                    {!showResolved && 'dueDate' in selectedRequest && (
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label className="text-right font-semibold self-start pt-1">Policy Owner:</Label>
-                        <div className="col-span-3 space-y-4">
-                          <div className="space-y-2">
-                            <div>
-                              <div className="flex items-center gap-4">
-                                  <label className="text-sm font-semibold text-gray-600">Team</label>
-                                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                  selectedRequest.policyOwner.teamConfidence.level === 'high' ? 'bg-green-100 text-green-800' :
-                                  selectedRequest.policyOwner.teamConfidence.level === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                                  'bg-red-100 text-red-800'
-                                  }`}>
-                                  {selectedRequest.policyOwner.teamConfidence.level} confidence
-                                  </span>
+                        <Label className="text-right font-semibold self-start pt-1">SLA Status:</Label>
+                        <div className="col-span-3">
+                          {(() => {
+                            const status = getSLAStatus(selectedRequest)
+                            return (
+                              <div className="flex items-center space-x-2">
+                                <span className={`font-medium ${status.onTrack ? 'text-green-600' : 'text-red-600'}`}>
+                                  {status.onTrack ? '✓ On Track' : '⚠ SLA Missed'}
+                                </span>
+                                <span className="text-gray-600">
+                                  ({status.hours}hr SLA, {status.onTrack ? `${status.remaining}hrs remaining` : `${status.remaining}hrs overdue`})
+                                </span>
                               </div>
-                              <p>
-                                {selectedRequest.policyOwner.team} (
-                                <a href={`mailto:${selectedRequest.policyOwner.teamEmail}`} className="text-blue-600 hover:underline">
-                                  {selectedRequest.policyOwner.teamEmail}
-                                </a>)
-                              </p>
-                            </div>
-                            <Accordion
-                                  trigger={
-                                  <div>
-                                      <span className="grow shrink-0 basis-0 text-body font-body text-primary">
-                                      Why this team?
-                                      </span>
-                                      <Accordion.Chevron />
-                                  </div>
-                                  }
-                                  defaultOpen={false}
-                                  >
-                                  <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-2 px-6 pb-6">
-                                      <ul className="list-disc list-inside">
-                                          {selectedRequest.policyOwner.teamConfidence.reasons.map((reason, i) => (
-                                          <li key={i}>{reason}</li>
-                                          ))}
-                                      </ul>
-                                      <Button
-                                          variant="brand-secondary"
-                                          onClick={() => null}
-                                      >
-                                          Update team?
-                                      </Button>
-                                  </div>
-                            </Accordion>
-                          </div>
-
-                          <div className="space-y-2">
-                            <div>
-                              <div className="flex items-center gap-4">
-                                  <label className="text-sm font-semibold text-gray-600">Contact</label>
-                                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                  selectedRequest.policyOwner.contactConfidence.level === 'high' ? 'bg-green-100 text-green-800' :
-                                  selectedRequest.policyOwner.contactConfidence.level === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                                  'bg-red-100 text-red-800'
-                                  }`}>
-                                  {selectedRequest.policyOwner.contactConfidence.level} confidence
-                                  </span>
-                              </div>
-                              <p>
-                                {selectedRequest.policyOwner.contact} (
-                                <a href={`mailto:${selectedRequest.policyOwner.email}`} className="text-blue-600 hover:underline">
-                                  {selectedRequest.policyOwner.email}
-                                </a>)
-                              </p>
-                            </div>
-                            <Accordion
-                                  trigger={
-                                  <div>
-                                      <span className="grow shrink-0 basis-0 text-body font-body text-primary">
-                                      Why this contact?
-                                      </span>
-                                      <Accordion.Chevron />
-                                  </div>
-                                  }
-                                  defaultOpen={false}
-                                  >
-                                  <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-2 px-6 pb-6">
-                                      <ul className="list-disc list-inside">
-                                          {selectedRequest.policyOwner.contactConfidence.reasons.map((reason, i) => (
-                                          <li key={i}>{reason}</li>
-                                          ))}
-                                      </ul>
-                                      <Button
-                                          variant="brand-secondary"
-                                          onClick={() => null}
-                                      >
-                                          Update contact?
-                                      </Button>
-                                  </div>
-                            </Accordion>
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4 mt-4">
-                              <div className="col-span-3 flex items-center gap-4">
-                                  <label className="text-sm font-semibold text-gray-600">Sign Off Status:</label>
-                                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                  selectedRequest.policyOwner.signOffStatus === 'Yes' ? 'bg-green-100 text-green-800' :
-                                  selectedRequest.policyOwner.signOffStatus === 'No' ? 'bg-red-100 text-red-800' :
-                                  selectedRequest.policyOwner.signOffStatus === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                                  'bg-gray-100 text-gray-800'
-                                  }`}>
-                                  {selectedRequest.policyOwner.signOffStatus || 'Pending'}
-                                  </span>
-                              </div>
-                              <div className="col-span-3 flex items-center gap-2">
-                                  <Button
-                                      variant="brand-secondary"
-                                      disabled={selectedRequest.policyOwner.signOffStatus === 'Yes'}
-                                      onClick={() => {
-                                          // Add your request sign off logic here
-                                          console.log('Requesting sign off');
-                                      }}
-                                      >
-                                      Request Sign Off
-                                  </Button>
-                                  <Button
-                                  variant="neutral-secondary"
-                                  disabled={selectedRequest.policyOwner.signOffStatus === 'N/A'}
-                                  onClick={() => {
-                                      // Add your not needed logic here
-                                      console.log('Sign off not needed');
-                                  }}
-                                  >
-                                  Not Required
-                              </Button>
-                              </div>
-                          </div>
+                            )
+                          })()}
                         </div>
                       </div>
                     )}
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label className="text-right font-semibold self-start pt-1">Suggested Response:</Label>
-                    <div className="col-span-3 space-y-2">
-                      {'suggestedResponse' in selectedRequest && (
-                        <>
-                          <p>{selectedRequest.suggestedResponse}</p>
-                          <div className="flex space-x-2">
-                            <Button variant="brand-secondary" onClick={handleUseResponse}>Use This Response</Button>
-                            <Button variant="neutral-secondary" onClick={handleModifyResponse}>Modify Response</Button>
+                    <hr className="border-t border-gray-200 my-4" />
+                    <div className="pt-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label className="text-right font-semibold self-start pt-1">Request Form:</Label>
+                        <div className="col-span-3">
+                          <div className="space-y-4">
+                            <div>
+                              <strong>Overview:</strong>
+                              <p>{selectedRequest.requestForm.overview.appName} - {selectedRequest.requestForm.overview.reasonForAccess}</p>
+                            </div>
+                            <div>
+                              <strong>Financial:</strong>
+                              <p>Cost: ${selectedRequest.requestForm.financial.cost}</p>
+                              <p>Existing License: {selectedRequest.requestForm.financial.existingLicense ? 'Yes' : 'No'}</p>
+                              <p>Manager Approval: {selectedRequest.requestForm.financial.managerApproval ? 'Yes' : 'No'}</p>
+                              <p>Cost Center Approved: {selectedRequest.requestForm.financial.costCenterApproved ? 'Yes' : 'No'}</p>
+                            </div>
+                            <div>
+                              <strong>Users:</strong>
+                              <p>Number of Users: {selectedRequest.requestForm.users.numberOfUsers}</p>
+                              <p>Team Roles: {selectedRequest.requestForm.users.teamRoles.join(', ')}</p>
+                            </div>
+                            <div>
+                              <strong>Resource:</strong>
+                              <p>Access Duration: {selectedRequest.requestForm.resource.accessDuration}</p>
+                            </div>
+                            <div>
+                              <strong>Security:</strong>
+                              <p>Login Method: {selectedRequest.requestForm.security.loginMethod}</p>
+                              <p>Integrations: {selectedRequest.requestForm.security.integrations.join(', ')}</p>
+                              <p>SSO: {selectedRequest.requestForm.security.sso ? 'Yes' : 'No'}</p>
+                              <p>SCIM: {selectedRequest.requestForm.security.scim ? 'Yes' : 'No'}</p>
+                              <p>Data Ingestion: {selectedRequest.requestForm.security.dataIngestion}</p>
+                              <p>Data Type: {selectedRequest.requestForm.security.dataType}</p>
+                              <p>Data Classification: {selectedRequest.requestForm.security.dataClassification}</p>
+                            </div>
                           </div>
-                        </>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4 mt-4">
+                        <Label className="text-right font-semibold self-start pt-1">Follow-up Questions:</Label>
+                        <div className="col-span-3">
+                          <Textarea
+                            placeholder="Ask follow-up questions or request more information..."
+                            className="w-full"
+                          />
+                          <Button type="submit" variant="brand-secondary" className="mt-2">Submit</Button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <hr className="border-t border-gray-200 my-4" />
+                    <div className="pt-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label className="text-right font-semibold self-start pt-1">Vendor Trust Info:</Label>
+                        <div className="col-span-3 space-y-4">
+                          <div>
+                            <h4 className="font-semibold mb-2">Compliance Frameworks</h4>
+                            {selectedRequest.trustInfo.compliance.map((framework, idx) => (
+                              <div key={idx} className="mb-2">
+                                <a href={framework.link} target="_blank" rel="noopener noreferrer" 
+                                   className="text-blue-600 hover:underline flex items-center">
+                                  {framework.framework} - {framework.status}
+                                  <ExternalLink className="h-4 w-4 ml-1" />
+                                </a>
+                                <span className="text-sm text-gray-500">Last updated: {framework.lastUpdated}</span>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div>
+                            <h4 className="font-semibold mb-2">Data Policies</h4>
+                            <div className="space-y-2">
+                              <div>
+                                <span className="text-sm font-medium">Retention: </span>
+                                <a href={selectedRequest.trustInfo.dataRetention.link} target="_blank" 
+                                   rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                  {selectedRequest.trustInfo.dataRetention.policy}
+                                </a>
+                              </div>
+                              <div>
+                                <span className="text-sm font-medium">Protection: </span>
+                                <a href={selectedRequest.trustInfo.dataProtection.link} target="_blank" 
+                                   rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                  {selectedRequest.trustInfo.dataProtection.policy}
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div>
+                            <h4 className="font-semibold mb-2">Service Level</h4>
+                            <a href={selectedRequest.trustInfo.uptime.link} target="_blank" 
+                               rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                              Uptime: {selectedRequest.trustInfo.uptime.percentage}
+                            </a>
+                          </div>
+
+                          <div>
+                            <h4 className="font-semibold mb-2">Risk Assessment</h4>
+                            <Select 
+                              value={selectedRequest.trustInfo.riskLevel} 
+                              onValueChange={(value: 'Low' | 'Medium' | 'High' | 'Critical') => 
+                                setSelectedRequest(prev => prev ? {...prev, trustInfo: {...prev.trustInfo, riskLevel: value}} : prev)}
+                            >
+                              <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Select risk level" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Low">Low</SelectItem>
+                                <SelectItem value="Medium">Medium</SelectItem>
+                                <SelectItem value="High">High</SelectItem>
+                                <SelectItem value="Critical">Critical</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div>
+                            <Button
+                              variant="brand-secondary"
+                              onClick={() => {
+                                // Add your security questionnaire generation logic here
+                                console.log('Generating security questionnaire');
+                              }}
+                            >
+                              Generate Security Questionnaire
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>                  
+                    <div className="border-t pt-4">
+                      {selectedRequest.policyOwner && (
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label className="text-right font-semibold self-start pt-1">Policy Owner:</Label>
+                          <div className="col-span-3 space-y-4">
+                            <div className="space-y-2">
+                              <div>
+                                <div className="flex items-center gap-4">
+                                    <label className="text-sm font-semibold text-gray-600">Team</label>
+                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                    selectedRequest.policyOwner.teamConfidence.level === 'high' ? 'bg-green-100 text-green-800' :
+                                    selectedRequest.policyOwner.teamConfidence.level === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                    'bg-red-100 text-red-800'
+                                    }`}>
+                                    {selectedRequest.policyOwner.teamConfidence.level} confidence
+                                    </span>
+                                </div>
+                                <p>
+                                  {selectedRequest.policyOwner.team} (
+                                  <a href={`mailto:${selectedRequest.policyOwner.teamEmail}`} className="text-blue-600 hover:underline">
+                                    {selectedRequest.policyOwner.teamEmail}
+                                  </a>)
+                                </p>
+                              </div>
+                              <Accordion
+                                    trigger={
+                                    <div>
+                                        <span className="grow shrink-0 basis-0 text-body font-body text-primary">
+                                        Why this team?
+                                        </span>
+                                        <Accordion.Chevron />
+                                    </div>
+                                    }
+                                    defaultOpen={false}
+                                    >
+                                    <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-2 px-6 pb-6">
+                                        <ul className="list-disc list-inside">
+                                            {selectedRequest.policyOwner.teamConfidence.reasons.map((reason, i) => (
+                                            <li key={i}>{reason}</li>
+                                            ))}
+                                        </ul>
+                                        <Button
+                                            variant="brand-secondary"
+                                            onClick={() => null}
+                                        >
+                                            Update team?
+                                        </Button>
+                                    </div>
+                              </Accordion>
+                            </div>
+
+                            <div className="space-y-2">
+                              <div>
+                                <div className="flex items-center gap-4">
+                                    <label className="text-sm font-semibold text-gray-600">Contact</label>
+                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                    selectedRequest.policyOwner.contactConfidence.level === 'high' ? 'bg-green-100 text-green-800' :
+                                    selectedRequest.policyOwner.contactConfidence.level === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                    'bg-red-100 text-red-800'
+                                    }`}>
+                                    {selectedRequest.policyOwner.contactConfidence.level} confidence
+                                    </span>
+                                </div>
+                                <p>
+                                  {selectedRequest.policyOwner.contact} (
+                                  <a href={`mailto:${selectedRequest.policyOwner.email}`} className="text-blue-600 hover:underline">
+                                    {selectedRequest.policyOwner.email}
+                                  </a>)
+                                </p>
+                              </div>
+                              <Accordion
+                                    trigger={
+                                    <div>
+                                        <span className="grow shrink-0 basis-0 text-body font-body text-primary">
+                                        Why this contact?
+                                        </span>
+                                        <Accordion.Chevron />
+                                    </div>
+                                    }
+                                    defaultOpen={false}
+                                    >
+                                    <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-2 px-6 pb-6">
+                                        <ul className="list-disc list-inside">
+                                            {selectedRequest.policyOwner.contactConfidence.reasons.map((reason, i) => (
+                                            <li key={i}>{reason}</li>
+                                            ))}
+                                        </ul>
+                                        <Button
+                                            variant="brand-secondary"
+                                            onClick={() => null}
+                                        >
+                                            Update contact?
+                                        </Button>
+                                    </div>
+                              </Accordion>
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4 mt-4">
+                                <div className="col-span-3 flex items-center gap-4">
+                                    <label className="text-sm font-semibold text-gray-600">Sign Off Status:</label>
+                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                    selectedRequest.policyOwner.signOffStatus === 'Yes' ? 'bg-green-100 text-green-800' :
+                                    selectedRequest.policyOwner.signOffStatus === 'No' ? 'bg-red-100 text-red-800' :
+                                    selectedRequest.policyOwner.signOffStatus === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+                                    'bg-gray-100 text-gray-800'
+                                    }`}>
+                                    {selectedRequest.policyOwner.signOffStatus || 'Pending'}
+                                    </span>
+                                </div>
+                                <div className="col-span-3 flex items-center gap-2">
+                                    <Button
+                                        variant="brand-secondary"
+                                        disabled={selectedRequest.policyOwner.signOffStatus === 'Yes'}
+                                        onClick={() => {
+                                            // Add your request sign off logic here
+                                            console.log('Requesting sign off');
+                                        }}
+                                        >
+                                        Request Sign Off
+                                    </Button>
+                                    <Button
+                                    variant="neutral-secondary"
+                                    disabled={selectedRequest.policyOwner.signOffStatus === 'N/A'}
+                                    onClick={() => {
+                                        // Add your not needed logic here
+                                        console.log('Sign off not needed');
+                                    }}
+                                    >
+                                    Not Required
+                                </Button>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
                       )}
                     </div>
-                  </div>
-                  <div className="grid grid-cols-4 items-start gap-4">
-                    <Label className="text-right self-start pt-1">
-                      <span className="font-semibold">Supporting Content:</span>
-                      <span className="block text-sm text-gray-500">Content that was referenced to create this response</span>
-                    </Label>
-                    <div className="col-span-3">
-                      {'supportingDocs' in selectedRequest && selectedRequest.supportingDocs.map((doc, index) => (
-                        <div key={index} className="flex items-center space-x-2 mb-2">
-                          <a href={doc.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline flex items-center">
-                            {doc.name}
-                            <ExternalLink className="h-4 w-4 ml-1" />
-                          </a>
-                        </div>
-                      ))}
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label className="text-right font-semibold self-start pt-1">Suggested Response:</Label>
+                      <div className="col-span-3 space-y-2">
+                        {'suggestedResponse' in selectedRequest && (
+                          <>
+                            <p>{selectedRequest.suggestedResponse}</p>
+                            <div className="flex space-x-2">
+                              <Button variant="brand-secondary" onClick={handleUseResponse}>Use This Response</Button>
+                              <Button variant="neutral-secondary" onClick={handleModifyResponse}>Modify Response</Button>
+                            </div>
+                          </>
+                        )}
+                      </div>
                     </div>
+                    <div className="grid grid-cols-4 items-start gap-4">
+                      <Label className="text-right self-start pt-1">
+                        <span className="font-semibold">Supporting Content:</span>
+                        <span className="block text-sm text-gray-500">Content that was referenced to create this response</span>
+                      </Label>
+                      <div className="col-span-3">
+                        {'supportingDocs' in selectedRequest && selectedRequest.supportingDocs.map((doc, index) => (
+                          <div key={index} className="flex items-center space-x-2 mb-2">
+                            <a href={doc.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline flex items-center">
+                              {doc.name}
+                              <ExternalLink className="h-4 w-4 ml-1" />
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
+                {showResolved ? (
+                  <>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label className="text-right">Response:</Label>
+                      <span className="col-span-3">{'response' in selectedRequest ? String(selectedRequest.response) : ''}</span>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label className="text-right">Decision:</Label>
+                      <span className="col-span-3">{typeof selectedRequest.decision === 'string' ? selectedRequest.decision : ''}</span>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label className="text-right">Documentation:</Label>
+                      {'documentationLink' in selectedRequest && (
+                        <a href={String(selectedRequest.documentationLink)} className="col-span-3 text-blue-500 hover:underline flex items-center">
+                          {String(selectedRequest.documentationLink)}
+                          <ExternalLink className="h-4 w-4 ml-1" />
+                        </a>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <div className="grid gap-2">
+                    <Label htmlFor="response" className="font-semibold">Your Response:</Label>
+                    <Textarea
+                      id="response"
+                      value={response}
+                      onChange={(e) => setResponse(e.target.value)}
+                      placeholder="Enter your response here..."
+                    />
+                    <Label htmlFor="residualRisk" className="font-semibold">Residual Risk:</Label>
+                    <Select
+                      value={selectedRequest.residualRisk} 
+                      onValueChange={(value: 'Low' | 'Medium' | 'High') => 
+                        setSelectedRequest(prev => prev ? {...prev, residualRisk: value} : prev)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select risk level" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="High">High</SelectItem>
+                        <SelectItem value="Medium">Medium</SelectItem>
+                        <SelectItem value="Low">Low</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                </>
-              )}
-              {showResolved ? (
-                <>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label className="text-right">Response:</Label>
-                    <span className="col-span-3">{'response' in selectedRequest ? String(selectedRequest.response) : ''}</span>
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label className="text-right">Decision:</Label>
-                    <span className="col-span-3">{typeof selectedRequest.decision === 'string' ? selectedRequest.decision : ''}</span>
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label className="text-right">Documentation:</Label>
-                    {'documentationLink' in selectedRequest && (
-                      <a href={String(selectedRequest.documentationLink)} className="col-span-3 text-blue-500 hover:underline flex items-center">
-                        {String(selectedRequest.documentationLink)}
-                        <ExternalLink className="h-4 w-4 ml-1" />
-                      </a>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <div className="grid gap-2">
-                  <Label htmlFor="response" className="font-semibold">Your Response:</Label>
-                  <Textarea
-                    id="response"
-                    value={response}
-                    onChange={(e) => setResponse(e.target.value)}
-                    placeholder="Enter your response here..."
-                  />
-                  <Label htmlFor="residualRisk" className="font-semibold">Residual Risk:</Label>
-                  <Select
-                    value={selectedRequest.residualRisk} 
-                    onValueChange={(value: 'Low' | 'Medium' | 'High') => 
-                      setSelectedRequest(prev => prev ? {...prev, residualRisk: value} : prev)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select risk level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="High">High</SelectItem>
-                      <SelectItem value="Medium">Medium</SelectItem>
-                      <SelectItem value="Low">Low</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-            </div>
-            <DialogFooter>
-              {!showResolved && 
-                <>
-                  <Button type="submit">Approve</Button>
-                  <Button type="submit">Deny</Button>
-                </>
-              }
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+                )}
+              </div>
+            </ScrollArea>
+
+            <SheetFooter className="flex justify-end gap-4 border-t pt-4 mt-4">
+              <Button
+                variant="neutral-secondary"
+                onClick={() => setSelectedRequest(null)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="brand-primary"
+                onClick={() => {
+                  // Add approval logic here
+                  console.log('Approving vendor request:', selectedRequest?.id);
+                  setSelectedRequest(null);
+                }}
+              >
+                Approve Request
+              </Button>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
       )}
     </div>
   )

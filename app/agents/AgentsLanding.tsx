@@ -40,7 +40,7 @@ function AgentsLandingPage() {
       path: "/agents/clientrequirements"
     },
     {
-      title: "Vendor & App Approval Agent",
+      title: "3rd Party Vendor Review Agent",
       description: "This agent receives requests from employees to use or renew vendors or applications and automatically generates supporting data and risk analysis based on security policy and vendor risk management data",
       thumbnail: "/thumbnails/5.svg",
       path: "/agents/vendorreview"
