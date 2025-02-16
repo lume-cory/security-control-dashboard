@@ -5,7 +5,7 @@ export function AlertsSection({ onAlertClick }: { onAlertClick: () => void }) {
   return (
     <Card className="transition-all duration-200">
       <CardHeader>
-        <CardTitle>Alerts</CardTitle>
+      <h2 className="text-xl font-bold">Alerts</h2>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 sm:grid-cols-1 xl:grid-cols-3 gap-4 transition-all duration-200">

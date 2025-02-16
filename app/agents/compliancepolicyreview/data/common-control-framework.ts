@@ -62,7 +62,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
   {
     id: 'CCF-001',
     name: 'Access Control and Authentication',
-    summary: 'This requirement outlines the necessary measures for ensuring secure access and authentication to company systems and data.',
+    summary: 'Secure access and authentication to organizational systems and data.',
     associatedRegulations: [
       { name: 'HIPPA', summary: 'HIPPA placeholder', link: '/regulations/hipaa/access-control', articleId: 'HIPPA-001' },
       { name: 'GDPR', summary: 'GDPR placeholder', link: '/regulations/gdpr/authentication', articleId: 'GDPR-001' },
@@ -233,7 +233,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
   {
     id: 'CCF-002',
     name: 'Data Encryption and Protection',
-    summary: 'This requirement outlines the necessary measures for ensuring secure encryption and protection of company data.',
+    summary: 'Ensure secure encryption and protection of organizational and stakeholder data.',
     associatedRegulations: [
       { name: 'HIPPA', summary: 'HIPPA placeholder', link: '/regulations/hipaa/encryption', articleId: 'HIPPA-002' },
       { name: 'GDPR', summary: 'GDPR placeholder', link: '/regulations/gdpr/data-protection', articleId: 'GDPR-002' },

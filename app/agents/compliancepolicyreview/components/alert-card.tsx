@@ -10,18 +10,18 @@ interface AlertCardProps {
 
 export function AlertCard({ title, description, aligned, nonAligned, onClick }: AlertCardProps) {
   return (
-    <Card className="cursor-pointer" onClick={onClick}>
+    <Card className="cursor-pointer hover:bg-gray-50" onClick={onClick}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-gray-500 mb-4">{description}</p>
-        <div className="flex justify-between items-center">
-          <div>
+        <div className="flex justify-between items-center mt-auto">
+          <div className="flex flex-col items-center">
             <p className="text-2xl font-bold text-green-600">{aligned}%</p>
             <p className="text-sm text-gray-500">Aligned</p>
           </div>
-          <div>
+          <div className="flex flex-col items-center">
             <p className="text-2xl font-bold text-red-600">{nonAligned}</p>
             <p className="text-sm text-gray-500">Non-aligned instances</p>
           </div>

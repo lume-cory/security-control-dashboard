@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { commonControlFrameworkData, CCFRequirement } from "../data/common-control-framework"
+import { frameworkAlignmentData } from "../data/framework-alignment-data"
 
 
 interface CommonControlFrameworkSectionProps {
@@ -52,52 +53,50 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
     <div>
       <Card>
         <CardHeader>
-          <CardTitle>Common Control Framework</CardTitle>
+          <h2 className="text-xl font-bold">Common Control Framework</h2>
         </CardHeader>
         <CardContent>
           
           {/* Policy Status Overview */}
           <div className="mb-8">
-            <Card className="border-0">
-              <CardContent className="pt-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">
-                      {totalActivePolicies}
-                    </div>
-                    <div className="text-sm text-gray-500">Active Policies</div>
+            <div className="border rounded-lg p-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">
+                    {totalActivePolicies}
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-yellow-600">
-                      {totalSuggestedPolicies}
-                    </div>
-                    <div className="text-sm text-gray-500">Suggested Policy Updates</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-red-600">
-                      {totalNonCompliantSystems}
-                    </div>
-                    <div className="text-sm text-gray-500">Non-compliant Systems</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold">
-                      {totalFrameworks}
-                    </div>
-                    <div className="text-sm text-gray-500">Associated Frameworks</div>
-                  </div>
+                  <div className="text-sm text-gray-500">Active Policies</div>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-yellow-600">
+                    {totalSuggestedPolicies}
+                  </div>
+                  <div className="text-sm text-gray-500">Suggested Policy Updates</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-red-600">
+                    {totalNonCompliantSystems}
+                  </div>
+                  <div className="text-sm text-gray-500">Non-compliant Systems</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">
+                    {totalFrameworks}
+                  </div>
+                  <div className="text-sm text-gray-500">Associated Frameworks</div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Non-Compliant Requirements */}
+          {/* Non-Compliant Requirements
           <div className="mb-8">
             <h3 className="text-md font-semibold mb-4">Non-Compliant Requirements</h3>
             <div className="grid grid-cols-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {filteredRequirements
                 .filter(req => req.nonCompliantInstances.length > 0)
                 .map(req => (
-                  <Card key={req.id} className="cursor-pointer" onClick={() => onRequirementClick(req)}>
+                  <Card key={req.id} className="cursor-pointer hover:bg-gray-50" onClick={() => onRequirementClick(req)}>
                     <CardHeader>
                       <CardTitle className="text-base">{req.name}</CardTitle>
                     </CardHeader>
@@ -112,22 +111,144 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
                   </Card>
                 ))}
             </div>
-          </div>
+          </div> */}
 
-          <h3 className="text-md font-semibold mb-4">Common Control Requirements</h3>
 
           {/* Requirements List */}
-          <div className="space-y-4">
-            {filteredRequirements.map(requirement => (
-              <div 
-                key={requirement.id} 
-                className="border rounded-lg p-4 cursor-pointer" 
-                onClick={() => onRequirementClick(requirement)}
-              >
-                <h4 className="font-semibold">{requirement.summary}</h4>
-                <p className="text-sm text-gray-500">Associated Frameworks: {requirement.associatedRegulations.map(reg => reg.name).join(', ')}</p>
-              </div>
-            ))}
+          <div className="mb-8">
+            {/* <h3 className="text-md font-semibold mb-4">Common Control Requirements</h3> */}
+            <div className="grid grid-cols-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+              {filteredRequirements.map(requirement => (
+                <div 
+                  key={requirement.id} 
+                  className="border rounded-lg p-4 cursor-pointer hover:bg-gray-50" 
+                  onClick={() => onRequirementClick(requirement)}
+                >
+                  <div className="space-y-3">
+                    {/* Title and Summary */}
+                    <div className="justify-between items-center mb-4">
+                      <p className="font-semibold text-md">{requirement.name}</p>
+                      <p className="text-sm text-gray-500">{requirement.summary}</p>
+                    </div>
+
+                    {/* Four-cell Grid */}
+                    <div className="grid grid-cols-2 gap-4 relative">
+                      {/* Left Side */}
+                      <div>
+                        {/* Top Left - Frameworks */}
+                        <div className="text-sm mb-4">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-gray-500">Framework Directives</span>
+                            <span className="text-lg font-bold">
+                              {requirement.associatedRegulations.length}
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-2 mt-1">
+                            {requirement.associatedRegulations.slice(0, 3).map(reg => {
+                              const frameworkData = frameworkAlignmentData.find(f => f.name === reg.name);
+                              const color = frameworkData?.color || 'hsl(var(--chart-1))';
+                              return (
+                                <span key={reg.name} className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100">
+                                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }}/>
+                                  {reg.name}
+                                </span>
+                              );
+                            })}
+                            {requirement.associatedRegulations.length > 3 && (
+                              <span className="text-xs text-gray-500">+{requirement.associatedRegulations.length - 3} more</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Bottom Left - Policies */}
+                        <div className="text-sm">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-gray-500">Mapped Org Policies</span>
+                            <span className="text-lg font-bold">
+                              {requirement.policies.length}
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-2 mt-1">
+                            {requirement.policies.slice(0, 3).map(policy => (
+                              <span 
+                                key={policy.id} 
+                                className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100"
+                              >
+                                <div 
+                                  className={`w-2 h-2 rounded-full ${
+                                    policy.status === 'active' 
+                                      ? 'bg-green-600' 
+                                      : 'bg-yellow-600'
+                                  }`}
+                                />
+                                {policy.name}
+                              </span>
+                            ))}
+                            {requirement.policies.length > 3 && (
+                              <span className="text-xs text-gray-500">+{requirement.policies.length - 3} more</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Vertical Divider */}
+                      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gray-200" />
+
+                      {/* Right Side */}
+                      <div className="pl-4">
+                        {/* Top Right - Tools */}
+                        <div className="text-sm mb-4">
+                          {requirement.supportingEvidence?.configurations && (
+                            <>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm text-gray-500">Security Tools & Controls</span>
+                                <span className="text-lg font-bold">
+                                  {requirement.supportingEvidence.configurations.length}
+                                </span>
+                              </div>
+                              <div className="flex flex-wrap gap-2 mt-1">
+                                {requirement.supportingEvidence.configurations.slice(0, 3).map((config, idx) => (
+                                  <span key={idx} className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100">
+                                    {config.tool}
+                                  </span>
+                                ))}
+                                {requirement.supportingEvidence.configurations.length > 3 && (
+                                  <span className="text-xs text-gray-500">+{requirement.supportingEvidence.configurations.length - 3} more</span>
+                                )}
+                              </div>
+                            </>
+                          )}
+                        </div>
+
+                        {/* Bottom Right - Non-compliant */}
+                        <div className="text-sm">
+                          {requirement.nonCompliantInstances.length > 0 && (
+                            <>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm text-gray-500">Non-compliant instances</span>
+                                <span className="text-lg font-bold text-red-600">
+                                  {requirement.nonCompliantInstances.length}
+                                </span>
+                              </div>
+                              <div className="flex flex-wrap gap-2 mt-1">
+                                {requirement.nonCompliantInstances.slice(0, 3).map((instance, idx) => (
+                                  <span key={idx} className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100">
+                                    {instance.system.name}
+                                  </span>
+                                ))}
+                                {requirement.nonCompliantInstances.length > 3 && (
+                                  <span className="text-xs text-gray-500">+{requirement.nonCompliantInstances.length - 3} more</span>
+                                )}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </CardContent>
       </Card>

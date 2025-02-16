@@ -22,8 +22,8 @@ export function FrameworkAlignmentSection({
     <Card>
       <CardHeader>
         <div className="flex justify-between items-center">
-          <CardTitle>Framework Alignment</CardTitle>
-          <div className="flex gap-2">
+        <h2 className="text-xl font-bold">Framework Alignment</h2>
+        <div className="flex gap-2">
             <Button
               size="medium"
               variant="brand-secondary"

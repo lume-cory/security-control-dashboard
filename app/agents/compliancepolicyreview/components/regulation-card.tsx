@@ -12,7 +12,7 @@ interface RegulationCardProps {
 
 export function RegulationCard({ name, alignment, effectiveDate, status, nonAlignedCount, color, onClick }: RegulationCardProps) {
   return (
-    <Card className="overflow-hidden cursor-pointer" onClick={onClick}>
+    <Card className="overflow-hidden cursor-pointer hover:bg-gray-50" onClick={onClick}>
       <div className="h-2" style={{ backgroundColor: color }}></div>
       <CardHeader>
         <CardTitle>{name}</CardTitle>
