@@ -7,7 +7,7 @@ import { ChevronLeft, TrendingUp, TrendingDown, Minus } from "lucide-react"
 import { useState } from "react"
 import { enrichedHippaArticles } from "./hippa-detail-view"
 import { ScrollArea } from "@/components/ui/scroll-area"
-
+import { enrichedSOC2Articles } from "../data/soc2-enriched-articles"
 
 interface ArticleDetailViewProps {
   article: typeof enrichedHippaArticles[0] & { supportingEvidence?: {

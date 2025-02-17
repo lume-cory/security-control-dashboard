@@ -126,66 +126,91 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
                 >
                   <div className="space-y-3">
                     {/* Title and Summary */}
-                    <div className="justify-between items-center mb-4">
+                    <div className="mb-4">
                       <p className="font-semibold text-md">{requirement.name}</p>
                       <p className="text-sm text-gray-500">{requirement.summary}</p>
                     </div>
 
-                    {/* Four-cell Grid */}
+                    {/* Framework Derivatives */}
+                    <div className="text-sm mb-6">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-500">Derived From:</span>
+                        <div className="flex flex-wrap gap-2">
+                          {requirement.associatedRegulations.slice(0, 3).map(reg => {
+                            const frameworkData = frameworkAlignmentData.find(f => f.name === reg.name);
+                            const color = frameworkData?.color || 'hsl(var(--chart-1))';
+                            return (
+                              <span key={reg.name} className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100">
+                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }}/>
+                                {reg.name}
+                              </span>
+                            );
+                          })}
+                          {requirement.associatedRegulations.length > 3 && (
+                            <span className="text-xs text-gray-500">+{requirement.associatedRegulations.length - 3} more</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Two-column Grid */}
                     <div className="grid grid-cols-2 gap-4 relative">
                       {/* Left Side */}
                       <div>
-                        {/* Top Left - Frameworks */}
+                        {/* Active Policies */}
                         <div className="text-sm mb-4">
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-gray-500">Framework Directives</span>
+                            <span className="text-sm text-gray-500">Active Policies</span>
                             <span className="text-lg font-bold">
-                              {requirement.associatedRegulations.length}
+                              {requirement.policies.filter(p => p.status === 'active').length}
                             </span>
                           </div>
                           <div className="flex flex-wrap gap-2 mt-1">
-                            {requirement.associatedRegulations.slice(0, 3).map(reg => {
-                              const frameworkData = frameworkAlignmentData.find(f => f.name === reg.name);
-                              const color = frameworkData?.color || 'hsl(var(--chart-1))';
-                              return (
-                                <span key={reg.name} className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100">
-                                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }}/>
-                                  {reg.name}
+                            {requirement.policies
+                              .filter(p => p.status === 'active')
+                              .slice(0, 3)
+                              .map(policy => (
+                                <span 
+                                  key={policy.id} 
+                                  className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100"
+                                >
+                                  <div className="w-2 h-2 rounded-full bg-green-600" />
+                                  {policy.name}
                                 </span>
-                              );
-                            })}
-                            {requirement.associatedRegulations.length > 3 && (
-                              <span className="text-xs text-gray-500">+{requirement.associatedRegulations.length - 3} more</span>
+                              ))}
+                            {requirement.policies.filter(p => p.status === 'active').length > 3 && (
+                              <span className="text-xs text-gray-500">
+                                +{requirement.policies.filter(p => p.status === 'active').length - 3} more
+                              </span>
                             )}
                           </div>
                         </div>
 
-                        {/* Bottom Left - Policies */}
+                        {/* Suggested Policy Updates */}
                         <div className="text-sm">
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-gray-500">Mapped Org Policies</span>
+                            <span className="text-sm text-gray-500">Suggested Policy Updates</span>
                             <span className="text-lg font-bold">
-                              {requirement.policies.length}
+                              {requirement.policies.filter(p => p.status === 'suggested').length}
                             </span>
                           </div>
                           <div className="flex flex-wrap gap-2 mt-1">
-                            {requirement.policies.slice(0, 3).map(policy => (
-                              <span 
-                                key={policy.id} 
-                                className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100"
-                              >
-                                <div 
-                                  className={`w-2 h-2 rounded-full ${
-                                    policy.status === 'active' 
-                                      ? 'bg-green-600' 
-                                      : 'bg-yellow-600'
-                                  }`}
-                                />
-                                {policy.name}
+                            {requirement.policies
+                              .filter(p => p.status === 'suggested')
+                              .slice(0, 3)
+                              .map(policy => (
+                                <span 
+                                  key={policy.id} 
+                                  className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100"
+                                >
+                                  <div className="w-2 h-2 rounded-full bg-yellow-600" />
+                                  {policy.name}
+                                </span>
+                              ))}
+                            {requirement.policies.filter(p => p.status === 'suggested').length > 3 && (
+                              <span className="text-xs text-gray-500">
+                                +{requirement.policies.filter(p => p.status === 'suggested').length - 3} more
                               </span>
-                            ))}
-                            {requirement.policies.length > 3 && (
-                              <span className="text-xs text-gray-500">+{requirement.policies.length - 3} more</span>
                             )}
                           </div>
                         </div>
@@ -225,7 +250,7 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
                           {requirement.nonCompliantInstances.length > 0 && (
                             <>
                               <div className="flex justify-between items-center">
-                                <span className="text-sm text-gray-500">Non-compliant instances</span>
+                                <span className="text-sm text-gray-500">Non-Compliant Instances</span>
                                 <span className="text-lg font-bold text-red-600">
                                   {requirement.nonCompliantInstances.length}
                                 </span>

@@ -6,6 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { hippaArticles } from '@/data/regulations/hippa'
 import { useState } from 'react'
 import { ArticleDetailView } from './article-detail-view'
+import { frameworkAlignmentData } from '../data/framework-alignment-data';
 
 interface HippaArticle {
   id: string;
@@ -817,6 +818,7 @@ const teamNonComplianceData = enrichedHippaArticles.reduce((acc: { team: string,
 
 export const HippaDetailView: React.FC = () => {
   const [selectedArticle, setSelectedArticle] = useState<typeof enrichedHippaArticles[0] | null>(null);
+  const hipaaData = frameworkAlignmentData.find(f => f.name === 'HIPPA');
 
   const handleOpenArticle = (article: typeof enrichedHippaArticles[0]) => {
     setSelectedArticle(article);
@@ -869,7 +871,7 @@ export const HippaDetailView: React.FC = () => {
                   <div className="text-sm text-gray-500">Non-compliant Systems</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold">92%</div>
+                  <div className="text-2xl font-bold">{hipaaData?.alignment || 0}%</div>
                   <div className="text-sm text-gray-500">Overall Alignment</div>
                 </div>
               </div>

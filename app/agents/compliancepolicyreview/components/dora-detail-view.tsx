@@ -6,6 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { useState } from 'react'
 import { ArticleDetailView } from './article-detail-view'
 import { doraArticles as baseDoraArticles } from '@/data/regulations/dora'
+import { frameworkAlignmentData } from '../data/framework-alignment-data'
 
 interface DoraArticle {
   id: string;
@@ -402,6 +403,7 @@ const teamNonComplianceData = enrichedDoraArticles.reduce((acc: Record<string, {
 
 export const DoraDetailView: React.FC = () => {
   const [selectedArticle, setSelectedArticle] = useState<(typeof enrichedDoraArticles)[0] | null>(null);
+  const doraData = frameworkAlignmentData.find(f => f.name === 'DORA');
 
   const handleOpenArticle = (article: (typeof enrichedDoraArticles)[0]) => {
     setSelectedArticle(article);
@@ -470,7 +472,7 @@ export const DoraDetailView: React.FC = () => {
                     <div className="text-sm text-gray-500">Non-compliant Systems</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold">92%</div>
+                    <div className="text-2xl font-bold">{doraData?.alignment || 0}%</div>
                     <div className="text-sm text-gray-500">Overall Alignment</div>
                   </div>
                 </div>

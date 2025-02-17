@@ -11,7 +11,7 @@ import { CommonControlFrameworkSection } from './components/common-control-frame
 import { CCFRequirement } from './data/common-control-framework'
 import { AuditChat } from './components/audit-chat'
 
-export type DetailViewType = 'compliance-mapper' | 'hippa' | 'dora' | 'ccf' | null;
+export type DetailViewType = 'compliance-mapper' | 'hippa' | 'dora' | 'soc2' | 'ccf' | null;
 
 interface HomeViewProps {
   activeView: DetailViewType;
@@ -31,6 +31,9 @@ export const HomeViewComponent: React.FC<HomeViewProps> = ({
         break;
       case 'HIPPA':
         setActiveView('hippa');
+        break;
+      case 'SOC2 Type 1':
+        setActiveView('soc2');
         break;
       default:
         setActiveView(null);

@@ -12,7 +12,7 @@ import { IconWithBackground } from '@/components/ui/subframe/components/IconWith
 import { Breadcrumbs } from '@/components/ui/subframe/components/Breadcrumbs'
 import { CCFDetailView } from './components/ccf-detail-view'
 import { CCFRequirement } from './data/common-control-framework'
-
+import { Soc2DetailView } from './components/soc2-detail-view'
 export default function HomeViewWrapper() {
   const router = useRouter();
   const [activeView, setActiveView] = useState<DetailViewType>(null);
@@ -57,6 +57,7 @@ export default function HomeViewWrapper() {
             )}
             {activeView === 'hippa' && <HippaDetailView />}
             {activeView === 'dora' && <DoraDetailView />}
+            {activeView === 'soc2' && <Soc2DetailView />}
             {activeView === 'ccf' && <CCFDetailView requirement={selectedCCFRequirement} />}
           </SheetContent>
         </Sheet>
