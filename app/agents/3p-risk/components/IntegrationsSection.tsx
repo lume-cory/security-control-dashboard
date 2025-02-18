@@ -78,12 +78,12 @@ export function IntegrationsSection() {
   };
 
   return (
-    <Card>
+    <Card className="w-full">
       <CardHeader>
         <div className="flex w-full items-center gap-2">
-          <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font">
+          <h2 className="line-clamp-1 grow shrink-0 basis-0 text-lg font-semibold">
             Integrations and Data Sources
-          </span>
+          </h2>
           <Button
             className="h-6 w-auto flex-none"
             variant="brand-primary"

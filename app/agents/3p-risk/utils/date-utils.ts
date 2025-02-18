@@ -14,5 +14,7 @@ export const DemoDateOffsets = {
   documentUploaded: -45,        // 45 days ago
   questionnaireDue: 14,         // 2 weeks from now
   questionnaireSent: -7,        // 7 days ago
-  actionPlanDue: 30             // 1 month from now
+  actionPlanDue: 30,             // 1 month from now
+  actionPlanLastUpdated: -5,    // 5 days ago
+  alertCreated: -1,             // 1 day ago
 } as const; 

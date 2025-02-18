@@ -9,6 +9,7 @@ import { useState } from "react"
 import * as SubframeCore from "@subframe/core"
 import { vendors, type Vendor } from "@/app/agents/3p-risk/data/vendor-data"
 import { VendorDetailView } from "./VendorDetailView"
+import { calculateVendorComplianceSummary } from "../data/vendor-data"
 
 export function VendorSection() {
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null)
@@ -18,7 +19,7 @@ export function VendorSection() {
     <Card className="w-full">
       <CardHeader>
         <div className="flex w-full items-center justify-between">
-          <span className="text-heading-3 font-heading-3">Third Party Vendors</span>
+          <h2 className="text-lg font-semibold">Vendors Policy & Control Compliance</h2>
           <Button 
             variant="brand-primary"
             icon="FeatherPlus"
@@ -36,7 +37,7 @@ export function VendorSection() {
               onClick={() => setSelectedVendor(vendor)}
               className="cursor-pointer rounded-md border p-4 hover:border-brand-primary hover:bg-neutral-50"
             >
-              <div className="flex items-start justify-between">
+              <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="text-body-bold font-body-bold">{vendor.name}</h3>
                   <p className="text-caption text-subtext-color">{vendor.category}</p>
@@ -44,14 +45,65 @@ export function VendorSection() {
                 <Badge variant={
                   vendor.status === 'COMPLIANT' ? 'success' :
                   vendor.status === 'NON_COMPLIANT' ? 'error' :
-                  vendor.status === 'COMPLIANT_WITH_EXCEPTION' ? 'warning' :
+                  vendor.status === 'COMPLIANT_WITH_EXCEPTION' ? 'success' :
                   vendor.status === 'MORE_INFO_REQUESTED' ? 'warning' :
-                  vendor.status === 'SUSPENDED' ? 'error' : 'neutral'
+                  vendor.status === 'SUSPENDED' ? 'error' : 'warning'
                 }>
                   {vendor.status}
                 </Badge>
               </div>
-              <p className="mt-2 text-sm text-subtext-color">{vendor.description}</p>
+
+              {/* <div className="flex justify-between mb-2">
+                  <p className="text-muted-foreground text-sm">Policy & Control Compliance:</p>
+              </div> */}
+              <div className="grid grid-cols-5 gap-2 text-center">
+                <div>
+                  <div className="text-lg font-bold text-green-600">
+                    {calculateVendorComplianceSummary(vendor).exceeded}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Exceeded</div>
+                </div>
+                <div>
+                  <div className="text-lg font-bold text-green-600">
+                    {calculateVendorComplianceSummary(vendor).met}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Met</div>
+                </div>
+                <div>
+                  <div className="text-lg font-bold text-red-600">
+                    {calculateVendorComplianceSummary(vendor).notMet}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Not Met</div>
+                </div>
+                <div>
+                  <div className="text-lg font-bold text-gray-600">
+                    {calculateVendorComplianceSummary(vendor).notAssessed}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Not Assessed</div>
+                </div>
+                <div>
+                  <div className="text-lg font-bold text-yellow-600">
+                    {calculateVendorComplianceSummary(vendor).exception}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Exception</div>
+                </div>
+              </div>
+
+              <div className="space-y-2 mb-4 mt-4 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Last Assessment:</span>
+                  <span>{vendor.assessmentStatus.lastAssessment}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Contract Renewal:</span>
+                  <span>{vendor.criticalDates.contractRenewal}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Next Assessment:</span>
+                  <span>{vendor.criticalDates.nextAssessment}</span>
+                </div>
+              </div>
+
             </div>
           ))}
         </div>

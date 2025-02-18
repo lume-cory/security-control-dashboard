@@ -9,7 +9,26 @@ type VendorStatus =
   | 'PENDING_REVIEW'
   | 'SUSPENDED';
 
-type ComplianceStatus = 'EXCEEDED' | 'MET' | 'NOT_MET' | 'NOT_ASSESSED';
+type ComplianceStatus = 'EXCEEDED' | 'MET' | 'NOT_MET' | 'NOT_ASSESSED' | 'EXCEPTION';
+
+type EvidenceType = 'QUESTIONNAIRE' | 'RFI' | 'CERTIFICATION' | 'ATTESTATION' | 'POLICY';
+type EvidenceStatus = 'ACCEPTABLE' | 'NEEDS_REVIEW' | 'INSUFFICIENT';
+
+interface Evidence {
+  id: string;
+  name: string;
+  type: EvidenceType;
+  url?: string;
+  description: string;
+  collectedDate: string;
+  isNew?: boolean;
+  status?: EvidenceStatus;
+  responses?: Array<{
+    question: string;
+    response: string;
+    status: 'ACCEPTABLE' | 'NEEDS_REVIEW' | 'INSUFFICIENT';
+  }>;
+}
 
 interface VendorCertification {
   name: string;
@@ -43,6 +62,26 @@ interface VendorDocument {
   status: 'CURRENT' | 'EXPIRED' | 'PENDING_REVIEW';
 }
 
+interface VendorPolicyMapping {
+  policyId: string;
+  policyName: string;
+  requirementGroups: Array<{
+    groupId: string;
+    groupName: string;
+    status: ComplianceStatus;
+    lastAssessed: string;
+    evidence?: Evidence[];
+    gaps?: string[];
+    actionPlan?: {
+      description: string;
+      dueDate: string;
+      lastUpdated: string;
+      status: 'OPEN' | 'IN_PROGRESS' | 'COMPLETED';
+      assignedTo: string;
+    };
+  }>;
+}
+
 interface Vendor {
   id: string;
   name: string;
@@ -63,12 +102,6 @@ interface Vendor {
     nextAssessmentDue: string;
     assessmentFrequency: 'ANNUAL' | 'SEMI_ANNUAL' | 'QUARTERLY';
   };
-  complianceSummary: {
-    exceeded: number;
-    met: number;
-    notMet: number;
-    notAssessed: number;
-  };
   certifications: VendorCertification[];
   documents: VendorDocument[];
   policyCompliance: Array<{
@@ -79,11 +112,12 @@ interface Vendor {
       groupName: string;
       status: ComplianceStatus;
       lastAssessed: string;
-      evidence?: string[];
+      evidence?: Evidence[];
       gaps?: string[];
       actionPlan?: {
         description: string;
         dueDate: string;
+        lastUpdated: string;
         status: 'OPEN' | 'IN_PROGRESS' | 'COMPLETED';
         assignedTo: string;
       };
@@ -117,7 +151,22 @@ interface Vendor {
     dueDate: string;
     assignedTo: string;
     description: string;
+    lastUpdated: string;
   }>;
+}
+
+export function calculateVendorComplianceSummary(vendor: Vendor) {
+  const allRequirements = vendor.policyCompliance.flatMap(policy =>
+    policy.requirementGroups.map(group => group.status)
+  );
+
+  return {
+    exceeded: allRequirements.filter(status => status === 'EXCEEDED').length,
+    met: allRequirements.filter(status => status === 'MET').length,
+    notMet: allRequirements.filter(status => status === 'NOT_MET').length,
+    notAssessed: allRequirements.filter(status => status === 'NOT_ASSESSED').length,
+    exception: allRequirements.filter(status => status === 'EXCEPTION').length
+  };
 }
 
 export const vendors: Vendor[] = [
@@ -141,16 +190,10 @@ export const vendors: Vendor[] = [
       nextAssessmentDue: getRelativeDate(DemoDateOffsets.nextAssessmentDue),
       assessmentFrequency: "SEMI_ANNUAL"
     },
-    complianceSummary: {
-      exceeded: 5,
-      met: 42,
-      notMet: 3,
-      notAssessed: 2
-    },
     certifications: [
       {
         name: "SOC 2 Type II",
-        issuer: "Big4 Audit Corp",
+        issuer: "EY Audit",
         validUntil: getRelativeDate(DemoDateOffsets.certificationExpiry),
         documentUrl: "https://acmecloud.com/security/soc2",
         lastVerified: getRelativeDate(DemoDateOffsets.documentLastVerified)
@@ -207,7 +250,8 @@ export const vendors: Vendor[] = [
         type: "REMEDIATION",
         dueDate: "2024-03-01",
         assignedTo: "Security Team",
-        description: "Implement encryption for data in transit and at rest"
+        description: "Implement encryption for data in transit and at rest",
+        lastUpdated: getRelativeDate(DemoDateOffsets.actionPlanLastUpdated)
       }
     ]
   },
@@ -229,12 +273,6 @@ export const vendors: Vendor[] = [
       lastAssessment: getRelativeDate(DemoDateOffsets.lastAssessment - 10),
       nextAssessmentDue: getRelativeDate(DemoDateOffsets.nextAssessmentDue + 30),
       assessmentFrequency: "SEMI_ANNUAL"
-    },
-    complianceSummary: {
-      exceeded: 0,
-      met: 100,
-      notMet: 0,
-      notAssessed: 0
     },
     certifications: [
       {
@@ -296,7 +334,8 @@ export const vendors: Vendor[] = [
         type: "REMEDIATION",
         dueDate: "2024-03-01",
         assignedTo: "Security Team",
-        description: "Implement encryption for data in transit and at rest"
+        description: "Implement encryption for data in transit and at rest",
+        lastUpdated: getRelativeDate(DemoDateOffsets.actionPlanLastUpdated)
       }
     ]
   },
@@ -311,19 +350,13 @@ export const vendors: Vendor[] = [
       phone: "555-0456"
     },
     riskLevel: "Low",
-    status: "COMPLIANT",
+    status: "PENDING_REVIEW",
     category: "Storage",
     lastReviewDate: getRelativeDate(DemoDateOffsets.lastReviewDate - 12),
     assessmentStatus: {
       lastAssessment: getRelativeDate(DemoDateOffsets.lastAssessment - 23),
       nextAssessmentDue: getRelativeDate(DemoDateOffsets.nextAssessmentDue - 32),
       assessmentFrequency: "SEMI_ANNUAL"
-    },
-    complianceSummary: {
-      exceeded: 0,
-      met: 100,
-      notMet: 0,
-      notAssessed: 0
     },
     certifications: [
       {
@@ -385,7 +418,8 @@ export const vendors: Vendor[] = [
         type: "REMEDIATION",
         dueDate: "2024-03-01",
         assignedTo: "Security Team",
-        description: "Implement encryption for data in transit and at rest"
+        description: "Implement encryption for data in transit and at rest",
+        lastUpdated: getRelativeDate(DemoDateOffsets.actionPlanLastUpdated)
       }
     ]
   }

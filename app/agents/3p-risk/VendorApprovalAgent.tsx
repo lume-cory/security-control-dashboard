@@ -16,6 +16,8 @@ import AddIntegrationDialog from "./components/AddIntegrationDialog";
 import { ChatDrawer } from './components/ChatDrawer'
 import { IntegrationsSection } from './components/IntegrationsSection'
 import { VendorSection } from './components/VendorSection'
+import { AlertsSection } from "./components/AlertsSection"
+import { alerts } from "./data/alerts"
 
 
 function VendorApprovalAgent() {
@@ -101,123 +103,28 @@ function VendorApprovalAgent() {
     <DefaultPageLayout>
 
       {/*Title and navigation breadcrumbs*/}
-      <div className="flex h-full w-full flex-col items-start gap-6 px-6 py-6" >
-        <div className="flex w-full items-start gap-4 mobile:flex-col mobile:items-center mobile:justify-start mobile:gap-6" >
+      <div className="flex h-full w-full flex-col items-start gap-6 px-6 py-6">
+        <div className="flex w-full items-start gap-4 mobile:flex-col mobile:items-center mobile:justify-start mobile:gap-6">
           <IconWithBackground size="medium" icon="FeatherRocket" />
-          <span className="text-heading-2 font-heading-2 text-default-font mobile:text-center" >
+          <span className="text-heading-2 font-heading-2 text-default-font mobile:text-center">
             Acme Inc
           </span>
         </div>
-        < div className="flex w-full items-center justify-between" >
+        <div className="flex w-full items-center justify-between">
           <Breadcrumbs>
-            <Breadcrumbs.Item onClick={() => router.push('/agents')}>Agents </Breadcrumbs.Item>
-            < Breadcrumbs.Divider />
+            <Breadcrumbs.Item onClick={() => router.push('/agents')}>Agents</Breadcrumbs.Item>
+            <Breadcrumbs.Divider />
             <Breadcrumbs.Item active={true}>
               3rd Party Vendor Review Agent
             </Breadcrumbs.Item>
           </Breadcrumbs>
         </div>
 
-        <>
+        <div className="space-y-6 w-full">
           <IntegrationsSection />
+          <AlertsSection alerts={alerts} />
           <VendorSection />
-
-          {/*Metrics section*/}
-          < div className="flex w-full flex-wrap items-start gap-4" >
-            <div className="flex flex-col items-start gap-4 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm" >
-              <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color" >
-                Outstanding questions
-              </span>
-              < div className="flex items-center gap-2" >
-                <FilterBadge label="Urgent" count="0" selected={false} />
-                <Badge variant="error" icon="FeatherArrowUp" >
-                  13 %
-                </Badge>
-              </div>
-              < div className="flex items-center gap-2" >
-                <FilterBadge label="High" count="2" selected={false} />
-                <Badge variant="success" icon="FeatherArrowDown" >
-                  5 %
-                </Badge>
-              </div>
-              < div className="flex items-center gap-2" >
-                <FilterBadge label="Medium" count="2" selected={false} />
-                <Badge variant="neutral" icon="FeatherArrowRight" >
-                  0 %
-                </Badge>
-              </div>
-              < div className="flex items-center gap-2" >
-                <FilterBadge label="Low" count="1" selected={false} />
-                <Badge variant="success" icon="FeatherArrowDown" >
-                  25 %
-                </Badge>
-              </div>
-            </div>
-            < div className="flex grow shrink-0 basis-0 flex-col flex-wrap items-start gap-4" >
-              <div className="flex w-full flex-wrap items-start gap-4" >
-                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm" >
-                  <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color" >
-                    Open Missed SLAs
-                  </span>
-                  < div className="flex w-full flex-col items-start gap-2" >
-                    <span className="text-heading-2 font-heading-2 text-default-font" >
-                      2
-                    </span>
-                    < Badge variant="error" icon="FeatherArrowUp" >
-                      25 %
-                    </Badge>
-                  </div>
-                </div>
-                < div className="flex grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm" >
-                  <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color" >
-                    Missed SLAs(past - 30 days)
-                  </span>
-                  < div className="flex w-full flex-col items-start gap-2" >
-                    <span className="text-heading-2 font-heading-2 text-default-font" >
-                      7
-                    </span>
-                    < Badge variant="success" icon="FeatherArrowDown" >
-                      33 %
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-              < div className="flex w-full flex-wrap items-start gap-4" >
-                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm" >
-                  <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color" >
-                    Average time to resolve(past 30 days)
-                  </span>
-                  < div className="flex w-full flex-col items-start gap-2" >
-                    <span className="text-heading-2 font-heading-2 text-default-font" >
-                      11 days
-                    </span>
-                    < Badge variant="success" icon="FeatherArrowDown" >
-                      25 %
-                    </Badge>
-                  </div>
-                </div>
-                < div className="flex grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm" >
-                  <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color" >
-                    Resolved(past 30 days)
-                  </span>
-                  < div className="flex w-full flex-col items-start gap-2" >
-                    <span className="text-heading-2 font-heading-2 text-default-font" >
-                      44
-                    </span>
-                    < Badge variant="neutral" icon="FeatherArrowUp" >
-                      33 %
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/*questions table section*/}
-          {/* < div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm" >
-            <QuestionsTable />
-          </div> */}
-        </>
+        </div>
       </div>
 
       {/*chat drawer*/}

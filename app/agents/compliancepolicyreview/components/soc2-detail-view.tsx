@@ -64,6 +64,7 @@ export const Soc2DetailView: React.FC = () => {
       
       <ScrollArea className="flex-1 pr-4">
         <div className="space-y-6">
+          
           {/* Policy Status Overview */}
           <div className="mb-8">
             <h3 className="text-lg font-semibold mb-4">Policy Status Overview</h3>
