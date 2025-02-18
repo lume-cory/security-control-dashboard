@@ -99,7 +99,7 @@ function VendorApprovalAgent() {
             <Breadcrumbs.Item onClick={() => router.push('/agents')}>Agents </Breadcrumbs.Item>
             < Breadcrumbs.Divider />
             <Breadcrumbs.Item active={true}>
-              3rd Party Vendor Review Agent
+              Vendor Request Review Agent
             </Breadcrumbs.Item>
           </Breadcrumbs>
         </div>

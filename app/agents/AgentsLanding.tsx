@@ -22,7 +22,7 @@ function AgentsLandingPage() {
       path: "/agents/helpdesk"
     },
     {
-      title: "Engineering Security Review",
+      title: "Product Security Review",
       description: "See incoming requests and questions from the engineering team and respond with the help of AI suggested answers",
       thumbnail: "/thumbnails/2.svg",
       path: "/agents/engsecurityreview"
@@ -40,22 +40,28 @@ function AgentsLandingPage() {
       path: "/agents/clientrequirements"
     },
     {
-      title: "3rd Party Vendor Review Agent",
+      title: "3rd Party Risk Review Agent",
+      description: "This agent augments the process of collecting 3rd party security controls, synthesizing their security policies, and mapping to our organization's security controls",
+      thumbnail: "/thumbnails/9.svg",
+      path: "/agents/3p-risk"
+    },
+    {
+      title: "Security Control Groups",
+      description: "This agent displays security control groups and methods to increase effectiveness considering business context",
+      thumbnail: "/thumbnails/6.svg",
+      path: "/agents/controlgroups"
+    },    
+    {
+      title: "Vendor Request Review Agent",
       description: "This agent receives requests from employees to use or renew vendors or applications and automatically generates supporting data and risk analysis based on security policy and vendor risk management data",
-      thumbnail: "/thumbnails/5.svg",
+      thumbnail: "/thumbnails/8.svg",
       path: "/agents/vendorreview"
     },
     {
       title: "Customer Security Inquiry Agent",
       description: "This agent is designed to aggregate questions from customers about the organization's security posture and suggest responses",
-      thumbnail: "/thumbnails/6.svg",
+      thumbnail: "/thumbnails/7.svg",
       path: "/agents/clientsecurityinquiries"
-    },
-    {
-      title: "Security Control Groups",
-      description: "This agent displays security control groups and methods to increase effectiveness considering business context",
-      thumbnail: "/thumbnails/8.svg",
-      path: "/agents/controlgroups"
     }
   ];
 

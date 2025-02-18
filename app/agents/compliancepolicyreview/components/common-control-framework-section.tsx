@@ -117,7 +117,7 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
           {/* Requirements List */}
           <div className="mb-8">
             {/* <h3 className="text-md font-semibold mb-4">Common Control Requirements</h3> */}
-            <div className="grid grid-cols-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4">
               {filteredRequirements.map(requirement => (
                 <div 
                   key={requirement.id} 
@@ -127,30 +127,33 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
                   <div className="space-y-3">
                     {/* Title and Summary */}
                     <div className="mb-4">
-                      <p className="font-semibold text-md">{requirement.name}</p>
-                      <p className="text-sm text-gray-500">{requirement.summary}</p>
-                    </div>
-
-                    {/* Framework Derivatives */}
-                    <div className="text-sm mb-6">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-500">Derived From:</span>
-                        <div className="flex flex-wrap gap-2">
-                          {requirement.associatedRegulations.slice(0, 3).map(reg => {
-                            const frameworkData = frameworkAlignmentData.find(f => f.name === reg.name);
-                            const color = frameworkData?.color || 'hsl(var(--chart-1))';
-                            return (
-                              <span key={reg.name} className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100">
-                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }}/>
-                                {reg.name}
-                              </span>
-                            );
-                          })}
-                          {requirement.associatedRegulations.length > 3 && (
-                            <span className="text-xs text-gray-500">+{requirement.associatedRegulations.length - 3} more</span>
-                          )}
+                      <div className="flex justify-between items-start">
+                        <p className="font-semibold text-md">{requirement.name}</p>
+                        
+                        {/* Framework Derivatives - Justified with title */}
+                        <div className="text-sm">
+                          <div className="flex items-center gap-2">
+                            {/* <span className="text-sm text-gray-500">Correlated w/ </span> */}
+                            <div className="flex flex-wrap gap-2">
+                              {requirement.associatedRegulations.slice(0, 3).map(reg => {
+                                const frameworkData = frameworkAlignmentData.find(f => f.name === reg.name);
+                                const color = frameworkData?.color || 'hsl(var(--chart-1))';
+                                return (
+                                  <span key={reg.name} className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100">
+                                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }}/>
+                                    {reg.name}
+                                  </span>
+                                );
+                              })}
+                              {requirement.associatedRegulations.length > 3 && (
+                                <span className="text-xs text-gray-500">+{requirement.associatedRegulations.length - 3} more</span>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
+                      
+                      <p className="text-sm text-gray-500 mt-1">{requirement.summary}</p>
                     </div>
 
                     {/* Two-column Grid */}

@@ -25,7 +25,7 @@ export function AlertsSection({ onAlertClick }: { onAlertClick: () => void }) {
             />
             <AlertCard
               title="EU AI Act"
-              description="The EU AI Act has gone into effect and will begin enforcement in 2025. The Information Security Policy is misaligned with 8 controls."
+              description="The EU AI Act has gone into effect and will begin enforcement in 2025. Based on usage of AI and ML products, we'll need to comply. The Information Security Policy is currently misaligned with 8 controls required in this regulation."
               aligned={72}
               nonAligned={8}
               onClick={onAlertClick}
