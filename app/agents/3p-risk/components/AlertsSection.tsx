@@ -29,7 +29,7 @@ export function AlertsSection({ alerts }: AlertsSectionProps) {
         )} */}
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4">
         {activeAlerts.map(alert => (
           <Card key={alert.id} className="p-4">
             <div className="flex items-start justify-between">

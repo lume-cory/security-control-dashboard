@@ -30,7 +30,7 @@ export function VendorSection() {
         </div>
       </CardHeader>
       <CardContent className="w-full">
-        <div className="grid grid-cols-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
           {vendors.map(vendor => (
             <div
               key={vendor.id}
