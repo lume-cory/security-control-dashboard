@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { useState } from "react"
 import * as SubframeCore from "@subframe/core"
 import AddIntegrationDialog from "./AddIntegrationDialog"
+import { cn } from "@/lib/utils"
 
 interface Integration {
   name: string;
@@ -95,10 +96,13 @@ export function IntegrationsSection() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex w-full items-start gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 auto-rows-fr gap-4">
           {integrations.map(({ name, link, subtitle, icon }, i) => (
             <a key={`${name}-${i}`} href={link} target="_blank">
-              <div className="flex items-center gap-2 rounded-md bg-neutral-50 px-2 py-2">
+              <div className={cn(
+                "flex items-center gap-2 rounded-md bg-neutral-50 px-2 py-2",
+                integrations.length > 4 && "md:col-span-2 lg:col-span-1"
+              )}>
                 <SubframeCore.Icon
                   className="text-heading-2 font-heading-2 text-default-font"
                   name={icon}
