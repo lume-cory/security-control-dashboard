@@ -172,7 +172,7 @@ export function calculateVendorComplianceSummary(vendor: Vendor) {
 export const vendors: Vendor[] = [
   {
     id: "1",
-    name: "Acme Cloud Services",
+    name: "Amazon Web Services",
     description: "Cloud infrastructure provider",
     website: "https://acmecloud.com",
     trustCenterUrl: "https://acmecloud.com/trust",
@@ -182,7 +182,7 @@ export const vendors: Vendor[] = [
       phone: "555-0123"
     },
     riskLevel: "High",
-    status: "COMPLIANT_WITH_EXCEPTION",
+    status: "NON_COMPLIANT",
     category: "Infrastructure",
     lastReviewDate: getRelativeDate(DemoDateOffsets.lastReviewDate),
     assessmentStatus: {
@@ -257,7 +257,7 @@ export const vendors: Vendor[] = [
   },
   {
     id: "2",
-    name: "SecureAuth Solutions",
+    name: "Okta",
     description: "Identity and access management provider",
     website: "https://secureauth.com",
     trustCenterUrl: "https://secureauth.com/security",
@@ -267,7 +267,7 @@ export const vendors: Vendor[] = [
     },
     riskLevel: "Medium",
     status: "COMPLIANT",
-    category: "Security",
+    category: "IAM",
     lastReviewDate: getRelativeDate(DemoDateOffsets.lastReviewDate - 5),
     assessmentStatus: {
       lastAssessment: getRelativeDate(DemoDateOffsets.lastAssessment - 10),
@@ -341,7 +341,7 @@ export const vendors: Vendor[] = [
   },
   {
     id: "3",
-    name: "DataVault Storage",
+    name: "Snowflake",
     description: "Enterprise backup and storage solutions",
     website: "https://datavault.com",
     pointOfContact: {
@@ -425,4 +425,4 @@ export const vendors: Vendor[] = [
   }
 ]
 
-export type { Vendor, VendorStatus, ComplianceStatus } 
+export type { Vendor, VendorStatus, ComplianceStatus, Evidence, EvidenceType, EvidenceStatus } 

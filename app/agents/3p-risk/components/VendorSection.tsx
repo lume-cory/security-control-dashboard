@@ -37,20 +37,20 @@ export function VendorSection() {
               onClick={() => setSelectedVendor(vendor)}
               className="cursor-pointer rounded-md border p-4 hover:border-brand-primary hover:bg-neutral-50"
             >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-body-bold font-body-bold">{vendor.name}</h3>
-                  <p className="text-caption text-subtext-color">{vendor.category}</p>
+              <div className="flex flex-col gap-1 mb-4">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-bold font-bold">{vendor.name}</h3>
+                  <Badge variant={
+                    vendor.status === 'COMPLIANT' ? 'success' :
+                    vendor.status === 'NON_COMPLIANT' ? 'error' :
+                    vendor.status === 'COMPLIANT_WITH_EXCEPTION' ? 'success' :
+                    vendor.status === 'MORE_INFO_REQUESTED' ? 'warning' :
+                    vendor.status === 'SUSPENDED' ? 'error' : 'warning'
+                  } className="text-xs">
+                    {vendor.status}
+                  </Badge>
                 </div>
-                <Badge variant={
-                  vendor.status === 'COMPLIANT' ? 'success' :
-                  vendor.status === 'NON_COMPLIANT' ? 'error' :
-                  vendor.status === 'COMPLIANT_WITH_EXCEPTION' ? 'success' :
-                  vendor.status === 'MORE_INFO_REQUESTED' ? 'warning' :
-                  vendor.status === 'SUSPENDED' ? 'error' : 'warning'
-                }>
-                  {vendor.status}
-                </Badge>
+                <p className="text-caption text-subtext-color">{vendor.category}</p>
               </div>
 
               {/* <div className="flex justify-between mb-2">

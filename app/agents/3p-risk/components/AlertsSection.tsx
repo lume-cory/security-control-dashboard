@@ -2,12 +2,15 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/subframe/components/Badge"
 import { Button } from "@/subframe/components/Button"
 import type { Alert } from "../data/alerts"
+import { useState } from "react"
+import { SlackThreadDialog } from "./SlackThreadDialog"
 
 interface AlertsSectionProps {
   alerts: Alert[];
 }
 
 export function AlertsSection({ alerts }: AlertsSectionProps) {
+  const [selectedThread, setSelectedThread] = useState<Alert['slackThread']>();
   const activeAlerts = alerts.filter(alert => alert.status !== 'DISMISSED');
 
   return (
@@ -53,14 +56,13 @@ export function AlertsSection({ alerts }: AlertsSectionProps) {
               </div>
               <div className="flex items-center gap-2 ml-4">
                 {alert.link && (
-                  <a href={alert.link.url} className="no-underline">
-                    <Button 
-                      variant="brand-primary" 
-                      size="small"
-                    >
-                      {alert.link.text}
-                    </Button>
-                  </a>
+                  <Button 
+                    variant="brand-primary" 
+                    size="small"
+                    onClick={() => alert.slackThread && setSelectedThread(alert.slackThread)}
+                  >
+                    {alert.link.text}
+                  </Button>
                 )}
               </div>
             </div>
@@ -73,6 +75,12 @@ export function AlertsSection({ alerts }: AlertsSectionProps) {
           </div>
         )}
       </div>
+
+      <SlackThreadDialog 
+        isOpen={!!selectedThread}
+        onClose={() => setSelectedThread(undefined)}
+        thread={selectedThread}
+      />
     </Card>
   )
 } 
