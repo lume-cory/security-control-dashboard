@@ -31,6 +31,15 @@ export interface Requirement {
   suggestedPolicyText?: string;
 }
 
+// Helper function to construct policy text from requirement groups
+function constructPolicyText(section: typeof ispSections[0]): string {
+  return section.requirementGroups.map(group => 
+    `${group.name}\n${group.requirements.map(req => 
+      `  ${req.reqId}. ${req.name}\n    ${req.text}`
+    ).join('\n')}`
+  ).join('\n\n');
+}
+
 //Data for DORA, CRI Profile, and Acme Information Security Policy
 export const doraCriRequirements: Requirement[] = [
   {
@@ -44,7 +53,7 @@ export const doraCriRequirements: Requirement[] = [
     policyId: ispSections[0].policyId,
     policyCategory: ispSections[0].category,
     confidenceInterval: 95,
-    policyText: ispSections[0].text
+    policyText: constructPolicyText(ispSections[0])
   },
   {
     id: '2',
@@ -57,7 +66,7 @@ export const doraCriRequirements: Requirement[] = [
     policyId: ispSections[1].policyId,
     policyCategory: ispSections[1].category,
     confidenceInterval: 92,
-    policyText: ispSections[1].text
+    policyText: constructPolicyText(ispSections[1])
   },
   {
     id: '3',
@@ -114,7 +123,7 @@ export const doraCriRequirements: Requirement[] = [
     policyId: ispSections[2].policyId,
     policyCategory: ispSections[2].category,
     confidenceInterval: 95,
-    policyText: ispSections[2].text
+    policyText: constructPolicyText(ispSections[2])
   }
 ];
 
@@ -131,7 +140,7 @@ export const criIspRequirements: Requirement[] = [
     policyId: ispSections[0].policyId,
     policyCategory: ispSections[0].category,
     confidenceInterval: 95,
-    policyText: ispSections[0].text
+    policyText: constructPolicyText(ispSections[0])
   },
   {
     id: '2',
@@ -144,7 +153,7 @@ export const criIspRequirements: Requirement[] = [
     policyId: ispSections[1].policyId,
     policyCategory: ispSections[1].category,
     confidenceInterval: 92,
-    policyText: ispSections[1].text
+    policyText: constructPolicyText(ispSections[1])
   }, 
   {
     id: '3',
@@ -157,7 +166,7 @@ export const criIspRequirements: Requirement[] = [
     policyId: ispSections[2].policyId,
     policyCategory: ispSections[2].category,
     confidenceInterval: 95,
-    policyText: ispSections[2].text
+    policyText: constructPolicyText(ispSections[2])
   }, 
   {
     id: '4',
@@ -482,7 +491,7 @@ export const nistCsfIspRequirements: Requirement[] = [
       policyId: ispSections[0].policyId,
       policyCategory: 'GOVERN / Organizational Context',
       confidenceInterval: 95,
-      policyText: ispSections[0].text
+      policyText: constructPolicyText(ispSections[0])
     },
     {
       id: '2',
