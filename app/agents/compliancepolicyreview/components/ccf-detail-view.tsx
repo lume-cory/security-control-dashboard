@@ -112,12 +112,23 @@ export function CCFDetailView({ requirement }: { requirement: CCFRequirement | n
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-muted-foreground">{policy.id}</span>
                       {policy.status === 'suggested' && (
-                        <span className="text-sm text-yellow-600">(Suggested)</span>
+                        <span className="text-sm text-yellow-600">(Suggested Update)</span>
                       )}
                     </div>
                   </div>
                   <p className="text-sm text-gray-500 mb-2">{policy.description}</p>
                   <p className="text-sm text-gray-700 mb-2">{policy.policyText}</p>
+                  {currentRequirement.associatedRegulations.length <= 3 && (
+                    <p className="text-sm text-gray-600 mb-2">
+                      This policy is applicable for the {
+                        currentRequirement.associatedRegulations.length === 1 
+                          ? `${currentRequirement.associatedRegulations[0].name} regulation`
+                          : currentRequirement.associatedRegulations.length === 2
+                            ? `${currentRequirement.associatedRegulations[0].name} and ${currentRequirement.associatedRegulations[1].name} regulations`
+                            : `${currentRequirement.associatedRegulations[0].name}, ${currentRequirement.associatedRegulations[1].name}, and ${currentRequirement.associatedRegulations[2].name} regulations`
+                      }.
+                    </p>
+                  )}
                   <a 
                     href={policy.link}
                     className="text-sm text-blue-600 hover:underline"

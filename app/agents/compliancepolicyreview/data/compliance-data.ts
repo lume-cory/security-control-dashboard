@@ -31,6 +31,20 @@ export interface Requirement {
   suggestedPolicyText?: string;
 }
 
+interface Policy {
+  id: string;
+  name: string;
+  description: string;
+  policyText: string;
+  link: string;
+  status?: string;
+  associatedRegulations?: Array<{
+    name: string;
+    summary: string;
+    link: string;
+  }>;
+}
+
 // Helper function to construct policy text from requirement groups
 function constructPolicyText(section: typeof ispSections[0]): string {
   return section.requirementGroups.map(group => 

@@ -22,10 +22,10 @@ function AgentsLandingPage() {
       path: "/agents/helpdesk"
     },
     {
-      title: "Product Security Review",
-      description: "See incoming requests and questions from the engineering team and respond with the help of AI suggested answers",
+      title: "Product Security Assessments",
+      description: "Product security assistants to help with threat modeling, impact risk assessments, and policy mapping",
       thumbnail: "/thumbnails/2.svg",
-      path: "/agents/engsecurityreview"
+      path: "/agents/productsecurity"
     },
     {
       title: "Compliance & Policy Reviewer",
@@ -50,18 +50,24 @@ function AgentsLandingPage() {
       description: "This agent displays security control groups and methods to increase effectiveness considering business context",
       thumbnail: "/thumbnails/6.svg",
       path: "/agents/controlgroups"
-    },    
+    },
     {
-      title: "Vendor Request Review Agent",
-      description: "This agent receives requests from employees to use or renew vendors or applications and automatically generates supporting data and risk analysis based on security policy and vendor risk management data",
-      thumbnail: "/thumbnails/8.svg",
-      path: "/agents/vendorreview"
+      title: "Engineering Question Review",
+      description: "See incoming requests and questions from the engineering team and respond with the help of AI suggested answers",
+      thumbnail: "/thumbnails/10.svg",
+      path: "/agents/engsecurityreview"
     },
     {
       title: "Customer Security Inquiry Agent",
       description: "This agent is designed to aggregate questions from customers about the organization's security posture and suggest responses",
       thumbnail: "/thumbnails/7.svg",
       path: "/agents/clientsecurityinquiries"
+    },
+    {
+      title: "Vendor Request Review Agent",
+      description: "This agent receives requests from employees to use or renew vendors or applications and automatically generates supporting data and risk analysis based on security policy and vendor risk management data",
+      thumbnail: "/thumbnails/8.svg",
+      path: "/agents/vendorreview"
     }
   ];
 

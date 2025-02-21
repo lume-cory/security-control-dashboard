@@ -192,8 +192,15 @@ export const vendors: Vendor[] = [
     },
     certifications: [
       {
-        name: "SOC 2 Type II",
-        issuer: "EY Audit",
+        name: "SOC 2 Type I",
+        issuer: "Ernst & Young",
+        validUntil: getRelativeDate(DemoDateOffsets.certificationExpiry),
+        documentUrl: "https://acmecloud.com/security/soc2",
+        lastVerified: getRelativeDate(DemoDateOffsets.documentLastVerified)
+      }, 
+      {
+        name: "ISO 27001",
+        issuer: "Consilium Labs",
         validUntil: getRelativeDate(DemoDateOffsets.certificationExpiry),
         documentUrl: "https://acmecloud.com/security/soc2",
         lastVerified: getRelativeDate(DemoDateOffsets.documentLastVerified)
@@ -207,6 +214,15 @@ export const vendors: Vendor[] = [
         url: "/documents/acme/security-assessment-2023q4.pdf",
         uploadDate: getRelativeDate(DemoDateOffsets.documentUploaded),
         lastVerified: getRelativeDate(DemoDateOffsets.documentLastVerified),
+        status: "CURRENT"
+      }, 
+      {
+        id: "doc2",
+        type: "QUESTIONNAIRE",
+        name: "Questionnaire Response - Acme Inc.",
+        url: "/documents/acme/questionnaire-response.pdf",
+        uploadDate: getRelativeDate(DemoDateOffsets.alertCreated),
+        lastVerified: getRelativeDate(DemoDateOffsets.alertCreated),
         status: "CURRENT"
       }
     ],

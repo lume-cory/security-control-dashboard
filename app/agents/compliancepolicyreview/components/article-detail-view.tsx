@@ -47,6 +47,7 @@ interface PolicyCardProps {
     policyText: string;
     link: string;
     status?: string;
+    associatedRegulations?: Array<{ name: string }>;
   };
 }
 
@@ -68,7 +69,7 @@ const PolicyCard: React.FC<PolicyCardProps> = ({ policy }) => {
         <h4 className="font-semibold">{policy.name}</h4>
         <span className="text-sm text-muted-foreground">({policy.id})</span>
         {isStatusSuggested && (
-          <span className="text-sm text-yellow-600">(Suggested)</span>
+          <span className="text-sm text-yellow-600">(Suggested Update)</span>
         )}
       </div>
       <p className="text-sm text-gray-500 mt-1">{policy.description}</p>
@@ -89,6 +90,17 @@ const PolicyCard: React.FC<PolicyCardProps> = ({ policy }) => {
         ) : (
           <>
             <p className="text-sm text-gray-700 mt-2">{policy.policyText}</p>
+            {policy.associatedRegulations && policy.associatedRegulations.length <= 3 && (
+              <p className="text-sm text-gray-600 mt-2">
+                This policy is applicable for the {
+                  policy.associatedRegulations.length === 1 
+                    ? `${policy.associatedRegulations[0].name} regulation`
+                    : policy.associatedRegulations.length === 2
+                      ? `${policy.associatedRegulations[0].name} and ${policy.associatedRegulations[1].name} regulations`
+                      : `${policy.associatedRegulations[0].name}, ${policy.associatedRegulations[1].name}, and ${policy.associatedRegulations[2].name} regulations`
+                }.
+              </p>
+            )}
             <div className="flex gap-2 mt-2">
               <Button size="small" onClick={() => setIsEditing(true)}>Modify</Button>
               <Button size="small" variant="brand-secondary">Submit for Approval</Button>
@@ -100,6 +112,13 @@ const PolicyCard: React.FC<PolicyCardProps> = ({ policy }) => {
       ) : (
         <>
           <p className="text-sm text-gray-700 mt-2">{policy.policyText}</p>
+          {policy.associatedRegulations && policy.associatedRegulations.length <= 2 && (
+            <p className="text-sm text-gray-600 mt-2">
+              This policy is applicable for {policy.associatedRegulations
+                .map(reg => reg.name)
+                .join(' and ')} regulation.
+            </p>
+          )}
           <a 
             href={policy.link}
             className="text-sm text-blue-600 hover:underline mt-2 inline-block"
