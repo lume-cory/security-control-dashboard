@@ -33,6 +33,22 @@ export function ThreatModelSection() {
         }
     }
 
+    const getThreatCounts = (assessment: ThreatModelAssessment) => {
+        const counts = {
+            CRITICAL: 0,
+            HIGH: 0,
+            MEDIUM: 0,
+            LOW: 0
+        }
+
+        // Count threats by risk level only
+        assessment.threats.forEach(threat => {
+            counts[threat.riskLevel.toUpperCase() as keyof typeof counts]++
+        })
+
+        return counts
+    }
+
     return (
         <Card className="w-full">
             <CardHeader>
@@ -49,58 +65,82 @@ export function ThreatModelSection() {
             </CardHeader>
             <CardContent className="w-full">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                    {previousAssessments.map(assessment => (
-                        <div
-                            key={assessment.id}
-                            onClick={() => setSelectedAssessment(assessment)}
-                            className="cursor-pointer rounded-md border p-4 hover:border-brand-primary hover:bg-neutral-50"
-                        >
-                            <div className="flex flex-col gap-1 mb-4">
-                                <div className="flex items-center justify-between">
-                                    <h3 className="text-bold font-bold">{assessment.name}</h3>
-                                    <Badge variant={getRiskBadgeVariant(assessment.riskLevel)}>
-                                        {assessment.riskLevel}
-                                    </Badge>
+                    {previousAssessments.map(assessment => {
+                        const threatCounts = getThreatCounts(assessment)
+                        
+                        return (
+                            <div
+                                key={assessment.id}
+                                onClick={() => setSelectedAssessment(assessment)}
+                                className="cursor-pointer rounded-md border p-4 hover:border-brand-primary hover:bg-neutral-50"
+                            >
+                                <div className="flex flex-col gap-1 mb-4">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-bold font-bold">{assessment.name}</h3>
+                                        <Badge variant="brand">
+                                            {assessment.projectTeam}
+                                        </Badge>
+                                    </div>
+                                    <p className="text-caption text-subtext-color">{assessment.projectTeam}</p>
+                                    <p className="text-caption text-subtext-color">Assessed: {assessment.date}</p>
                                 </div>
-                                <p className="text-caption text-subtext-color">{assessment.projectTeam}</p>
-                                <p className="text-caption text-subtext-color">Assessed: {assessment.date}</p>
-                            </div>
 
-                            <div className="grid grid-cols-4 gap-2 text-center mb-4">
-                                <div>
-                                    <div className="text-lg font-bold text-red-600">
-                                        {assessment.criticalThreats}
+                                <div className="mb-4">
+                                    <p className="text-sm font-semibold mb-2">Threat Risk Summary</p>
+                                    <div className="grid grid-cols-4 gap-2 text-center">
+                                        <div>
+                                            <div className="text-lg font-bold text-red-600">
+                                                {threatCounts.CRITICAL}
+                                            </div>
+                                            <div className="text-sm text-muted-foreground">Critical</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-lg font-bold text-orange-600">
+                                                {threatCounts.HIGH}
+                                            </div>
+                                            <div className="text-sm text-muted-foreground">High</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-lg font-bold text-yellow-600">
+                                                {threatCounts.MEDIUM}
+                                            </div>
+                                            <div className="text-sm text-muted-foreground">Medium</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-lg font-bold text-green-600">
+                                                {threatCounts.LOW}
+                                            </div>
+                                            <div className="text-sm text-muted-foreground">Low</div>
+                                        </div>
                                     </div>
-                                    <div className="text-sm text-muted-foreground">Critical</div>
                                 </div>
-                                <div>
-                                    <div className="text-lg font-bold text-orange-600">
-                                        {assessment.highThreats}
-                                    </div>
-                                    <div className="text-sm text-muted-foreground">High</div>
-                                </div>
-                                <div>
-                                    <div className="text-lg font-bold text-yellow-600">
-                                        {assessment.mediumThreats}
-                                    </div>
-                                    <div className="text-sm text-muted-foreground">Medium</div>
-                                </div>
-                                <div>
-                                    <div className="text-lg font-bold text-green-600">
-                                        {assessment.lowThreats}
-                                    </div>
-                                    <div className="text-sm text-muted-foreground">Low</div>
-                                </div>
-                            </div>
 
-                            <div className="flex justify-between items-center text-sm">
-                                <span className="text-muted-foreground">Mitigations:</span>
-                                <span>
-                                    {assessment.mitigationsImplemented} / {assessment.mitigationsTotal}
-                                </span>
+                                <div className="space-y-2">
+                                    <p className="text-sm font-semibold">Mitigations</p>
+                                    <div className="space-y-1">
+                                        {assessment.mitigations.map((mitigation, index) => (
+                                            <div key={index} className="flex justify-between items-center text-sm">
+                                                <span className="text-muted-foreground truncate pr-2">
+                                                    {mitigation.mitigation}
+                                                </span>
+                                                <Badge 
+                                                    variant={
+                                                        mitigation.status === 'IMPLEMENTED' ? 'success' :
+                                                        mitigation.status === 'IN_PROGRESS' ? 'warning' :
+                                                        mitigation.status === 'PLANNED' ? 'neutral' :
+                                                        'error'
+                                                    }
+                                                    className="whitespace-nowrap"
+                                                >
+                                                    {mitigation.status.replace('_', ' ')}
+                                                </Badge>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        )
+                    })}
                 </div>
             </CardContent>
 
