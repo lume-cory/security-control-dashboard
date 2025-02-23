@@ -14,6 +14,7 @@ import SeverityAssessment, { fullAssessments } from "./SeverityAssessment"
 import MitigationProposals, { fullMitigations } from "./MitigationProposals"
 import References, { fullReferences } from "./References"
 import { Textarea } from "@/components/ui/textarea"
+import { Spinner } from "../ui/Spinner"
 
 type SectionStatus = 'PENDING' | 'GENERATING' | 'COMPLETE' | 'UPDATED';
 
@@ -32,9 +33,16 @@ interface ComponentProps {
   typingSpeed?: number;
 }
 
+type AnalysisStep = {
+    id: string;
+    label: string;
+    status: 'pending' | 'active' | 'complete';
+}
+
 export default function ThreatModelAssistant({ typingSpeed = 2000 }: ComponentProps) {
   const [confluenceLink, setConfluenceLink] = useState("")
   const [featureName, setFeatureName] = useState("")
+  const [repositoryUrl, setRepositoryUrl] = useState("")
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [progress, setProgress] = useState(0)
   const [currentSection, setCurrentSection] = useState("")
@@ -49,6 +57,15 @@ export default function ThreatModelAssistant({ typingSpeed = 2000 }: ComponentPr
   ])
   const [editContent, setEditContent] = useState<SectionContent | null>(null)
   const [sectionProgress, setSectionProgress] = useState<Record<number, boolean>>({})
+  const [showTemplate, setShowTemplate] = useState(false)
+  const [currentStep, setCurrentStep] = useState(0)
+  const [isFullyComplete, setIsFullyComplete] = useState(false)
+
+  const analysisSteps: AnalysisStep[] = [
+    { id: 'design', label: 'Interrogating design doc', status: 'pending' },
+    { id: 'code', label: 'Parsing code repo', status: 'complete' },
+    { id: 'model', label: 'Constructing initial threat model', status: 'pending' }
+  ]
 
   const getStatusBadge = (status: SectionStatus) => {
     switch (status) {
@@ -65,11 +82,62 @@ export default function ThreatModelAssistant({ typingSpeed = 2000 }: ComponentPr
 
   const startAnalysis = () => {
     setIsAnalyzing(true)
-    // Set first section to Generating
-    setSections(prev => prev.map((section, idx) => ({
-      ...section,
-      status: idx === 0 ? 'GENERATING' : 'PENDING'
-    })))
+    setCurrentStep(0)
+
+    // Simulate AI processing steps first
+    const stepDuration = 2000 // 2 seconds per step
+    analysisSteps.forEach((_, index) => {
+        setTimeout(() => {
+            setCurrentStep(index)
+        }, index * stepDuration)
+    })
+
+    // After analysis steps, start section generation
+    setTimeout(() => {
+        setShowTemplate(true)
+        
+        // Initialize first section
+        setSections(prev => prev.map((section, idx) => ({
+            ...section,
+            status: idx === 0 ? 'GENERATING' : 'PENDING'
+        })))
+
+        // Calculate total duration for all sections
+        const totalDuration = sections.reduce((acc, _, i) => {
+            const contentLength = getSectionContent(i)?.content?.length || 0
+            return acc + Math.max(typingSpeed, contentLength * 30) + 1000
+        }, 0)
+
+        // Start the section progression
+        sections.forEach((_, index) => {
+            // Calculate delays based on content length
+            const contentLength = getSectionContent(index)?.content?.length || 0
+            const revealDuration = Math.max(typingSpeed, contentLength * 30) // 30ms per character minimum
+            const sectionDelay = index === 0 ? 0 : 
+                sections.slice(0, index).reduce((acc, _, i) => {
+                    const prevContentLength = getSectionContent(i)?.content?.length || 0
+                    return acc + Math.max(typingSpeed, prevContentLength * 30) + 1000
+                }, 0)
+            
+            setTimeout(() => {
+                setProgress((index + 1) * (100 / sections.length))
+                setCurrentSection(sections[index].name)
+                
+                if (index > 0) {
+                    setSections(prev => prev.map((section, idx) => ({
+                        ...section,
+                        status: idx === index ? 'GENERATING' : 
+                                idx < index ? 'COMPLETE' : 'PENDING'
+                    })))
+                }
+            }, sectionDelay)
+            
+            // Mark section as complete after its content is fully revealed
+            setTimeout(() => {
+                onSectionComplete(index)
+            }, sectionDelay + revealDuration)
+        })
+    }, analysisSteps.length * stepDuration)
   }
 
   const getSectionContent = (index: number) => {
@@ -134,15 +202,20 @@ export default function ThreatModelAssistant({ typingSpeed = 2000 }: ComponentPr
 
     // Set current section to Complete
     setSections(prev => prev.map((section, idx) => {
-      if (idx === index) {
-        return { ...section, status: 'COMPLETE' }
-      }
-      // Set next section to Generating
-      if (idx === index + 1) {
-        return { ...section, status: 'GENERATING' }
-      }
-      return section
+        if (idx === index) {
+            return { ...section, status: 'COMPLETE' }
+        }
+        // Set next section to Generating if it exists
+        if (idx === index + 1) {
+            return { ...section, status: 'GENERATING' }
+        }
+        return section
     }))
+
+    // If this was the last section, mark as fully complete
+    if (index === sections.length - 1) {
+        setIsFullyComplete(true)
+    }
   }
 
   const handleSave = (index: number) => {
@@ -156,18 +229,18 @@ export default function ThreatModelAssistant({ typingSpeed = 2000 }: ComponentPr
     ))
   }
 
+  const getStepStatus = (index: number) => {
+    if (index < currentStep) return 'complete'
+    if (index === currentStep) return 'active'
+    return 'pending'
+  }
+
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Threat Model Analysis</CardTitle>
-            {isAnalyzing && (
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">{currentSection}</span>
-                <Progress value={progress} className="w-[100px]" />
-              </div>
-            )}
           </div>
         </CardHeader>
         <CardContent>
@@ -190,20 +263,67 @@ export default function ThreatModelAssistant({ typingSpeed = 2000 }: ComponentPr
                 className="mt-1"
               />
             </div>
-            {!isAnalyzing && (
-              <button
-                className="w-full bg-brand-primary text-white py-2 rounded-md hover:bg-brand-primary/90"
+            <div>
+              <label className="text-sm font-medium">Repository URL</label>
+              <Input
+                value={repositoryUrl}
+                onChange={(e) => setRepositoryUrl(e.target.value)}
+                placeholder="https://github.com/acme/vehicle-detection"
+                className="mt-1"
+              />
+            </div>
+            {!showTemplate && (
+              <Button
+                variant="brand-primary"
                 onClick={startAnalysis}
-                disabled={!confluenceLink || !featureName}
+                disabled={isAnalyzing}
               >
                 Start Analysis
-              </button>
+              </Button>
             )}
           </div>
         </CardContent>
       </Card>
 
-      {isAnalyzing && (
+      {isAnalyzing && !isFullyComplete && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Spinner className="h-5 w-5" />
+              AI Analysis in Progress
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {analysisSteps.map((step, index) => (
+                <div 
+                  key={step.id}
+                  className="flex items-center gap-3"
+                >
+                  {getStepStatus(index) === 'complete' ? (
+                    <Badge variant="success">✓</Badge>
+                  ) : getStepStatus(index) === 'active' ? (
+                    <Spinner className="h-4 w-4" />
+                  ) : (
+                    <div className="h-4 w-4 rounded-full border" />
+                  )}
+                  <span className={
+                    getStepStatus(index) === 'complete' 
+                      ? 'text-muted-foreground line-through' 
+                      : getStepStatus(index) === 'active'
+                      ? 'font-medium'
+                      : ''
+                  }>
+                    {step.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {showTemplate && (
         <div className="space-y-8">
           {sections.map((section, index) => (
             <div key={section.name} className="relative">

@@ -7,6 +7,7 @@ import { IconWithBackground } from "@/subframe/components/IconWithBackground";
 import { Breadcrumbs } from "@/subframe/components/Breadcrumbs";
 import * as SubframeCore from "@subframe/core";
 import { ThreatModelSection } from "./components/threatmodel/ThreatModelSection"
+import { VulnerabilitySection } from "./components/vulnerability/VulnerabilitySection"
 
 
 function ProductSecurityHome() {
@@ -36,6 +37,7 @@ function ProductSecurityHome() {
 
         <div className="space-y-6 w-full">
           <ThreatModelSection />
+          <VulnerabilitySection />
         </div>
       </div>
 

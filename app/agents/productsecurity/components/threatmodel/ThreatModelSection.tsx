@@ -81,7 +81,6 @@ export function ThreatModelSection() {
                                             {assessment.projectTeam}
                                         </Badge>
                                     </div>
-                                    <p className="text-caption text-subtext-color">{assessment.projectTeam}</p>
                                     <p className="text-caption text-subtext-color">Assessed: {assessment.date}</p>
                                 </div>
 
@@ -121,7 +120,7 @@ export function ThreatModelSection() {
                                         {assessment.mitigations.map((mitigation, index) => (
                                             <div key={index} className="flex justify-between items-center text-sm">
                                                 <span className="text-muted-foreground truncate pr-2">
-                                                    {mitigation.mitigation}
+                                                    {mitigation.name}
                                                 </span>
                                                 <Badge 
                                                     variant={

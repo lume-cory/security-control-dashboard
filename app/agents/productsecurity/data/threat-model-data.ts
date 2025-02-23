@@ -46,6 +46,7 @@ export interface ThreatModelAssessment {
     
     // From MitigationProposals
     mitigations: Array<{
+        name: string;
         threat: string;
         mitigation: string;
         status: 'IMPLEMENTED' | 'IN_PROGRESS' | 'PLANNED' | 'NOT_STARTED';
@@ -148,21 +149,25 @@ Key components of the system include:
 
         mitigations: [
             {
+                name: "Fake camera feeds injection",
                 threat: "Fake camera feeds injection",
                 mitigation: "Implement strong authentication for IoT cameras and use digital signatures for video streams",
                 status: "IN_PROGRESS"
             },
             {
+                name: "Leakage of sensitive vehicle location data",
                 threat: "Leakage of sensitive vehicle location data",
                 mitigation: "Enforce end-to-end encryption, implement data masking, and establish strict data access policies",
                 status: "PLANNED"
             },
             {
+                name: "Overwhelming the video ingestion service",
                 threat: "Overwhelming the video ingestion service",
                 mitigation: "Implement rate limiting, use load balancers, and set up auto-scaling for the ingestion service",
                 status: "IMPLEMENTED"
             },
             {
+                name: "Unauthorized access to admin functions",
                 threat: "Unauthorized access to admin functions",
                 mitigation: "Enforce multi-factor authentication, implement least privilege access, and regularly audit admin accounts",
                 status: "IMPLEMENTED"
@@ -266,21 +271,25 @@ Key components include:
 
         mitigations: [
             {
+                name: "Unauthorized payment initiation",
                 threat: "Unauthorized payment initiation",
                 mitigation: "Implement multi-factor authentication and request signing",
                 status: "IMPLEMENTED"
             },
             {
+                name: "Transaction amount modification",
                 threat: "Transaction amount modification",
                 mitigation: "Use digital signatures for all transaction data",
                 status: "IMPLEMENTED"
             },
             {
+                name: "Credit card data exposure",
                 threat: "Credit card data exposure",
                 mitigation: "Implement end-to-end encryption and tokenization",
                 status: "IN_PROGRESS"
             },
             {
+                name: "Payment service disruption",
                 threat: "Payment service disruption",
                 mitigation: "Deploy redundant systems and DDoS protection",
                 status: "IMPLEMENTED"
@@ -382,21 +391,25 @@ Key components include:
 
         mitigations: [
             {
+                name: "Credential stuffing attacks",
                 threat: "Credential stuffing attacks",
                 mitigation: "Implement rate limiting and CAPTCHA protection",
                 status: "IN_PROGRESS"
             },
             {
+                name: "Token exposure",
                 threat: "Token exposure",
                 mitigation: "Use short-lived tokens and secure storage",
                 status: "IMPLEMENTED"
             },
             {
+                name: "Authentication service disruption",
                 threat: "Authentication service disruption",
                 mitigation: "Deploy in multiple regions with automatic failover",
                 status: "PLANNED"
             },
             {
+                name: "Session hijacking",
                 threat: "Session hijacking",
                 mitigation: "Implement secure session management and token binding",
                 status: "IMPLEMENTED"
