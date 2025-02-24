@@ -7,6 +7,8 @@ import { useState } from 'react'
 import { ArticleDetailView } from './article-detail-view'
 import { doraArticles as baseDoraArticles } from '@/data/regulations/dora'
 import { frameworkAlignmentData } from '../data/framework-alignment-data'
+import { Button } from "@/subframe/components/Button"
+
 
 interface DoraArticle {
   id: string;
@@ -47,6 +49,7 @@ interface DoraArticle {
       current: number;
       target: number;
       trend: string;
+      status: 'good' | 'bad' | 'neutral';
       history: Array<{ date: string; value: number }>;
     }>;
     audits: Array<{
@@ -148,6 +151,7 @@ export const enrichedDoraArticles = [
         current: 85,
         target: 100,
         trend: "increasing",
+        status: "good",
         history: [
           { date: "2024-01", value: 75 },
           { date: "2024-02", value: 80 },
@@ -217,6 +221,7 @@ export const enrichedDoraArticles = [
         current: 92,
         target: 95,
         trend: "increasing",
+        status: "good",
         history: [
           { date: "2024-01", value: 88 },
           { date: "2024-02", value: 90 },
@@ -281,6 +286,7 @@ export const enrichedDoraArticles = [
         current: 89,
         target: 100,
         trend: "stable",
+        status: "neutral",
         history: [
           { date: "2024-01", value: 88 },
           { date: "2024-02", value: 89 },
@@ -423,11 +429,13 @@ export const DoraDetailView: React.FC = () => {
       impactedSystems: selectedArticle.impactedSystems || [],
       nonCompliantInstances: selectedArticle.nonCompliantInstances || [],
       supportingEvidence: {
-        configurations: selectedArticle.supportingEvidence?.configurations || [],
-        metrics: selectedArticle.supportingEvidence?.metrics || [],
-        audits: selectedArticle.supportingEvidence?.audits || []
+        ...selectedArticle.supportingEvidence,
+        metrics: selectedArticle.supportingEvidence?.metrics.map(metric => ({
+          ...metric,
+          status: metric.status as 'good' | 'bad' | 'neutral'
+        })) || []
       }
-    };
+    } as const;
     
     return <ArticleDetailView 
       article={enrichedArticle}
@@ -580,6 +588,13 @@ export const DoraDetailView: React.FC = () => {
           <div className="h-8" />
         </div>
       </ScrollArea>
+
+      {/* Footer */}
+      <div className="flex justify-end gap-4 p-6">
+        <Button variant="brand-primary" icon="FeatherFile" onClick={() => console.log('Generate Report')}>
+          Generate Report
+        </Button>
+      </div>
     </div>
   );
 }; 

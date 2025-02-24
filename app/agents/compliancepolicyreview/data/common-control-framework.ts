@@ -46,7 +46,14 @@ export interface CCFRequirement {
       current: number;
       target: number;
       trend: string;
-      history: Array<{ date: string; value: number }>;
+      status: 'good' | 'bad' | 'neutral';
+      breakdown?: {
+        critical: number;
+        high: number;
+        medium: number;
+        low: number;
+      };
+      history: Array<MetricHistory>;
     }>;
     audits: Array<{
       date: string;
@@ -55,6 +62,17 @@ export interface CCFRequirement {
       findings: string;
       auditor: string;
     }>;
+  };
+}
+
+interface MetricHistory {
+  date: string;
+  value: number;
+  breakdown?: {
+    critical: number;
+    high: number;
+    medium: number;
+    low: number;
   };
 }
 
@@ -194,6 +212,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           current: 94,
           target: 100,
           trend: 'increasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 85 },
             { date: '2024-02', value: 90 },
@@ -205,6 +224,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           current: 2.3,
           target: 5,
           trend: 'decreasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 4.2 },
             { date: '2024-02', value: 3.1 },
@@ -336,6 +356,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           current: 100,
           target: 100,
           trend: 'stable',
+          status: 'good',
           history: [
             { date: '2024-01', value: 100 },
             { date: '2024-02', value: 100 },
@@ -396,6 +417,20 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         repository: 'github.com/company/web-app',
         team: 'Web Team',
         teamContact: 'web@company.com'
+      }, 
+      {
+        name: 'iOS Application',
+        type: 'Mobile Application',
+        repository: 'github.com/company/mobile-app',
+        team: 'Mobile Team',
+        teamContact: 'mobile-dev@company.com'
+      }, 
+      {
+        name: 'Authentication Service',
+        type: 'IAM',
+        repository: 'github.com/company/auth-service',
+        team: 'IAM Development',
+        teamContact: 'iam-dev@company.com'
       }
     ],
     nonCompliantInstances: [
@@ -416,29 +451,122 @@ export const commonControlFrameworkData: CCFRequirement[] = [
     supportingEvidence: {
       configurations: [
         {
-          tool: 'Qualys',
-          type: 'Vulnerability Scanner',
+          tool: 'Veracode',
+          type: 'Static Application Security Testing',
           evidence: {
-            policyName: 'Automated Scanning Configuration',
+            policyName: 'Enterprise SAST Policy',
             settings: [
-              { name: 'Scan Frequency', value: 'Daily' },
-              { name: 'Alert Threshold', value: 'Medium' }
+              { name: 'Scan Frequency', value: 'On every merge to main' },
+              { name: 'Critical Severity Gate', value: 'Block deployment' }
             ],
             lastUpdated: '2024-04-01',
+            version: '2.1'
+          }
+        },
+        {
+          tool: 'Black Duck',
+          type: 'Software Composition Analysis',
+          evidence: {
+            policyName: 'SCA Policy',
+            settings: [
+              { name: 'License Compliance', value: 'Enabled' },
+              { name: 'Vulnerability Scanning', value: 'Daily' }
+            ],
+            lastUpdated: '2024-04-05',
+            version: '3.0'
+          }
+        },
+        {
+          tool: 'External Penetration Testing',
+          type: 'Security Assessment',
+          evidence: {
+            policyName: 'Annual Pentest Program',
+            settings: [
+              { name: 'Frequency', value: 'Annual' },
+              { name: 'Scope', value: 'All external-facing systems' }
+            ],
+            lastUpdated: '2024-03-15',
             version: '1.0'
           }
         }
       ],
       metrics: [
         {
-          name: 'Vulnerabilities Detected',
-          current: 15,
-          target: 0,
+          name: 'Critical Vulnerability MTTR',
+          current: 5.2,
+          target: 3,
           trend: 'decreasing',
+          status: 'good',
           history: [
-            { date: '2024-01', value: 40 },
-            { date: '2024-02', value: 25 },
-            { date: '2024-03', value: 15 }
+            { date: '2024-01', value: 6.8 },
+            { date: '2024-02', value: 5.9 },
+            { date: '2024-03', value: 5.2 }
+          ]
+        },
+        {
+          name: 'High Vulnerability MTTR',
+          current: 12.4,
+          target: 7,
+          trend: 'stable',
+          status: 'neutral',
+          history: [
+            { date: '2024-01', value: 12.1 },
+            { date: '2024-02', value: 12.6 },
+            { date: '2024-03', value: 12.4 }
+          ]
+        },
+        {
+          name: 'Medium Vulnerability MTTR',
+          current: 25.8,
+          target: 15,
+          trend: 'increasing',
+          status: 'bad',
+          history: [
+            { date: '2024-01', value: 22.3 },
+            { date: '2024-02', value: 24.1 },
+            { date: '2024-03', value: 25.8 }
+          ]
+        },
+        {
+          name: 'Low Vulnerability MTTR',
+          current: 45.2,
+          target: 30,
+          trend: 'stable',
+          status: 'neutral',
+          history: [
+            { date: '2024-01', value: 44.8 },
+            { date: '2024-02', value: 45.5 },
+            { date: '2024-03', value: 45.2 }
+          ]
+        },
+        {
+          name: 'SLA Breached Vulnerabilities',
+          current: 23,
+          target: 0,
+          trend: 'increasing',
+          status: 'bad',
+          history: [
+            { date: '2024-01', value: 18 },
+            { date: '2024-02', value: 21 },
+            { date: '2024-03', value: 23 }
+          ]
+        },
+        {
+          name: 'SLA Breached by Severity',
+          current: 23,
+          target: 0,
+          trend: 'increasing',
+          status: 'bad',
+          breakdown: {
+            critical: 2,
+            high: 7,
+            medium: 9,
+            low: 5
+          },
+          history: [
+            { date: '2024-01', value: 18, breakdown: { critical: 1, high: 5, medium: 8, low: 4 } },
+            { date: '2024-02', value: 21, breakdown: { critical: 2, high: 6, medium: 8, low: 5 } },
+            { date: '2024-03', value: 23, breakdown: { critical: 2, high: 7, medium: 9, low: 5 } }
           ]
         }
       ],
@@ -534,6 +662,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           current: 45,
           target: 30,
           trend: 'decreasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 60 },
             { date: '2024-02', value: 50 },
@@ -626,6 +755,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           current: 80,
           target: 100,
           trend: 'increasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 70 },
             { date: '2024-02', value: 75 },
@@ -710,6 +840,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           current: 70,
           target: 100,
           trend: 'increasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 60 },
             { date: '2024-02', value: 65 },
@@ -793,6 +924,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           current: 95,
           target: 100,
           trend: 'stable',
+          status: 'good',
           history: [
             { date: '2024-01', value: 93 },
             { date: '2024-02', value: 94 },
@@ -876,6 +1008,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           current: 65,
           target: 90,
           trend: 'increasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 50 },
             { date: '2024-02', value: 58 },
@@ -960,6 +1093,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           current: 85,
           target: 100,
           trend: 'increasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 70 },
             { date: '2024-02', value: 78 },
@@ -1051,6 +1185,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           current: 4,
           target: 2,
           trend: 'decreasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 6 },
             { date: '2024-02', value: 5 },
@@ -1141,6 +1276,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           current: 75,
           target: 95,
           trend: 'increasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 60 },
             { date: '2024-02', value: 68 },
@@ -1223,6 +1359,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           current: 88,
           target: 95,
           trend: 'stable',
+          status: 'neutral',
           history: [
             { date: '2024-01', value: 87 },
             { date: '2024-02', value: 88 },
@@ -1305,6 +1442,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           current: 92,
           target: 95,
           trend: 'increasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 85 },
             { date: '2024-02', value: 89 },

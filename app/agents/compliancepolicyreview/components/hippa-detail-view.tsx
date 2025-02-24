@@ -6,9 +6,11 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { hippaArticles } from '@/data/regulations/hippa'
 import { useState } from 'react'
 import { ArticleDetailView } from './article-detail-view'
-import { frameworkAlignmentData } from '../data/framework-alignment-data';
+import { frameworkAlignmentData } from '../data/framework-alignment-data'
+import { Button } from "@/subframe/components/Button"
 
-interface HippaArticle {
+
+interface BaseArticle {
   id: string;
   name: string;
   text: string;
@@ -27,6 +29,9 @@ interface HippaArticle {
     status: string;
     dueDate: string;
   }>;
+}
+
+interface HippaArticle extends BaseArticle {
   supportingEvidence?: {
     configurations: Array<{
       tool: string;
@@ -43,6 +48,7 @@ interface HippaArticle {
       current: number;
       target: number;
       trend: string;
+      status: string;
       history: Array<{ date: string; value: number }>;
     }>;
     audits: Array<{
@@ -140,6 +146,7 @@ export const enrichedHippaArticles = [
           current: 98.5,
           target: 95,
           trend: "increasing",
+          status: "good",
           history: [
             { date: "2024-01", value: 97.2 },
             { date: "2024-02", value: 98.1 },
@@ -151,6 +158,7 @@ export const enrichedHippaArticles = [
           current: 45, // minutes
           target: 60,
           trend: "stable",
+          status: "neutral",
           history: [
             { date: "2024-01", value: 48 },
             { date: "2024-02", value: 46 },
@@ -162,6 +170,7 @@ export const enrichedHippaArticles = [
           current: 94.3,
           target: 90,
           trend: "increasing",
+          status: "good",
           history: [
             { date: "2024-01", value: 91.5 },
             { date: "2024-02", value: 93.1 },
@@ -230,8 +239,9 @@ export const enrichedHippaArticles = [
         {
           name: "Security Officer Response Time",
           current: 25,
-          target: 30,
-          trend: "improving",
+          target: 20,
+          trend: "decreasing",
+          status: "good",
           history: [
             { date: "2024-01", value: 32 },
             { date: "2024-02", value: 28 },
@@ -330,6 +340,7 @@ export const enrichedHippaArticles = [
           current: 4.2,
           target: 24,
           trend: "stable",
+          status: "neutral",
           history: [
             { date: "2024-01", value: 4.5 },
             { date: "2024-02", value: 4.3 },
@@ -503,6 +514,7 @@ export const enrichedHippaArticles = [
           current: 98.7,
           target: 100,
           trend: "increasing",
+          status: "good",
           history: [
             { date: "2024-01", value: 95.3 },
             { date: "2024-02", value: 97.1 },
@@ -514,6 +526,7 @@ export const enrichedHippaArticles = [
           current: 0.5, // percentage
           target: 1,
           trend: "stable",
+          status: "neutral",
           history: [
             { date: "2024-01", value: 0.8 },
             { date: "2024-02", value: 0.6 },
@@ -625,6 +638,7 @@ export const enrichedHippaArticles = [
           current: 99.9,
           target: 99.9,
           trend: "stable",
+          status: "neutral",
           history: [
             { date: "2024-01", value: 99.8 },
             { date: "2024-02", value: 99.9 },
@@ -635,7 +649,8 @@ export const enrichedHippaArticles = [
           name: "Average Log Processing Time",
           current: 2.3, // seconds
           target: 5,
-          trend: "improving",
+          trend: "decreasing",
+          status: "good",
           history: [
             { date: "2024-01", value: 3.1 },
             { date: "2024-02", value: 2.7 },
@@ -647,6 +662,7 @@ export const enrichedHippaArticles = [
           current: 99.5,
           target: 98,
           trend: "stable",
+          status: "neutral",
           history: [
             { date: "2024-01", value: 99.3 },
             { date: "2024-02", value: 99.4 },
@@ -781,6 +797,7 @@ export const enrichedHippaArticles = [
           current: 12,
           target: 15,
           trend: "stable",
+          status: "neutral",
           history: [
             { date: "2024-01", value: 13 },
             { date: "2024-02", value: 12 },
@@ -817,20 +834,42 @@ const teamNonComplianceData = enrichedHippaArticles.reduce((acc: { team: string,
 }, []);
 
 export const HippaDetailView: React.FC = () => {
-  const [selectedArticle, setSelectedArticle] = useState<typeof enrichedHippaArticles[0] | null>(null);
+  const [selectedArticle, setSelectedArticle] = useState<HippaArticle | null>(null);
   const hipaaData = frameworkAlignmentData.find(f => f.name === 'HIPPA');
 
-  const handleOpenArticle = (article: typeof enrichedHippaArticles[0]) => {
+  const handleOpenArticle = (article: HippaArticle) => {
     setSelectedArticle(article);
   };
 
   if (selectedArticle) {
-    return (
-      <ArticleDetailView 
-        article={selectedArticle} 
-        onClose={() => setSelectedArticle(null)}
-      />
-    );
+    const enrichedArticle = {
+      id: selectedArticle.id || '',
+      name: selectedArticle.name || '',
+      text: selectedArticle.text || '',
+      policies: selectedArticle.policies || [],
+      impactedSystems: selectedArticle.impactedSystems || [],
+      nonCompliantInstances: selectedArticle.nonCompliantInstances || [],
+      supportingEvidence: {
+        configurations: selectedArticle.supportingEvidence?.configurations || [],
+        metrics: selectedArticle.supportingEvidence?.metrics.map((metric: {
+          name: string;
+          current: number;
+          target: number;
+          trend: string;
+          status: string;
+          history: Array<{ date: string; value: number }>;
+        }) => ({
+          ...metric,
+          status: metric.status as 'good' | 'bad' | 'neutral'
+        })) || [],
+        audits: selectedArticle.supportingEvidence?.audits || []
+      }
+    };
+
+    return <ArticleDetailView 
+      article={enrichedArticle}
+      onClose={() => setSelectedArticle(null)}
+    />;
   }
 
   return (
@@ -924,59 +963,69 @@ export const HippaDetailView: React.FC = () => {
           <div className="mb-8">
             <h3 className="text-lg font-semibold mb-4">HIPPA Articles & Company Policy</h3>
             <div className="space-y-6">
-              {enrichedHippaArticles.map(article => (
-                <Card key={article.id} className="cursor-default">
-                  <CardHeader
-                    className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleOpenArticle(article)}
-                  >
-                    <div className="flex justify-between items-center">
-                      <CardTitle className="text-lg">{article.name}</CardTitle>
-                      {article.nonCompliantInstances.length > 0 && (
-                        <span className="text-sm font-bold text-red-600">
-                          {article.nonCompliantInstances.length} non-compliant
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-500">{article.text}</p>
-                  </CardHeader>
-                  <CardContent>
-                    <Accordion type="single" collapsible>
-                      {article.policies.map((policy, index) => (
-                        <AccordionItem key={index} value={`${article.id}-policy-${index}`}>
-                          <AccordionTrigger>
-                            <span className="flex items-center gap-2">
-                              <span>{policy.name}</span>
-                              <span className="text-sm text-muted-foreground">({policy.id})</span>
-                              {policy.status === 'suggested' && (
-                                <span className="text-sm text-yellow-600">(Suggested)</span>
-                              )}
-                            </span>
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            <p className="text-sm text-gray-500 mb-2">{policy.description}</p>
-                            <p className="text-sm text-gray-700 mb-2">{policy.policyText}</p>
-                            <a 
-                              href={policy.link}
-                              className="text-sm text-blue-600 hover:underline"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              View Policy Document
-                            </a>
-                          </AccordionContent>
-                        </AccordionItem>
-                      ))}
-                    </Accordion>
-                  </CardContent>
-                </Card>
-              ))}
+              {enrichedHippaArticles.map((article) => {
+                const typedArticle = article as HippaArticle;
+                return (
+                  <Card key={typedArticle.id} className="cursor-default">
+                    <CardHeader
+                      className="cursor-pointer hover:bg-gray-50"
+                      onClick={() => handleOpenArticle(typedArticle)}
+                    >
+                      <div className="flex justify-between items-center">
+                        <CardTitle className="text-lg">{typedArticle.name}</CardTitle>
+                        {typedArticle.nonCompliantInstances.length > 0 && (
+                          <span className="text-sm font-bold text-red-600">
+                            {typedArticle.nonCompliantInstances.length} non-compliant
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-500">{typedArticle.text}</p>
+                    </CardHeader>
+                    <CardContent>
+                      <Accordion type="single" collapsible>
+                        {typedArticle.policies.map((policy, index) => (
+                          <AccordionItem key={index} value={`${typedArticle.id}-policy-${index}`}>
+                            <AccordionTrigger>
+                              <span className="flex items-center gap-2">
+                                <span>{policy.name}</span>
+                                <span className="text-sm text-muted-foreground">({policy.id})</span>
+                                {policy.status === 'suggested' && (
+                                  <span className="text-sm text-yellow-600">(Suggested)</span>
+                                )}
+                              </span>
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <p className="text-sm text-gray-500 mb-2">{policy.description}</p>
+                              <p className="text-sm text-gray-700 mb-2">{policy.policyText}</p>
+                              <a 
+                                href={policy.link}
+                                className="text-sm text-blue-600 hover:underline"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                View Policy Document
+                              </a>
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           </div>
           
           <div className="h-8" />
         </div>
       </ScrollArea>
+
+      {/* Footer */}
+      <div className="flex justify-end gap-4 p-6">
+        <Button variant="brand-primary" icon="FeatherFile" onClick={() => console.log('Generate Report')}>
+          Generate Report
+        </Button>
+      </div>
     </div>
   )
 } 

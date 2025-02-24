@@ -48,6 +48,7 @@ export interface enrichedSOC2Article {
       current: number;
       target: number;
       trend: string;
+      status: 'good' | 'bad' | 'neutral';
       history: Array<{ date: string; value: number }>;
     }>;
     audits: Array<{
@@ -130,6 +131,7 @@ export const enrichedSOC2Articles: enrichedSOC2Article[] = [
           current: 87,
           target: 100,
           trend: 'increasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 75 },
             { date: '2024-02', value: 82 },
@@ -224,6 +226,7 @@ export const enrichedSOC2Articles: enrichedSOC2Article[] = [
           current: 82,
           target: 100,
           trend: 'increasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 65 },
             { date: '2024-02', value: 75 },
@@ -296,6 +299,7 @@ export const enrichedSOC2Articles: enrichedSOC2Article[] = [
           current: 95,
           target: 100,
           trend: 'increasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 85 },
             { date: '2024-02', value: 90 },
@@ -382,6 +386,7 @@ export const enrichedSOC2Articles: enrichedSOC2Article[] = [
           current: 98,
           target: 99.9,
           trend: 'increasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 97 },
             { date: '2024-02', value: 97.5 },
@@ -446,6 +451,7 @@ export const enrichedSOC2Articles: enrichedSOC2Article[] = [
           current: 92,
           target: 100,
           trend: 'stable',
+          status: 'neutral',
           history: [
             { date: '2024-01', value: 90 },
             { date: '2024-02', value: 91 },
@@ -502,6 +508,7 @@ export const enrichedSOC2Articles: enrichedSOC2Article[] = [
           current: 100,
           target: 100,
           trend: 'stable',
+          status: 'good',
           history: [
             { date: '2024-01', value: 100 },
             { date: '2024-02', value: 100 },
@@ -580,6 +587,7 @@ export const enrichedSOC2Articles: enrichedSOC2Article[] = [
           current: 99.95,
           target: 99.9,
           trend: 'stable',
+          status: 'good',
           history: [
             { date: '2024-01', value: 99.93 },
             { date: '2024-02', value: 99.94 },
@@ -644,6 +652,7 @@ export const enrichedSOC2Articles: enrichedSOC2Article[] = [
           current: 98,
           target: 95,
           trend: 'increasing',
+          status: 'good',
           history: [
             { date: '2024-01', value: 96 },
             { date: '2024-02', value: 97 },
@@ -708,6 +717,7 @@ export const enrichedSOC2Articles: enrichedSOC2Article[] = [
           current: 100,
           target: 100,
           trend: 'stable',
+          status: 'good',
           history: [
             { date: '2024-01', value: 100 },
             { date: '2024-02', value: 100 },

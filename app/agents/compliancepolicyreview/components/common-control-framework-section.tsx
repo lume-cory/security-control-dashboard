@@ -1,7 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { commonControlFrameworkData, CCFRequirement } from "../data/common-control-framework"
 import { frameworkAlignmentData } from "../data/framework-alignment-data"
-
+import { useState } from "react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/subframe/components/Button"
 
 interface CommonControlFrameworkSectionProps {
   selectedItems: Record<string, boolean>;
@@ -9,6 +12,9 @@ interface CommonControlFrameworkSectionProps {
 }
 
 export function CommonControlFrameworkSection({ selectedItems, onRequirementClick }: CommonControlFrameworkSectionProps) {
+  const [showReportDialog, setShowReportDialog] = useState(false)
+  const [selectedControls, setSelectedControls] = useState<Record<string, boolean>>({})
+
   // Filter requirements that have at least one selected regulation
   const filteredRequirements = commonControlFrameworkData
     .map(requirement => {
@@ -49,11 +55,42 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
     filteredRequirements.flatMap(req => req.associatedRegulations.map(reg => reg.name))
   ).size;
 
+  const handleSelectAll = () => {
+    const allSelected = Object.values(selectedControls).every(v => v)
+    const newState = filteredRequirements.reduce((acc, req) => ({
+        ...acc,
+        [req.id]: !allSelected
+    }), {})
+    setSelectedControls(newState)
+  }
+
+  const handleGenerateReport = () => {
+    // Handle report generation
+    setShowReportDialog(false)
+  }
+
   return (
     <div>
       <Card>
         <CardHeader>
-          <h2 className="text-xl font-bold">Common Control Framework</h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-bold">Common Control Framework</h2>
+            <Button
+              variant="brand-primary"
+              icon="FeatherFileText"
+              onClick={() => {
+                setSelectedControls(
+                  filteredRequirements.reduce((acc, req) => ({
+                    ...acc,
+                    [req.id]: false
+                  }), {})
+                )
+                setShowReportDialog(true)
+              }}
+            >
+              Generate Assessment Report
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           
@@ -280,6 +317,67 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={showReportDialog} onOpenChange={setShowReportDialog}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Generate Assessment Report</DialogTitle>
+          </DialogHeader>
+          
+          <div className="py-4">
+            <div className="flex justify-between items-center mb-4">
+              <h4 className="font-medium">Select Control Obligations</h4>
+              <Button
+                variant="brand-secondary"
+                size="small"
+                onClick={handleSelectAll}
+              >
+                {Object.values(selectedControls).every(v => v) ? 'Deselect All' : 'Select All'}
+              </Button>
+            </div>
+            
+            <div className="space-y-3 max-h-[300px] overflow-y-auto">
+              {filteredRequirements.map(req => (
+                <div key={req.id} className="flex items-start space-x-3">
+                  <Checkbox
+                    id={req.id}
+                    checked={selectedControls[req.id]}
+                    onCheckedChange={(checked) => {
+                      setSelectedControls(prev => ({
+                        ...prev,
+                        [req.id]: checked === true
+                      }))
+                    }}
+                  />
+                  <label
+                    htmlFor={req.id}
+                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    <div className="font-medium">{req.name}</div>
+                    <div className="text-muted-foreground text-xs mt-1">{req.summary}</div>
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="brand-secondary"
+              onClick={() => setShowReportDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="brand-primary"
+              onClick={handleGenerateReport}
+              disabled={!Object.values(selectedControls).some(v => v)}
+            >
+              Generate Report
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 } 

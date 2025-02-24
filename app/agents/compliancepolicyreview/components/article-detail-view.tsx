@@ -9,33 +9,70 @@ import { enrichedHippaArticles } from "./hippa-detail-view"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { enrichedSOC2Articles } from "../data/soc2-enriched-articles"
 
-interface ArticleDetailViewProps {
-  article: typeof enrichedHippaArticles[0] & { supportingEvidence?: {
-    configurations: Array<{
-      tool: string;
-      type: string;
-      evidence: {
-        policyName: string;
-        settings: Array<{ name: string; value: string }>;
-        lastUpdated: string;
-        version: string;
-      };
-    }>;
-    metrics: Array<{
+interface BaseArticle {
+  id: string;
+  name: string;
+  text: string;
+  policies: Array<{
+    id: string;
+    name: string;
+    description: string;
+    policyText: string;
+    link: string;
+    status: string;
+  }>;
+  impactedSystems: Array<{
+    name: string;
+    type: string;
+    repository: string;
+    team: string;
+    teamContact: string;
+  }>;
+  nonCompliantInstances: Array<{
+    system: {
       name: string;
-      current: number;
-      target: number;
-      trend: string;
-      history: Array<{ date: string; value: number }>;
-    }>;
-    audits: Array<{
-      date: string;
       type: string;
-      scope: string;
-      findings: string;
-      auditor: string;
-    }>;
-  }};
+      repository: string;
+      team: string;
+      teamContact: string;
+    };
+    issue: string;
+    mitigation: string;
+    status: string;
+    dueDate: string;
+  }>;
+}
+
+interface ArticleDetailViewProps {
+  article: BaseArticle & {
+    supportingEvidence?: {
+      configurations: Array<{
+        tool: string;
+        type: string;
+        evidence: {
+          policyName: string;
+          settings: Array<{ name: string; value: string }>;
+          lastUpdated: string;
+          version: string;
+        };
+      }>;
+      metrics: Array<{
+        name: string;
+        current: number;
+        target: number;
+        trend: string;
+        status: 'good' | 'bad' | 'neutral';
+        history: Array<{ date: string; value: number }>;
+      }>;
+      audits: Array<{
+        date: string;
+        type: string;
+        scope: string;
+        findings: string;
+        auditor: string;
+      }>;
+    };
+  };
   onClose: () => void;
 }
 
@@ -144,11 +181,21 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
     console.log(`Following up with ${teamContact}`, followUpNotes);
   }
 
-  const getTrendIcon = (trend: string) => {
+  const getTrendIcon = (trend: string, status: 'good' | 'bad' | 'neutral') => {
+    const getColorClass = () => {
+      switch(status) {
+        case 'good': return 'text-green-500'
+        case 'bad': return 'text-red-500'
+        case 'neutral': return 'text-gray-500'
+      }
+    }
+
+    const colorClass = getColorClass()
+    
     switch(trend) {
-      case 'increasing': return <TrendingUp className="h-12 w-12 text-green-500" />
-      case 'decreasing': return <TrendingDown className="h-12 w-12 text-red-500" />
-      default: return <Minus className="h-12 w-12 text-gray-500" />
+      case 'increasing': return <TrendingUp className={`h-12 w-12 ${colorClass}`} />
+      case 'decreasing': return <TrendingDown className={`h-12 w-12 ${colorClass}`} />
+      default: return <Minus className={`h-12 w-12 ${colorClass}`} />
     }
   }
 
@@ -276,7 +323,7 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
                 {article.supportingEvidence.metrics.map((metric, idx) => (
                     <Card key={idx}>
                     <CardContent className="pt-6 flex flex-col items-center text-center">
-                        {getTrendIcon(metric.trend)}
+                        {getTrendIcon(metric.trend, metric.status)}
                         <div className="flex justify-center items-start mb-2 w-full">
                             <p className="text-sm font-medium">{metric.name}</p>
                         </div>

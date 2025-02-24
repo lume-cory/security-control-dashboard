@@ -7,6 +7,8 @@ import { enrichedSOC2Articles } from '../data/soc2-enriched-articles'
 import { useState } from 'react'
 import { ArticleDetailView } from './article-detail-view'
 import { frameworkAlignmentData } from '../data/framework-alignment-data'
+import { Button } from "@/subframe/components/Button"
+
 
 // Calculate team non-compliance data
 const teamNonComplianceData = enrichedSOC2Articles.reduce((acc: { team: string, count: number }[]) => {
@@ -202,6 +204,13 @@ export const Soc2DetailView: React.FC = () => {
           <div className="h-8" />
         </div>
       </ScrollArea>
+
+      {/* Footer */}
+      <div className="flex justify-end gap-4 p-6">
+        <Button variant="brand-primary" icon="FeatherFile" onClick={() => console.log('Generate Report')}>
+          Generate Report
+        </Button>
+      </div>
     </div>
   )
 } 
