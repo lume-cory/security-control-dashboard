@@ -1,4 +1,5 @@
 import { getRelativeDate, DemoDateOffsets } from "@/app/utils/date-utils";
+import { ContractualObligation, contractualObligations } from "./contractual-obligations";
 
 export interface CCFRequirement {
   id: string;
@@ -8,6 +9,14 @@ export interface CCFRequirement {
     name: string;
     articleId: string;
     summary: string;
+    link: string;
+  }>;
+  associatedContractualObligations: Array<{
+    entity: string;
+    type: string;
+    category: string;
+    summary: string;
+    text: string[];
     link: string;
   }>;
   policies: Array<{
@@ -88,6 +97,12 @@ export const commonControlFrameworkData: CCFRequirement[] = [
       { name: 'GDPR', summary: 'GDPR placeholder', link: '/regulations/gdpr/authentication', articleId: 'GDPR-001' },
       { name: 'SOC2 Type 1', summary: 'SOC2 Type 1 placeholder', link: '/frameworks/soc2/access', articleId: 'SOC2-001' },
       { name: 'ISO 27001', summary: 'ISO 27001 placeholder', link: '/frameworks/iso27001/access-control', articleId: 'ISO27001-001' }
+    ],
+    associatedContractualObligations: [
+      {
+        ...contractualObligations[2].obligations[1],
+        entity: contractualObligations[2].entity
+      },
     ],
     policies: [
       {
@@ -262,6 +277,20 @@ export const commonControlFrameworkData: CCFRequirement[] = [
       { name: 'NIS2', summary: 'NIS2 placeholder', link: '/regulations/nis2/encryption', articleId: 'NIS2-001' },
       { name: 'DORA', summary: 'DORA placeholder', link: '/regulations/dora/data-security', articleId: 'DORA-001' }
     ],
+    associatedContractualObligations: [
+      {
+        ...contractualObligations[0].obligations[1],
+        entity: contractualObligations[0].entity
+      },
+      {
+        ...contractualObligations[1].obligations[1],
+        entity: contractualObligations[1].entity
+      },
+      {
+        ...contractualObligations[2].obligations[0],
+        entity: contractualObligations[2].entity
+      },
+    ],
     policies: [
       {
         id: 'POL-003',
@@ -386,6 +415,16 @@ export const commonControlFrameworkData: CCFRequirement[] = [
       { name: 'ISO 27001', summary: 'Standards for vulnerability management', link: '/frameworks/iso27001/vulnerability', articleId: 'ISO27001-002' },
       { name: 'SOC2 Type 1', summary: 'Requirements for vulnerability scanning', link: '/frameworks/soc2/vulnerability', articleId: 'SOC2-002' },
       { name: 'NIS2', summary: 'Vulnerability management in critical infrastructure', link: '/regulations/nis2/vulnerability', articleId: 'NIS2-002' }
+    ],
+    associatedContractualObligations: [
+      {
+        ...contractualObligations[1].obligations[2],
+        entity: contractualObligations[1].entity
+      },
+      {
+        ...contractualObligations[3].obligations[3],
+        entity: contractualObligations[3].entity
+      },
     ],
     policies: [
       {
@@ -593,6 +632,20 @@ export const commonControlFrameworkData: CCFRequirement[] = [
       { name: 'EU Cyber Resilience Act', summary: 'Standards for cyber incident management', link: '/regulations/eu-cyber/incident', articleId: 'EUCRA-001' },
       { name: 'NIST CSF 2.0', summary: 'Incident response guidelines', link: '/regulations/nist/incident-response', articleId: 'NISTCSF-004' }
     ],
+    associatedContractualObligations: [
+      {
+        ...contractualObligations[0].obligations[1],
+        entity: contractualObligations[0].entity
+      },
+      {
+        ...contractualObligations[1].obligations[0],
+        entity: contractualObligations[1].entity
+      },
+      {
+        ...contractualObligations[3].obligations[1],
+        entity: contractualObligations[3].entity
+      },
+    ],
     policies: [
       {
         id: 'POL-006',
@@ -693,6 +746,20 @@ export const commonControlFrameworkData: CCFRequirement[] = [
       { name: 'HIPPA', summary: 'Retention of protected health information', link: '/regulations/hipaa/retention', articleId: 'HIPPA-003' },
       { name: 'UK GDPR', summary: 'Retention and secure deletion standards for personal data', link: '/regulations/uk-gdpr/retention', articleId: 'UKGDPR-001' }
     ],
+    associatedContractualObligations: [
+      {
+        ...contractualObligations[0].obligations[3],
+        entity: contractualObligations[0].entity
+      },
+      {
+        ...contractualObligations[1].obligations[3],
+        entity: contractualObligations[1].entity
+      },
+      {
+        ...contractualObligations[2].obligations[3],
+        entity: contractualObligations[2].entity
+      },
+    ],
     policies: [
       {
         id: 'POL-008',
@@ -786,6 +853,12 @@ export const commonControlFrameworkData: CCFRequirement[] = [
       { name: 'NIS2', summary: 'Supply chain security guidelines', link: '/regulations/nis2/supply-chain', articleId: 'NIS2-003' },
       { name: 'SEBI', summary: 'Outsourcing and vendor oversight standards', link: '/regulations/sebi/vendor-risk', articleId: 'SEBI-001' }
     ],
+    associatedContractualObligations: [
+      {
+        ...contractualObligations[2].obligations[5],
+        entity: contractualObligations[2].entity
+      },
+    ],
     policies: [
       {
         id: 'POL-010',
@@ -870,6 +943,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
       { name: 'ISO 27001', summary: 'Configuration management requirements', link: '/frameworks/iso27001/configuration', articleId: 'ISO27001-004' },
       { name: 'DORA', summary: 'Change control protocols for operational resilience', link: '/regulations/dora/change-control', articleId: 'DORA-003' }
     ],
+    associatedContractualObligations: [],
     policies: [
       {
         id: 'POL-011',
@@ -953,6 +1027,12 @@ export const commonControlFrameworkData: CCFRequirement[] = [
       { name: 'EU AI Act', summary: 'Regulations for high-risk AI systems and transparency', link: '/regulations/eu-ai/act', articleId: 'EUAI-001' },
       { name: 'ISO 42001', summary: 'Standards for AI governance and risk management', link: '/frameworks/iso42001/ai-governance', articleId: 'ISO42001-001' },
       { name: 'NIST AI RMF', summary: 'AI risk management framework guidelines', link: '/regulations/nist-ai/rmf', articleId: 'NIST-AIRM-001' }
+    ],
+    associatedContractualObligations: [
+      {
+        ...contractualObligations[2].obligations[2],
+        entity: contractualObligations[2].entity
+      },
     ],
     policies: [
       {
@@ -1039,6 +1119,16 @@ export const commonControlFrameworkData: CCFRequirement[] = [
       { name: 'NIST CSF 2.0', summary: 'Security training and education guidelines', link: '/regulations/nist/training', articleId: 'NISTCSF-006' },
       { name: 'CCPA', summary: 'Privacy awareness training for handling consumer data', link: '/regulations/ccpa/training', articleId: 'CCPA-002' }
     ],
+    associatedContractualObligations: [
+      {
+        ...contractualObligations[0].obligations[2],
+        entity: contractualObligations[0].entity
+      },
+      {
+        ...contractualObligations[3].obligations[2],
+        entity: contractualObligations[3].entity
+      },
+    ],
     policies: [
       {
         id: 'POL-013',
@@ -1123,6 +1213,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
       { name: 'NIST CSF 2.0', summary: 'Guidelines for business continuity planning', link: '/regulations/nist/continuity', articleId: 'NISTCSF-007' },
       { name: 'NY DFS', summary: 'Disaster recovery and resilience standards', link: '/regulations/nydfs/disaster-recovery', articleId: 'NYDFS-002' }
     ],
+    associatedContractualObligations: [],
     policies: [
       {
         id: 'POL-014',
@@ -1215,6 +1306,12 @@ export const commonControlFrameworkData: CCFRequirement[] = [
       { name: 'ISO 42001', summary: 'Model validation standards', link: '/frameworks/iso42001/validation', articleId: 'ISO42001-002' },
       { name: 'NIST AI RMF', summary: 'AI model risk assessment guidelines', link: '/frameworks/nist-ai/model-risk', articleId: 'NIST-AIRM-002' }
     ],
+    associatedContractualObligations: [
+      {
+        ...contractualObligations[2].obligations[2],
+        entity: contractualObligations[2].entity
+      },
+    ],
     policies: [
       {
         id: 'POL-016',
@@ -1305,6 +1402,20 @@ export const commonControlFrameworkData: CCFRequirement[] = [
       { name: 'EU AI Act', summary: 'Data quality and privacy requirements', link: '/regulations/eu-ai/data-privacy', articleId: 'EUAI-003' },
       { name: 'ISO 42001', summary: 'AI data management standards', link: '/frameworks/iso42001/data-management', articleId: 'ISO42001-003' }
     ],
+    associatedContractualObligations: [
+      {
+        ...contractualObligations[0].obligations[0],
+        entity: contractualObligations[0].entity
+      },
+      {
+        ...contractualObligations[1].obligations[1],
+        entity: contractualObligations[1].entity
+      },
+      {
+        ...contractualObligations[2].obligations[2],
+        entity: contractualObligations[2].entity
+      },
+    ],
     policies: [
       {
         id: 'POL-017',
@@ -1387,6 +1498,12 @@ export const commonControlFrameworkData: CCFRequirement[] = [
     associatedRegulations: [
       { name: 'NIST AI RMF', summary: 'AI system monitoring guidelines', link: '/frameworks/nist-ai/monitoring', articleId: 'NIST-AIRM-003' },
       { name: 'ISO 42001', summary: 'AI performance monitoring standards', link: '/frameworks/iso42001/monitoring', articleId: 'ISO42001-004' }
+    ],
+    associatedContractualObligations: [
+      {
+        ...contractualObligations[2].obligations[2],
+        entity: contractualObligations[2].entity
+      },
     ],
     policies: [
       {

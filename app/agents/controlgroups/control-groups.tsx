@@ -14,6 +14,8 @@ import DetailViewWithActivity from './am-details-subframe'
 import { DefaultPageLayout } from '@/components/ui/subframe/layouts/DefaultPageLayout'
 import { Breadcrumbs } from '@/components/ui/subframe/components/Breadcrumbs'
 import { IconWithBackground } from '@/components/ui/subframe/components/IconWithBackground'
+import { Button } from '@/subframe/components/Button'
+import { Badge } from "@/subframe/components/Badge"
 
 export default function ControlGroupsComponent() {
   const router = useRouter();
@@ -102,10 +104,19 @@ export default function ControlGroupsComponent() {
     }
   ]
 
-  const getEffectivenessColor = (effectiveness: number) => {
-    if (effectiveness >= 80) return "text-green-600"
-    if (effectiveness >= 60) return "text-yellow-600"
-    return "text-red-600"
+  const getEffectivenessColors = (effectiveness: number) => {
+    if (effectiveness >= 80) return {
+      text: "text-green-600",
+      bg: "bg-green-50"
+    }
+    if (effectiveness >= 60) return {
+      text: "text-yellow-600",
+      bg: "bg-yellow-50"
+    }
+    return {
+      text: "text-red-600",
+      bg: "bg-red-50"
+    }
   }
 
   const getProgressColor = (effectiveness: number) => {
@@ -125,6 +136,12 @@ export default function ControlGroupsComponent() {
       default:
         return "text-green-500"
     }
+  }
+
+  const getEffectivenessBadgeVariant = (effectiveness: number) => {
+    if (effectiveness >= 80) return "success" as const
+    if (effectiveness >= 60) return "warning" as const
+    return "error" as const
   }
 
   const handleCardClick = (themeName: string) => {
@@ -170,35 +187,32 @@ export default function ControlGroupsComponent() {
           {securityThemes.map((theme, index) => (
             <Card key={index} className="flex flex-col cursor-pointer" onClick={() => handleCardClick(theme.name)}>
               <CardHeader className="flex-grow pb-0">
-                <CardTitle className="text-lg">{theme.name}</CardTitle>
-                <Progress
-                  value={theme.effectiveness}
-                  className={cn(
-                    "w-full h-2 bg-gray-200",
-                    "border border-gray-300 rounded-full",
-                    "[&>div]:transition-all",
-                    `[&>div]:${getProgressColor(theme.effectiveness)}`
-                  )}
-                />
-                <CardDescription className={cn("font-semibold", getEffectivenessColor(theme.effectiveness))}>
-                  Effectiveness: {theme.effectiveness}%
-                </CardDescription>
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-lg">{theme.name}</CardTitle>
+                  <Badge variant={getEffectivenessBadgeVariant(theme.effectiveness)}>
+                    {`Effectiveness: ${theme.effectiveness}%`}
+                  </Badge>
+                </div>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="text-sm my-2 p-2 bg-gray-100 rounded grid grid-cols-1 gap-2">
-                  <p><span className="font-semibold">Framework Controls:</span> {theme.controls}</p>
-                  <p><span className="font-semibold">Security Resources:</span> {theme.resources}</p>
-                  <p><span className="font-semibold">Metrics:</span> {theme.metrics}</p>
-                  <p><span className="font-semibold">Findings & Responses:</span> {theme.findings}</p>
+                <div className="text-sm my-2 p-2 rounded">
+                  <div className="grid grid-cols-2 gap-2">
+                    <p><span className="font-semibold">Framework Controls:</span> {theme.controls}</p>
+                    <p><span className="font-semibold">Security Resources:</span> {theme.resources}</p>
+                    <p><span className="font-semibold">Metrics:</span> {theme.metrics}</p>
+                    <p><span className="font-semibold">Findings & Responses:</span> {theme.findings}</p>
+                  </div>
                 </div>
-                <div className="text-sm mt-2 p-2 bg-gray-100 rounded">
-                  <p className="font-semibold">Finding:</p>
+                <div className="text-sm mt-2 p-2">
+                  <div className="flex justify-between items-start">
+                    <p className="font-semibold">Finding:</p>
+                    <span className={cn("font-semibold", getImpactColor(theme.impact))}>
+                      Impact: {theme.impact}
+                    </span>
+                  </div>
                   <p>{theme.criticalFinding}</p>
-                  <p className={cn("font-semibold", getImpactColor(theme.impact))}>
-                    Impact: {theme.impact}
-                  </p>
-                  <p className="font-semibold hover:underline">see more...</p>
                 </div>
+                <Button variant="brand-secondary" className="font-semibold hover:underline">see more...</Button>
               </CardContent>
             </Card>
           ))}

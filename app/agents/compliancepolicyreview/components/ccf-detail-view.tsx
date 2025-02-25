@@ -82,16 +82,44 @@ export function CCFDetailView({ requirement }: { requirement: CCFRequirement | n
           {/* Associated Regulations & Frameworks */}
           <div className="mb-8">
             <h3 className="text-lg font-semibold mb-4">Associated Regulations & Frameworks</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-1 gap-4">
-                  {currentRequirement.associatedRegulations.map(reg => (
-                    <div 
-                      key={reg.name}
-                      className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50"
-                      onClick={() => setSelectedRequirement(currentRequirement)}
-                    >
-                      <h4 className="font-semibold">{reg.name}</h4>
-                      <p className="text-sm text-gray-600">{reg.summary}</p>
-                      <a href={reg.link} className="text-sm text-blue-600 hover:underline">View Documentation</a>
+            <div className="grid grid-cols-2 sm:grid-cols-1 gap-4">
+              {currentRequirement.associatedRegulations.map(reg => (
+                <div 
+                  key={reg.name}
+                  className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50"
+                  onClick={() => setSelectedRequirement(currentRequirement)}
+                >
+                  <h4 className="font-semibold">{reg.name}</h4>
+                  <p className="text-sm text-gray-600">{reg.summary}</p>
+                  <a href={reg.link} className="text-sm text-blue-600 hover:underline">View Obligations</a>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Contractual Obligations */}
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold mb-4">Contractual Obligations</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-1 gap-4">
+              {currentRequirement.associatedContractualObligations.map((obligation, idx) => (
+                <div 
+                  key={`${obligation.entity}-${idx}`}
+                  className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50"
+                  onClick={() => setSelectedRequirement(currentRequirement)}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold">{obligation.entity}</h4>
+                    <span className="text-sm text-muted-foreground">{obligation.type}</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">{obligation.summary}</p>
+                  <div className="space-y-1">
+                    {obligation.text.map((item, i) => (
+                      <p key={i} className="text-sm text-gray-500">• {item}</p>
+                    ))}
+                  </div>
+                  <a href={obligation.link} className="text-sm text-blue-600 hover:underline mt-2 inline-block">
+                    View Contract Details
+                  </a>
                 </div>
               ))}
             </div>

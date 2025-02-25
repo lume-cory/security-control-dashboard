@@ -5,6 +5,8 @@ import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/subframe/components/Button"
+import { Badge } from "@/components/ui/badge"
+import { ContractualObligation } from "../data/contractual-obligations"
 
 interface CommonControlFrameworkSectionProps {
   selectedItems: Record<string, boolean>;
@@ -68,6 +70,17 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
     // Handle report generation
     setShowReportDialog(false)
   }
+
+  const handleObligationClick = (obligation: {
+    entity: string;
+    type: string;
+    category: string;
+    summary: string;
+    text: string[];
+    link: string;
+  }) => {
+    console.log('Obligation clicked:', obligation);
+  };
 
   return (
     <div>
@@ -154,44 +167,71 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
           {/* Requirements List */}
           <div className="mb-8">
             {/* <h3 className="text-md font-semibold mb-4">Common Control Requirements</h3> */}
-            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4">
-              {filteredRequirements.map(requirement => (
-                <div 
-                  key={requirement.id} 
-                  className="border rounded-lg p-4 cursor-pointer hover:bg-gray-50" 
-                  onClick={() => onRequirementClick(requirement)}
-                >
-                  <div className="space-y-3">
-                    {/* Title and Summary */}
-                    <div className="mb-4">
-                      <div className="flex justify-between items-start">
-                        <p className="font-semibold text-md">{requirement.name}</p>
-                        
-                        {/* Framework Derivatives - Justified with title */}
-                        <div className="text-sm">
-                          <div className="flex items-center gap-2">
-                            {/* <span className="text-sm text-gray-500">Correlated w/ </span> */}
-                            <div className="flex flex-wrap gap-2">
-                              {requirement.associatedRegulations.slice(0, 3).map(reg => {
-                                const frameworkData = frameworkAlignmentData.find(f => f.name === reg.name);
-                                const color = frameworkData?.color || 'hsl(var(--chart-1))';
-                                return (
-                                  <span key={reg.name} className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100">
-                                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }}/>
-                                    {reg.name}
-                                  </span>
-                                );
-                              })}
-                              {requirement.associatedRegulations.length > 3 && (
-                                <span className="text-xs text-gray-500">+{requirement.associatedRegulations.length - 3} more</span>
-                              )}
-                            </div>
+            <div className="space-y-4">
+              {filteredRequirements.map((requirement) => (
+                <Card key={requirement.id} className="cursor-pointer hover:bg-muted/50" onClick={() => onRequirementClick(requirement)}>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      {/* Left side - Title and Summary */}
+                      <div className="space-y-1">
+                        <CardTitle className="text-xl font-semibold">
+                          {requirement.name}
+                        </CardTitle>
+                        <p className="text-sm text-gray-500">{requirement.summary}</p>
+                      </div>
+
+                      {/* Right side - Obligation Badges */}
+                      <div className="flex flex-col gap-2">
+                        {/* Framework Obligation Derivatives */}
+                        <div className="flex justify-end">
+                          {/* <span className="text-sm text-gray-500">Frameworks: </span> */}
+                          <div className="flex flex-wrap gap-2 justify-end">
+                            {requirement.associatedRegulations.slice(0, 3).map(reg => {
+                              const frameworkData = frameworkAlignmentData.find(f => f.name === reg.name);
+                              const color = frameworkData?.color || 'hsl(var(--chart-1))';
+                              return (
+                                <span key={reg.name} className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100">
+                                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }}/>
+                                  {reg.name}
+                                </span>
+                              );
+                            })}
+                            {requirement.associatedRegulations.length > 3 && (
+                              <span className="text-xs text-gray-500">+{requirement.associatedRegulations.length - 3} more</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Contractual Obligation Badges */}
+                        <div className="flex justify-end">
+                        {/* <span className="text-sm text-gray-500">Contractual: </span> */}
+                          <div className="flex flex-wrap gap-2 justify-end">
+                            {requirement.associatedContractualObligations?.slice(0, 3).map((obligation, idx) => (
+                              obligation && (
+                                <span 
+                                  key={idx}
+                                  className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100 cursor-pointer hover:bg-gray-200"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleObligationClick(obligation);
+                                  }}
+                                >
+                                  <div className="w-2 h-2 rounded-full bg-green-500"/>
+                                  {obligation.entity}
+                                </span>
+                              )
+                            ))}
+                            {requirement.associatedContractualObligations?.length > 3 && (
+                              <span className="text-xs text-gray-500">
+                                +{requirement.associatedContractualObligations.length - 3} more
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
-                      
-                      <p className="text-sm text-gray-500 mt-1">{requirement.summary}</p>
                     </div>
+                  </CardHeader>
+                  <CardContent>
 
                     {/* Two-column Grid */}
                     <div className="grid grid-cols-2 gap-4 relative">
@@ -310,8 +350,8 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </div>
