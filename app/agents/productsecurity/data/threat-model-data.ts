@@ -1,4 +1,4 @@
-import { getRelativeDate } from "@/app/agents/3p-risk/utils/date-utils"
+import { getRelativeDate } from "@/app/utils/date-utils"
 
 export interface ThreatModelAssessment {
     id: string;

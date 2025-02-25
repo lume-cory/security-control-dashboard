@@ -1,3 +1,5 @@
+import { getRelativeDate, DemoDateOffsets } from "@/app/utils/date-utils";
+
 export interface CCFRequirement {
   id: string;
   name: string;
@@ -147,7 +149,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Single factor authentication only',
         mitigation: 'Implement MFA using corporate IdP',
         status: 'In Progress',
-        dueDate: '2024-06-30'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       },
       {
         system: {
@@ -160,7 +162,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Password complexity requirements not enforced',
         mitigation: 'Update authentication service to enforce new password policy',
         status: 'In Progress',
-        dueDate: '2024-05-15'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       },
       {
         system: {
@@ -173,7 +175,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'API key rotation not automated',
         mitigation: 'Implement automated key rotation system',
         status: 'Planned',
-        dueDate: '2024-06-01'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       }
     ],
     supportingEvidence: {
@@ -188,7 +190,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'Allowed Factors', value: 'Biometric, Hardware Token' },
               { name: 'Session Length', value: '8 hours' }
             ],
-            lastUpdated: '2024-03-15',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '2.1'
           }
         },
@@ -201,7 +203,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'Risk-based MFA', value: 'Enabled' },
               { name: 'Location-based Access', value: 'Enforced' }
             ],
-            lastUpdated: '2024-03-10',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '3.0'
           }
         }
@@ -214,9 +216,9 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'increasing',
           status: 'good',
           history: [
-            { date: '2024-01', value: 85 },
-            { date: '2024-02', value: 90 },
-            { date: '2024-03', value: 94 }
+            { date: getRelativeDate(-90), value: 85 },
+            { date: getRelativeDate(-60), value: 90 },
+            { date: getRelativeDate(-30), value: 94 }
           ]
         },
         {
@@ -226,22 +228,22 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'decreasing',
           status: 'good',
           history: [
-            { date: '2024-01', value: 4.2 },
-            { date: '2024-02', value: 3.1 },
-            { date: '2024-03', value: 2.3 }
+            { date: getRelativeDate(-90), value: 4.2 },
+            { date: getRelativeDate(-60), value: 3.1 },
+            { date: getRelativeDate(-30), value: 2.3 }
           ]
         }
       ],
       audits: [
         {
-          date: '2024-03-01',
+          date: getRelativeDate(DemoDateOffsets.lastAssessment),
           type: 'Internal',
           scope: 'Access Control Review',
           findings: 'MFA compliance at 94%. Legacy system remediation in progress.',
           auditor: 'Security Team'
         },
         {
-          date: '2024-02-15',
+          date: getRelativeDate(DemoDateOffsets.lastAssessment),
           type: 'External',
           scope: 'SOC2 Type 1',
           findings: 'Access control policies meet SOC2 requirements. Minor findings in legacy systems.',
@@ -305,7 +307,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Legacy TLS 1.2 still in use',
         mitigation: 'Upgrade to TLS 1.3 across all endpoints',
         status: 'In Progress',
-        dueDate: '2024-05-30'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       },
       {
         system: {
@@ -318,7 +320,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Legacy TLS 1.2 still in use',
         mitigation: 'Upgrade to TLS 1.3 across all endpoints',
         status: 'In Progress',
-        dueDate: '2024-05-30'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       },
       {
         system: {
@@ -331,7 +333,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Backup encryption keys not rotated regularly',
         mitigation: 'Implement automated key rotation schedule',
         status: 'Not Started',
-        dueDate: '2024-07-15'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       }
     ],
     supportingEvidence: {
@@ -345,7 +347,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'Automatic Rotation', value: 'Enabled' },
               { name: 'Rotation Period', value: '90 days' }
             ],
-            lastUpdated: '2024-03-01',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '1.2'
           }
         }
@@ -358,15 +360,15 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'stable',
           status: 'good',
           history: [
-            { date: '2024-01', value: 100 },
-            { date: '2024-02', value: 100 },
-            { date: '2024-03', value: 100 }
+            { date: getRelativeDate(-90), value: 100 },
+            { date: getRelativeDate(-60), value: 100 },
+            { date: getRelativeDate(-30), value: 100 }
           ]
         }
       ],
       audits: [
         {
-          date: '2024-03-15',
+          date: getRelativeDate(DemoDateOffsets.lastAssessment),
           type: 'Automated',
           scope: 'Encryption Configuration',
           findings: 'All systems compliant with encryption standards',
@@ -445,7 +447,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Outdated patch levels observed on several endpoints',
         mitigation: 'Schedule immediate patch updates and verify with automated scanning',
         status: 'Not Started',
-        dueDate: '2024-05-15'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       }
     ],
     supportingEvidence: {
@@ -459,7 +461,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'Scan Frequency', value: 'On every merge to main' },
               { name: 'Critical Severity Gate', value: 'Block deployment' }
             ],
-            lastUpdated: '2024-04-01',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '2.1'
           }
         },
@@ -472,7 +474,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'License Compliance', value: 'Enabled' },
               { name: 'Vulnerability Scanning', value: 'Daily' }
             ],
-            lastUpdated: '2024-04-05',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '3.0'
           }
         },
@@ -485,22 +487,22 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'Frequency', value: 'Annual' },
               { name: 'Scope', value: 'All external-facing systems' }
             ],
-            lastUpdated: '2024-03-15',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '1.0'
           }
         }
       ],
       metrics: [
         {
-          name: 'Critical Vulnerability MTTR',
+          name: 'Vulnerability MTTR',
           current: 5.2,
           target: 3,
           trend: 'decreasing',
           status: 'good',
           history: [
-            { date: '2024-01', value: 6.8 },
-            { date: '2024-02', value: 5.9 },
-            { date: '2024-03', value: 5.2 }
+            { date: getRelativeDate(-90), value: 6.8 },
+            { date: getRelativeDate(-60), value: 5.9 },
+            { date: getRelativeDate(-30), value: 5.2 }
           ]
         },
         {
@@ -510,9 +512,9 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'stable',
           status: 'neutral',
           history: [
-            { date: '2024-01', value: 12.1 },
-            { date: '2024-02', value: 12.6 },
-            { date: '2024-03', value: 12.4 }
+            { date: getRelativeDate(-90), value: 12.1 },
+            { date: getRelativeDate(-60), value: 12.6 },
+            { date: getRelativeDate(-30), value: 12.4 }
           ]
         },
         {
@@ -522,9 +524,9 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'increasing',
           status: 'bad',
           history: [
-            { date: '2024-01', value: 22.3 },
-            { date: '2024-02', value: 24.1 },
-            { date: '2024-03', value: 25.8 }
+            { date: getRelativeDate(-90), value: 22.3 },
+            { date: getRelativeDate(-60), value: 24.1 },
+            { date: getRelativeDate(-30), value: 25.8 }
           ]
         },
         {
@@ -534,9 +536,9 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'stable',
           status: 'neutral',
           history: [
-            { date: '2024-01', value: 44.8 },
-            { date: '2024-02', value: 45.5 },
-            { date: '2024-03', value: 45.2 }
+            { date: getRelativeDate(-90), value: 44.8 },
+            { date: getRelativeDate(-60), value: 45.5 },
+            { date: getRelativeDate(-30), value: 45.2 }
           ]
         },
         {
@@ -546,9 +548,9 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'increasing',
           status: 'bad',
           history: [
-            { date: '2024-01', value: 18 },
-            { date: '2024-02', value: 21 },
-            { date: '2024-03', value: 23 }
+            { date: getRelativeDate(-90), value: 18 },
+            { date: getRelativeDate(-60), value: 21 },
+            { date: getRelativeDate(-30), value: 23 }
           ]
         },
         {
@@ -564,19 +566,19 @@ export const commonControlFrameworkData: CCFRequirement[] = [
             low: 5
           },
           history: [
-            { date: '2024-01', value: 18, breakdown: { critical: 1, high: 5, medium: 8, low: 4 } },
-            { date: '2024-02', value: 21, breakdown: { critical: 2, high: 6, medium: 8, low: 5 } },
-            { date: '2024-03', value: 23, breakdown: { critical: 2, high: 7, medium: 9, low: 5 } }
+            { date: getRelativeDate(-90), value: 18, breakdown: { critical: 1, high: 5, medium: 8, low: 4 } },
+            { date: getRelativeDate(-60), value: 21, breakdown: { critical: 2, high: 6, medium: 8, low: 5 } },
+            { date: getRelativeDate(-30), value: 23, breakdown: { critical: 2, high: 7, medium: 9, low: 5 } }
           ]
         }
       ],
       audits: [
         {
-          date: '2024-04-10',
-          type: 'Internal',
-          scope: 'Vulnerability Management Review',
-          findings: 'Scanning frequency meets requirements; patch management improvements needed.',
-          auditor: 'Security Operations'
+          date: getRelativeDate(DemoDateOffsets.lastAssessment),
+          type: 'External',
+          scope: 'Security Controls',
+          findings: 'Minor findings in encryption key rotation',
+          auditor: 'Security Team'
         }
       ]
     }
@@ -637,7 +639,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Delayed incident reporting and lack of automated alerts',
         mitigation: 'Upgrade logging system and integrate automated alerting',
         status: 'In Progress',
-        dueDate: '2024-07-01'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       }
     ],
     supportingEvidence: {
@@ -651,7 +653,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'Alert Sensitivity', value: 'High' },
               { name: 'Response Automation', value: 'Enabled' }
             ],
-            lastUpdated: '2024-04-05',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '2.0'
           }
         }
@@ -664,15 +666,15 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'decreasing',
           status: 'good',
           history: [
-            { date: '2024-01', value: 60 },
-            { date: '2024-02', value: 50 },
-            { date: '2024-03', value: 45 }
+            { date: getRelativeDate(-90), value: 60 },
+            { date: getRelativeDate(-60), value: 50 },
+            { date: getRelativeDate(-30), value: 45 }
           ]
         }
       ],
       audits: [
         {
-          date: '2024-04-15',
+          date: getRelativeDate(DemoDateOffsets.lastAssessment),
           type: 'Internal',
           scope: 'Incident Response Drill',
           findings: 'Response times improved; recommendations made to further automate detection.',
@@ -730,7 +732,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Data retention schedules are not enforced automatically',
         mitigation: 'Implement automated deletion scripts based on retention policy',
         status: 'Not Started',
-        dueDate: '2024-08-15'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       }
     ],
     supportingEvidence: {
@@ -744,7 +746,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'Retention Period', value: '5 years' },
               { name: 'Disposal Method', value: 'Automated Script' }
             ],
-            lastUpdated: '2024-03-20',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '1.0'
           }
         }
@@ -757,15 +759,15 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'increasing',
           status: 'good',
           history: [
-            { date: '2024-01', value: 70 },
-            { date: '2024-02', value: 75 },
-            { date: '2024-03', value: 80 }
+            { date: getRelativeDate(-90), value: 70 },
+            { date: getRelativeDate(-60), value: 75 },
+            { date: getRelativeDate(-30), value: 80 }
           ]
         }
       ],
       audits: [
         {
-          date: '2024-04-20',
+          date: getRelativeDate(DemoDateOffsets.lastAssessment),
           type: 'External',
           scope: 'Data Retention Review',
           findings: 'Retention schedules are defined; execution needs improvement.',
@@ -815,7 +817,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Incomplete vendor security assessments in system records',
         mitigation: 'Review outstanding assessments and update risk scores',
         status: 'In Progress',
-        dueDate: '2024-09-30'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       }
     ],
     supportingEvidence: {
@@ -829,7 +831,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'Assessment Frequency', value: 'Annual' },
               { name: 'Risk Scoring Model', value: 'Automated' }
             ],
-            lastUpdated: '2024-03-25',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '1.1'
           }
         }
@@ -842,15 +844,15 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'increasing',
           status: 'good',
           history: [
-            { date: '2024-01', value: 60 },
-            { date: '2024-02', value: 65 },
-            { date: '2024-03', value: 70 }
+            { date: getRelativeDate(-90), value: 60 },
+            { date: getRelativeDate(-60), value: 65 },
+            { date: getRelativeDate(-30), value: 70 }
           ]
         }
       ],
       audits: [
         {
-          date: '2024-04-05',
+          date: getRelativeDate(DemoDateOffsets.lastAssessment),
           type: 'Internal',
           scope: 'Vendor Risk Management',
           findings: 'Several vendors pending assessments; process improvements recommended.',
@@ -899,7 +901,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Untracked configuration changes leading to drift',
         mitigation: 'Implement automated change logging and reconciliation',
         status: 'Not Started',
-        dueDate: '2024-10-01'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       }
     ],
     supportingEvidence: {
@@ -913,7 +915,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'Approval Workflow', value: 'Enabled' },
               { name: 'Emergency Change Process', value: 'Documented' }
             ],
-            lastUpdated: '2024-04-08',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '2.2'
           }
         }
@@ -926,15 +928,15 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'stable',
           status: 'good',
           history: [
-            { date: '2024-01', value: 93 },
-            { date: '2024-02', value: 94 },
-            { date: '2024-03', value: 95 }
+            { date: getRelativeDate(-90), value: 93 },
+            { date: getRelativeDate(-60), value: 94 },
+            { date: getRelativeDate(-30), value: 95 }
           ]
         }
       ],
       audits: [
         {
-          date: '2024-04-12',
+          date: getRelativeDate(DemoDateOffsets.lastAssessment),
           type: 'Internal',
           scope: 'Change Management Review',
           findings: 'Minor deviations in emergency changes; overall process effective.',
@@ -983,7 +985,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Lack of transparency in AI decision logs',
         mitigation: 'Integrate comprehensive audit logging for AI decision processes',
         status: 'In Progress',
-        dueDate: '2024-11-15'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       }
     ],
     supportingEvidence: {
@@ -997,7 +999,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'Log Retention', value: '180 days' },
               { name: 'Anomaly Detection', value: 'Enabled' }
             ],
-            lastUpdated: '2024-04-02',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '1.0'
           }
         }
@@ -1010,15 +1012,15 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'increasing',
           status: 'good',
           history: [
-            { date: '2024-01', value: 50 },
-            { date: '2024-02', value: 58 },
-            { date: '2024-03', value: 65 }
+            { date: getRelativeDate(-90), value: 50 },
+            { date: getRelativeDate(-60), value: 58 },
+            { date: getRelativeDate(-30), value: 65 }
           ]
         }
       ],
       audits: [
         {
-          date: '2024-04-18',
+          date: getRelativeDate(DemoDateOffsets.lastAssessment),
           type: 'External',
           scope: 'AI Ethics Review',
           findings: 'Policy aligns with EU AI Act; improvements needed in transparency metrics.',
@@ -1068,7 +1070,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Incomplete training records for several departments',
         mitigation: 'Enroll remaining employees in the mandatory security training course',
         status: 'Not Started',
-        dueDate: '2024-12-01'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       }
     ],
     supportingEvidence: {
@@ -1082,7 +1084,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'Course Completion Requirement', value: '100%' },
               { name: 'Reminder Frequency', value: 'Weekly' }
             ],
-            lastUpdated: '2024-04-10',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '1.3'
           }
         }
@@ -1095,15 +1097,15 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'increasing',
           status: 'good',
           history: [
-            { date: '2024-01', value: 70 },
-            { date: '2024-02', value: 78 },
-            { date: '2024-03', value: 85 }
+            { date: getRelativeDate(-90), value: 70 },
+            { date: getRelativeDate(-60), value: 78 },
+            { date: getRelativeDate(-30), value: 85 }
           ]
         }
       ],
       audits: [
         {
-          date: '2024-04-22',
+          date: getRelativeDate(DemoDateOffsets.lastAssessment),
           type: 'Internal',
           scope: 'Training Compliance Audit',
           findings: 'Improvement in training participation observed; record-keeping issues remain.',
@@ -1160,7 +1162,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Outdated recovery procedures not reflecting current infrastructure',
         mitigation: 'Revise the recovery plan and conduct a full failover test',
         status: 'In Progress',
-        dueDate: '2025-01-15'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       }
     ],
     supportingEvidence: {
@@ -1174,7 +1176,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'Backup Frequency', value: 'Hourly' },
               { name: 'Offsite Replication', value: 'Enabled' }
             ],
-            lastUpdated: '2024-04-12',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '3.5'
           }
         }
@@ -1187,15 +1189,15 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'decreasing',
           status: 'good',
           history: [
-            { date: '2024-01', value: 6 },
-            { date: '2024-02', value: 5 },
-            { date: '2024-03', value: 4 }
+            { date: getRelativeDate(-90), value: 6 },
+            { date: getRelativeDate(-60), value: 5 },
+            { date: getRelativeDate(-30), value: 4 }
           ]
         }
       ],
       audits: [
         {
-          date: '2024-04-25',
+          date: getRelativeDate(DemoDateOffsets.lastAssessment),
           type: 'External',
           scope: 'Disaster Recovery Drill',
           findings: 'DR plan effective with minor gaps in failover times identified.',
@@ -1251,7 +1253,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Missing automated bias detection in validation pipeline',
         mitigation: 'Implement fairness metrics and bias detection',
         status: 'In Progress',
-        dueDate: '2024-06-15'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       }
     ],
     supportingEvidence: {
@@ -1265,7 +1267,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'Bias Detection', value: 'Enabled' },
               { name: 'Performance Thresholds', value: 'Strict' }
             ],
-            lastUpdated: '2024-04-01',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '2.0'
           }
         }
@@ -1278,15 +1280,15 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'increasing',
           status: 'good',
           history: [
-            { date: '2024-01', value: 60 },
-            { date: '2024-02', value: 68 },
-            { date: '2024-03', value: 75 }
+            { date: getRelativeDate(-90), value: 60 },
+            { date: getRelativeDate(-60), value: 68 },
+            { date: getRelativeDate(-30), value: 75 }
           ]
         }
       ],
       audits: [
         {
-          date: '2024-04-10',
+          date: getRelativeDate(DemoDateOffsets.lastAssessment),
           type: 'Internal',
           scope: 'AI Model Validation',
           findings: 'Validation process needs enhancement for bias detection',
@@ -1334,7 +1336,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Incomplete data lineage tracking',
         mitigation: 'Implement comprehensive data provenance system',
         status: 'Planned',
-        dueDate: '2024-07-30'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       }
     ],
     supportingEvidence: {
@@ -1348,7 +1350,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'PII Detection', value: 'Enabled' },
               { name: 'Data Versioning', value: 'Required' }
             ],
-            lastUpdated: '2024-03-15',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '1.5'
           }
         }
@@ -1361,15 +1363,15 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'stable',
           status: 'neutral',
           history: [
-            { date: '2024-01', value: 87 },
-            { date: '2024-02', value: 88 },
-            { date: '2024-03', value: 88 }
+            { date: getRelativeDate(-90), value: 87 },
+            { date: getRelativeDate(-60), value: 88 },
+            { date: getRelativeDate(-30), value: 88 }
           ]
         }
       ],
       audits: [
         {
-          date: '2024-03-20',
+          date: getRelativeDate(DemoDateOffsets.lastAssessment),
           type: 'External',
           scope: 'Data Privacy Review',
           findings: 'Data handling practices align with EU AI Act requirements',
@@ -1417,7 +1419,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
         issue: 'Lack of automated alerting for model drift',
         mitigation: 'Implement drift detection and alert system',
         status: 'Not Started',
-        dueDate: '2024-08-15'
+        dueDate: getRelativeDate(DemoDateOffsets.actionPlanDue)
       }
     ],
     supportingEvidence: {
@@ -1431,7 +1433,7 @@ export const commonControlFrameworkData: CCFRequirement[] = [
               { name: 'Drift Detection', value: 'Enabled' },
               { name: 'Alert Thresholds', value: 'Configured' }
             ],
-            lastUpdated: '2024-04-05',
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
             version: '1.0'
           }
         }
@@ -1444,15 +1446,15 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           trend: 'increasing',
           status: 'good',
           history: [
-            { date: '2024-01', value: 85 },
-            { date: '2024-02', value: 89 },
-            { date: '2024-03', value: 92 }
+            { date: getRelativeDate(-90), value: 85 },
+            { date: getRelativeDate(-60), value: 89 },
+            { date: getRelativeDate(-30), value: 92 }
           ]
         }
       ],
       audits: [
         {
-          date: '2024-04-15',
+          date: getRelativeDate(DemoDateOffsets.lastAssessment),
           type: 'Internal',
           scope: 'AI System Monitoring',
           findings: 'Monitoring coverage adequate; alerting needs improvement',

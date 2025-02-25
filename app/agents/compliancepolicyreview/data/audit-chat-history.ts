@@ -1,3 +1,39 @@
+import { getRelativeDate, DemoDateOffsets } from "@/app/utils/date-utils";
+
+export interface AuditChatEvidence {
+  policies?: Array<{
+    id: string;
+    name: string;
+    description: string;
+    link: string;
+    lastUpdated: string;
+  }>;
+  metrics?: Array<{
+    name: string;
+    current: number;
+    target: number;
+    trend: 'increasing' | 'decreasing' | 'stable';
+    status: 'good' | 'bad' | 'neutral';
+    history: Array<{ date: string; value: number }>;
+  }>;
+  configurations?: Array<{
+    tool: string;
+    type: string;
+    evidence: {
+      policyName: string;
+      settings: Array<{ name: string; value: string }>;
+      lastUpdated: string;
+      version: string;
+    };
+  }>;
+  contracts?: Array<{
+    customer: string;
+    requirement: string;
+    link: string;
+    details: string;
+  }>;
+}
+
 export interface AuditChat {
   id: string;
   title: string;
@@ -6,6 +42,7 @@ export interface AuditChat {
   conversation: Array<{
     role: string;
     content: string;
+    evidence?: AuditChatEvidence;
   }>;
 }
 
@@ -13,31 +50,80 @@ export const auditChatHistory: AuditChat[] = [
   {
     id: "1",
     title: "BYOD Policy & Evidence",
-    timestamp: new Date().toISOString().split('T')[0],
-    question: "What is our policy on accessing internal company resources on a personal phone? Can you show supporting evidence for that?",
+    timestamp: getRelativeDate(0),
+    question: "What is our policy on accessing internal company resources on a personal phone?",
     conversation: [
       { 
         role: "user", 
-        content: "What is your policy on accessing internal company resources on a personal phone? Can you show supporting evidence for that?" 
+        content: "What is our policy on accessing internal company resources on a personal phone?" 
       },
       {
         role: "assistant",
-        content: "Our BYOD (Bring Your Own Device) policy requires all personal devices to be enrolled in our Mobile Device Management (MDM) system before accessing company resources. Here's the specific evidence:\n\n1. Policy Document:\n- Policy ID: SEC-MOB-001\n- Last Updated: 2024-02-15\n- Location: security-policies/mobile/byod.pdf\n\n2. Technical Controls:\n- MDM Solution: Microsoft Intune\n- Enforced policies:\n  * Device encryption\n  * PIN requirement\n  * Remote wipe capability\n\n3. Audit Logs:\n- Last MDM compliance scan: 2024-03-10\n- 98% device compliance rate\n\nWould you like me to pull up the full policy document or MDM configuration details?"
+        content: "Our BYOD policy requires all personal devices to be enrolled in our MDM system before accessing company resources. Here's the relevant documentation and evidence:",
+        evidence: {
+          policies: [{
+            id: "SEC-MOB-001",
+            name: "BYOD Security Policy",
+            description: "Requirements for personal device usage",
+            link: "/policies/security/byod.pdf",
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified)
+          }],
+          metrics: [{
+            name: "MDM Compliance Rate",
+            current: 92,
+            target: 95,
+            trend: "stable",
+            status: "neutral",
+            history: [
+              { date: getRelativeDate(-90), value: 97 },
+              { date: getRelativeDate(-60), value: 98 },
+              { date: getRelativeDate(-30), value: 92 }
+            ]
+          }],
+          configurations: [{
+            tool: "Microsoft Intune",
+            type: "MDM",
+            evidence: {
+              policyName: "BYOD Security Controls",
+              settings: [
+                { name: "Device Encryption", value: "Required" },
+                { name: "PIN Length", value: "6 digits" },
+                { name: "Max PIN Attempts", value: "5" }
+              ],
+              lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
+              version: "2.4"
+            }
+          }]
+        }
       },
       {
         role: "user",
-        content: "Yes, please show me the MDM configuration details"
+        content: "Why has the compliance rate dropped recently?"
       },
       {
         role: "assistant",
-        content: "Here are the current MDM configuration settings:\n\n1. Device Security Requirements:\n- Minimum PIN length: 6 digits\n- Maximum PIN attempts: 5\n- Device encryption: Required\n- Biometric authentication: Allowed\n\n2. Application Controls:\n- Work profile separation: Enforced\n- Allowed apps: Company Portal, Outlook, Teams\n- Blocked apps: File sharing apps\n\n3. Network Security:\n- VPN requirement: Always-on\n- Wi-Fi security: WPA2 Enterprise\n\n4. Compliance Monitoring:\n- Device check-in: Every 8 hours\n- Compliance grace period: 24 hours\n\nThis configuration was last reviewed by Security Team on 2024-03-01 (Ticket: SEC-2024-156)"
+        content: "The recent drop in MDM compliance is due to the rollout of a new email app that requires updated device configurations. Here's the current remediation status:",
+        evidence: {
+          metrics: [{
+            name: "Email App Migration",
+            current: 65,
+            target: 100,
+            trend: "increasing",
+            status: "neutral",
+            history: [
+              { date: getRelativeDate(-30), value: 0 },
+              { date: getRelativeDate(-15), value: 45 },
+              { date: getRelativeDate(0), value: 65 }
+            ]
+          }]
+        }
       }
     ]
   },
   {
     id: "2",
     title: "Data Retention Evidence",
-    timestamp: new Date().toISOString().split('T')[0],
+    timestamp: getRelativeDate(0),
     question: "Can you provide evidence of our data retention practices for customer data?",
     conversation: [
       {
@@ -46,31 +132,144 @@ export const auditChatHistory: AuditChat[] = [
       },
       {
         role: "assistant",
-        content: "Here's our data retention implementation evidence:\n\n1. Policy Framework:\n- Policy ID: DAT-RET-002\n- Retention periods:\n  * Customer data: 7 years\n  * Transaction logs: 5 years\n  * Audit trails: 3 years\n\n2. Technical Implementation:\n- Storage systems: AWS S3 + Glacier\n- Lifecycle policies: Automated archival\n- Deletion workflows: Documented in SEC-WF-023\n\n3. Recent Audits:\n- Internal audit: January 2024\n- External audit: November 2023\n- Findings: All compliant\n\nWould you like to see the specific AWS lifecycle configurations or audit reports?"
+        content: "Here's our data retention implementation evidence and current compliance status:",
+        evidence: {
+          policies: [{
+            id: "DAT-RET-002",
+            name: "Data Retention Policy",
+            description: "Requirements for data lifecycle management",
+            link: "/policies/data/retention.pdf",
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified)
+          }],
+          configurations: [{
+            tool: "AWS S3",
+            type: "Storage",
+            evidence: {
+              policyName: "Lifecycle Rules",
+              settings: [
+                { name: "Customer Data Retention", value: "7 years" },
+                { name: "Archive Tier", value: "Glacier after 90 days" },
+                { name: "Encryption", value: "AES-256" }
+              ],
+              lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
+              version: "1.2"
+            }
+          }],
+          contracts: [{
+            customer: "FinServ Inc.",
+            requirement: "3 year retention required",
+            link: "/contracts/customer-a/data-requirements.pdf",
+            details: "Section 8.2 - Data Lifecycle"
+          }, 
+          {
+            customer: "Design Co.",
+            requirement: "1 year retention required",
+            link: "/contracts/customer-b/data-requirements.pdf",
+            details: "Section 13.4 - Data Management"
+          }
+        ]
+        }
       }
     ]
-  }, 
+  },
   {
     id: "3",
     title: "Customer Incident Reporting",
-    timestamp: new Date().toISOString().split('T')[0],
-    question: "Can you show me a list of all of the customer reporting requirements from our customer contracts? Which customers has the shortest reporting requirements?",
+    timestamp: getRelativeDate(0),
+    question: "What are our incident reporting SLAs for different customers?",
     conversation: [
       {
         role: "user",
-        content: "Can you show me a list of all of the customer reporting requirements from our customer contracts? Which customers has the shortest reporting requirements?"
+        content: "What are our incident reporting SLAs for different customers?"
       },
       {
         role: "assistant",
-        content: "Here's the list of customer reporting requirements from our customer contracts:\n\n1. Customer A: 24 hours\n2. Customer B: 48 hours\n3. Customer C: 72 hours\n\nThe customer with the shortest reporting requirement is Customer A, with a 24-hour window for incident reporting."
+        content: "Here are our customer incident reporting requirements and current SLA performance:",
+        evidence: {
+          policies: [{
+            id: "INC-001",
+            name: "Incident Response Policy",
+            description: "Customer notification requirements",
+            link: "/policies/security/incident-response.pdf",
+            lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified)
+          }],
+          metrics: [{
+            name: "SLA Compliance Rate",
+            current: 98,
+            target: 100,
+            trend: "stable",
+            status: "good",
+            history: [
+              { date: getRelativeDate(-90), value: 97 },
+              { date: getRelativeDate(-60), value: 98 },
+              { date: getRelativeDate(-30), value: 98 }
+            ]
+          }],
+          contracts: [
+            {
+              customer: "Financial Services A",
+              requirement: "Critical incidents within 1 hour",
+              link: "/contracts/fs-a/sla.pdf",
+              details: "Exhibit C - Incident Response"
+            },
+            {
+              customer: "Healthcare Provider B",
+              requirement: "All incidents within 24 hours",
+              link: "/contracts/hc-b/requirements.pdf",
+              details: "Section 4.3 - Security Incidents"
+            }
+          ]
+        }
       },
       {
         role: "user",
-        content: "Does the reporting requirement depend on the type of incident or asset involved in the incident?"
+        content: "How do we track different severity levels?"
       },
       {
         role: "assistant",
-        content: "Yes, the reporting requirement can vary depending on the type of incident or asset involved. For example, incidents involving sensitive data or critical infrastructure may require immediate reporting, while less severe incidents may have a longer reporting window. Additionally, some customers may have specific requirements for reporting incidents related to their assets or data."
+        content: "We track incident response times by severity level. Here's the current breakdown:",
+        evidence: {
+          metrics: [
+            {
+              name: "Critical MTTR",
+              current: 42,
+              target: 60,
+              trend: "decreasing",
+              status: "good",
+              history: [
+                { date: getRelativeDate(-90), value: 55 },
+                { date: getRelativeDate(-60), value: 48 },
+                { date: getRelativeDate(-30), value: 42 }
+              ]
+            },
+            {
+              name: "High MTTR",
+              current: 180,
+              target: 240,
+              trend: "stable",
+              status: "good",
+              history: [
+                { date: getRelativeDate(-90), value: 185 },
+                { date: getRelativeDate(-60), value: 178 },
+                { date: getRelativeDate(-30), value: 180 }
+              ]
+            }
+          ],
+          configurations: [{
+            tool: "PagerDuty",
+            type: "Incident Management",
+            evidence: {
+              policyName: "SLA Tracking",
+              settings: [
+                { name: "Critical Alert", value: "15 min warning" },
+                { name: "High Alert", value: "1 hour warning" },
+                { name: "Escalation Path", value: "3 levels" }
+              ],
+              lastUpdated: getRelativeDate(DemoDateOffsets.documentLastVerified),
+              version: "2.0"
+            }
+          }]
+        }
       }
     ]
   }

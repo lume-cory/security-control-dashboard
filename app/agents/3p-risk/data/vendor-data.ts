@@ -1,4 +1,4 @@
-import { getRelativeDate, DemoDateOffsets } from '../utils/date-utils'
+import { getRelativeDate, DemoDateOffsets } from "@/app/utils/date-utils";
 import { vendorPolicyMappings } from './vendor-policy-mappings'
 
 type VendorStatus = 

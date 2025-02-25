@@ -92,8 +92,90 @@ export function AuditChat() {
                 <ScrollArea className="flex-grow mb-4">
                   {selectedChat.conversation.map((message, index) => (
                     <div key={index} className={`mb-4 ${message.role === 'user' ? 'text-right' : 'text-left'}`}>
-                      <div className={`inline-block p-2 rounded-lg ${message.role === 'user' ? 'bg-blue-100' : 'bg-gray-100'}`}>
-                        {message.content}
+                      <div className={`inline-block p-2 rounded-lg ${message.role === 'user' ? 'bg-blue-100' : 'bg-gray-100'} max-w-[85%]`}>
+                        <div className="whitespace-pre-wrap">{message.content}</div>
+                        
+                        {message.evidence && (
+                          <div className="mt-4 space-y-4">
+                            {/* Policy Links */}
+                            {message.evidence.policies && (
+                              <div className="border-t pt-2">
+                                <h4 className="font-medium mb-2">Related Policies</h4>
+                                {message.evidence.policies.map(policy => (
+                                  <a 
+                                    key={policy.id}
+                                    href={policy.link}
+                                    className="block text-sm text-blue-600 hover:underline mb-1"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    {policy.name} ({policy.id})
+                                  </a>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Metrics */}
+                            {message.evidence.metrics && (
+                              <div className="border-t pt-2">
+                                <h4 className="font-medium mb-2">Compliance Metrics</h4>
+                                <div className="grid grid-cols-2 gap-4">
+                                  {message.evidence.metrics.map(metric => (
+                                    <div key={metric.name} className="bg-white p-2 rounded shadow-sm">
+                                      <div className="text-sm font-medium">{metric.name}</div>
+                                      <div className="flex items-baseline gap-2">
+                                        <span className="text-xl font-bold">{metric.current}</span>
+                                        <span className="text-sm text-gray-500">/ {metric.target}</span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Configurations */}
+                            {message.evidence.configurations && (
+                              <div className="border-t pt-2">
+                                <h4 className="font-medium mb-2">Security Tool Configurations</h4>
+                                {message.evidence.configurations.map(config => (
+                                  <div key={config.tool} className="bg-white p-2 rounded shadow-sm mb-2">
+                                    <div className="font-medium">{config.tool}</div>
+                                    <div className="text-sm text-gray-600 mb-1">{config.evidence.policyName}</div>
+                                    <div className="space-y-1">
+                                      {config.evidence.settings.map(setting => (
+                                        <div key={setting.name} className="text-sm flex justify-between">
+                                          <span className="text-gray-600">{setting.name}</span>
+                                          <span>{setting.value}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Contract Requirements */}
+                            {message.evidence.contracts && (
+                              <div className="border-t pt-2">
+                                <h4 className="font-medium mb-2">Contract Requirements</h4>
+                                {message.evidence.contracts.map(contract => (
+                                  <div key={contract.customer} className="bg-white p-2 rounded shadow-sm mb-2">
+                                    <div className="font-medium">{contract.customer}</div>
+                                    <div className="text-sm text-gray-600 mb-1">{contract.requirement}</div>
+                                    <a 
+                                      href={contract.link}
+                                      className="text-sm text-blue-600 hover:underline"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      View Contract
+                                    </a>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}

@@ -1,6 +1,6 @@
 import { ispSections } from "@/data/policies/information-security-policy"
 import type { ComplianceStatus, Evidence } from "./vendor-data"
-import { getRelativeDate, DemoDateOffsets } from '../utils/date-utils'
+import { getRelativeDate, DemoDateOffsets } from "@/app/utils/date-utils";
 
 interface VendorPolicyMapping {
   vendorId: string;
