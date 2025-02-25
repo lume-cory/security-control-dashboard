@@ -6,6 +6,8 @@ import { useState } from 'react'
 import { ArticleDetailView } from './article-detail-view'
 import { Button } from "@/subframe/components/Button"
 import { FileText, FolderSearch } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { securityControlGroups } from "../../controlgroups/data/security-control-groups"
 
 function mapRequirementToArticle(requirement: typeof commonControlFrameworkData[0]): any {
   return {
@@ -16,7 +18,8 @@ function mapRequirementToArticle(requirement: typeof commonControlFrameworkData[
     policies: requirement.policies,
     impactedSystems: requirement.impactedSystems,
     nonCompliantInstances: requirement.nonCompliantInstances,
-    supportingEvidence: requirement.supportingEvidence
+    supportingEvidence: requirement.supportingEvidence,
+    vulnerabilities: requirement.vulnerabilities
   };
 }
 
@@ -36,6 +39,21 @@ export function CCFDetailView({ requirement }: { requirement: CCFRequirement | n
     
     return acc;
   }, []);
+
+  const getEffectivenessBadgeVariant = (effectiveness: number) => {
+    if (effectiveness >= 80) return "success" as const
+    if (effectiveness >= 60) return "warning" as const
+    return "error" as const
+  }
+
+  const getImpactColor = (impact: string) => {
+    switch (impact) {
+      case "Critical": return "text-red-600"
+      case "High": return "text-orange-500"
+      case "Medium": return "text-yellow-500"
+      default: return "text-green-500"
+    }
+  }
 
   if (selectedRequirement) {
     return (
@@ -66,12 +84,43 @@ export function CCFDetailView({ requirement }: { requirement: CCFRequirement | n
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {teamNonComplianceData.map(item => (
                     <div 
-                    key={item.team} 
-                    className="text-center cursor-pointer hover:bg-gray-50"
-                    onClick={() => setSelectedRequirement(currentRequirement)}
+                      key={item.team} 
+                      className="text-center cursor-pointer hover:bg-gray-50"
+                      onClick={() => setSelectedRequirement(currentRequirement)}
                     >
                       <div className="text-2xl font-bold text-red-600">{item.count}</div>
                       <div className="text-sm text-gray-500">{item.team}</div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* Risks & Vulnerabilities by Category */}
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold mb-4">Risks & Vulnerabilities by Category</h3>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {Object.entries(
+                    currentRequirement.vulnerabilities.reduce((acc, source) => {
+                      source.vulnerabilities.forEach(vuln => {
+                        if (!acc[vuln.category]) {
+                          acc[vuln.category] = 0;
+                        }
+                        acc[vuln.category]++;
+                      });
+                      return acc;
+                    }, {} as Record<string, number>)
+                  ).map(([category, count]) => (
+                    <div 
+                      key={category} 
+                      className="text-center cursor-pointer hover:bg-gray-50"
+                      onClick={() => setSelectedRequirement(currentRequirement)}
+                    >
+                      <div className="text-2xl font-bold text-yellow-600">{count}</div>
+                      <div className="text-sm text-gray-500">{category}</div>
                     </div>
                   ))}
                 </div>
@@ -169,6 +218,25 @@ export function CCFDetailView({ requirement }: { requirement: CCFRequirement | n
               ))}
             </div>
           </div>
+
+          {/* Security Groups
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold mb-4">Security Groups</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-1 gap-4">
+              {currentRequirement.securityGroups.map((groupIndex) => (
+                <div key={groupIndex} className="p-4 border rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-semibold">{securityControlGroups[groupIndex].name}</h4>
+                    <Badge variant={getEffectivenessBadgeVariant(securityControlGroups[groupIndex].effectiveness)}>
+                      {securityControlGroups[groupIndex].effectiveness}%
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">Controls: {securityControlGroups[groupIndex].controls}</p>
+                  <p className="text-sm text-gray-600">Findings: {securityControlGroups[groupIndex].findings}</p>
+                </div>
+              ))}
+            </div>
+          </div> */}
 
           {/* Security Tools */}
           <div className="mb-8">

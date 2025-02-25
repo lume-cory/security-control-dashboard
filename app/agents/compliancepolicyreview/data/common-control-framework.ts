@@ -1,5 +1,7 @@
 import { getRelativeDate, DemoDateOffsets } from "@/app/utils/date-utils";
-import { ContractualObligation, contractualObligations } from "./contractual-obligations";
+import { contractualObligations } from "./contractual-obligations";
+import { securityControlGroups, SecurityControlGroup } from '../../controlgroups/data/security-control-groups'
+
 
 export interface CCFRequirement {
   id: string;
@@ -74,6 +76,20 @@ export interface CCFRequirement {
       auditor: string;
     }>;
   };
+  securityGroups: number[]; // Array of indices into securityControlGroups
+  vulnerabilities: Array<{
+    source: string;
+    summary: string;
+    vulnerabilities: Array<{
+      name: string;
+      category: string;
+      date: string;
+      text: string;
+      impact: 'Critical' | 'High' | 'Medium' | 'Low';
+      remediationSteps: string[];
+      status: 'Open' | 'In Progress' | 'Resolved' | 'Accepted';
+    }>;
+  }>;
 }
 
 interface MetricHistory {
@@ -265,7 +281,64 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           auditor: 'Ernst & Young'
         }
       ]
-    }
+    },
+    securityGroups: [0, 5], // References "Access Management" and "Provisioning"
+    vulnerabilities: [
+      {
+        source: 'SonarQube',
+        summary: 'Authentication Bypass',
+        vulnerabilities: [
+          {
+            name: 'CVE-2023-1234',
+            category: 'Authentication Bypass',
+            date: getRelativeDate(-15),
+            text: 'Authentication bypass in SSO service due to improper session validation',
+            impact: 'Critical',
+            remediationSteps: [
+              'Update session validation logic in auth middleware',
+              'Implement session fingerprinting',
+              'Add IP-based session binding',
+              'Deploy hotfix to SSO service'
+            ],
+            status: 'In Progress'
+          },
+          {
+            name: 'CVE-2023-5678',
+            category: 'Plain Text Credentials',
+            date: getRelativeDate(-10),
+            text: 'Plaintext passwords exposed in Employee Portal logs',
+            impact: 'High',
+            remediationSteps: [
+              'Update logging filters to mask sensitive data',
+              'Rotate exposed credentials',
+              'Implement log sanitization middleware',
+              'Audit existing logs for exposure'
+            ],
+            status: 'Open'
+          }
+        ]
+      },
+      {
+        source: 'Snyk',
+        summary: 'Weak Authentication',
+        vulnerabilities: [
+          {
+            name: 'SNYK-JS-AUTH-789',
+            category: 'Weak Password Policy',
+            date: getRelativeDate(-5),
+            text: 'Password policy in Customer Portal allows weak passwords',
+            impact: 'High',
+            remediationSteps: [
+              'Update password validation rules',
+              'Force password reset for non-compliant accounts',
+              'Enable password strength meter',
+              'Add breached password check'
+            ],
+            status: 'Open'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 'CCF-002',
@@ -404,7 +477,64 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           auditor: 'Security Automation'
         }
       ]
-    }
+    },
+    securityGroups: [1, 6, 7], // References data protection, endpoint protection and data storage
+    vulnerabilities: [
+      {
+        source: 'Qualys',
+        summary: 'Encryption Weaknesses',
+        vulnerabilities: [
+          {
+            name: 'CVE-2023-7890',
+            category: 'Weak Encryption',
+            date: getRelativeDate(-12),
+            text: 'Legacy TLS 1.2 in use on payment processing endpoints',
+            impact: 'High',
+            remediationSteps: [
+              'Upgrade to TLS 1.3',
+              'Update cipher suite configuration',
+              'Disable legacy protocols',
+              'Test payment processing after upgrade'
+            ],
+            status: 'In Progress'
+          },
+          {
+            name: 'CVE-2023-8901',
+            category: 'Key Management',
+            date: getRelativeDate(-8),
+            text: 'Encryption keys not rotated according to policy',
+            impact: 'Critical',
+            remediationSteps: [
+              'Implement automated key rotation',
+              'Update key management service',
+              'Rotate all existing keys',
+              'Verify no service disruption'
+            ],
+            status: 'Open'
+          }
+        ]
+      },
+      {
+        source: 'AWS Security Hub',
+        summary: 'Data Protection',
+        vulnerabilities: [
+          {
+            name: 'AWS-KMS-001',
+            category: 'Data at Rest',
+            date: getRelativeDate(-5),
+            text: 'Unencrypted S3 buckets containing sensitive data',
+            impact: 'Critical',
+            remediationSteps: [
+              'Enable default encryption',
+              'Encrypt existing objects',
+              'Update bucket policies',
+              'Monitor encryption status'
+            ],
+            status: 'Open'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 'CCF-003',
@@ -620,7 +750,64 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           auditor: 'Security Team'
         }
       ]
-    }
+    },
+    securityGroups: [3, 6], // References incident response and enpoint protection
+    vulnerabilities: [
+      {
+        source: 'Tenable',
+        summary: 'Patch Management Issues',
+        vulnerabilities: [
+          {
+            name: 'CVE-2023-4567', 
+            category: 'Missing Security Updates',
+            date: getRelativeDate(-15),
+            text: 'Critical security patches missing on multiple production servers',
+            impact: 'Critical',
+            remediationSteps: [
+              'Deploy latest security patches',
+              'Update patch management system',
+              'Verify patch installation',
+              'Document exceptions'
+            ],
+            status: 'In Progress'
+          },
+          {
+            name: 'CVE-2023-4568',
+            category: 'Outdated Software',
+            date: getRelativeDate(-10),
+            text: 'End-of-life software versions running in production',
+            impact: 'High',
+            remediationSteps: [
+              'Identify all EOL software',
+              'Create upgrade schedule',
+              'Test upgrades in staging',
+              'Deploy to production'
+            ],
+            status: 'Open'
+          }
+        ]
+      },
+      {
+        source: 'Rapid7',
+        summary: 'System Vulnerabilities',
+        vulnerabilities: [
+          {
+            name: 'CVE-2023-4569',
+            category: 'System Configuration',
+            date: getRelativeDate(-7),
+            text: 'Misconfigured security settings on development servers',
+            impact: 'Medium',
+            remediationSteps: [
+              'Review security baselines',
+              'Update system configurations',
+              'Implement configuration monitoring',
+              'Document changes'
+            ],
+            status: 'Open'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 'CCF-004',
@@ -734,7 +921,64 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           auditor: 'Security Team'
         }
       ]
-    }
+    },
+    securityGroups: [3], // References incident response
+    vulnerabilities: [
+      {
+        source: 'Splunk',
+        summary: 'Alert Management',
+        vulnerabilities: [
+          {
+            name: 'SPLK-2023-001',
+            category: 'Alert Latency',
+            date: getRelativeDate(-7),
+            text: 'Critical alert notifications delayed by up to 15 minutes',
+            impact: 'Critical',
+            remediationSteps: [
+              'Optimize alert pipeline configuration',
+              'Increase alert processing resources',
+              'Implement redundant notification paths',
+              'Add alert delivery monitoring'
+            ],
+            status: 'In Progress'
+          },
+          {
+            name: 'SPLK-2023-002',
+            category: 'Log Coverage',
+            date: getRelativeDate(-5),
+            text: 'Missing log sources from critical systems',
+            impact: 'High',
+            remediationSteps: [
+              'Deploy log forwarders to all critical systems',
+              'Verify log ingestion paths',
+              'Update log source inventory',
+              'Configure log completeness monitoring'
+            ],
+            status: 'Open'
+          }
+        ]
+      },
+      {
+        source: 'PagerDuty',
+        summary: 'Incident Response',
+        vulnerabilities: [
+          {
+            name: 'PD-2023-123',
+            category: 'Response Time',
+            date: getRelativeDate(-3),
+            text: 'Incident escalation paths not following SLA requirements',
+            impact: 'High',
+            remediationSteps: [
+              'Update escalation policies',
+              'Configure SLA-based auto-escalation',
+              'Train response teams on new procedures',
+              'Implement response time tracking'
+            ],
+            status: 'Open'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 'CCF-005',
@@ -841,7 +1085,64 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           auditor: 'External Auditor'
         }
       ]
-    }
+    },
+    securityGroups: [7], // References data storage
+    vulnerabilities: [
+      {
+        source: 'Forcepoint - DLP',
+        summary: 'Data Retention Issues',
+        vulnerabilities: [
+          {
+            name: 'DLP-2023-001',
+            category: 'Data Lifecycle',
+            date: getRelativeDate(-20),
+            text: 'Customer data retained beyond retention period in analytics database',
+            impact: 'High',
+            remediationSteps: [
+              'Identify affected data records',
+              'Execute deletion scripts',
+              'Verify data removal',
+              'Document deletion process'
+            ],
+            status: 'Open'
+          },
+          {
+            name: 'DLP-2023-002', 
+            category: 'Data Classification',
+            date: getRelativeDate(-15),
+            text: 'Sensitive data stored in non-compliant storage locations',
+            impact: 'Critical',
+            remediationSteps: [
+              'Scan for misplaced sensitive data',
+              'Move data to approved storage',
+              'Update data handling procedures',
+              'Train teams on proper storage'
+            ],
+            status: 'In Progress'
+          }
+        ]
+      },
+      {
+        source: 'Atlan - Data Governance',
+        summary: 'Data Management Compliance',
+        vulnerabilities: [
+          {
+            name: 'DG-2023-003',
+            category: 'Data Disposal',
+            date: getRelativeDate(-10),
+            text: 'Automated data disposal scripts failing on legacy systems',
+            impact: 'Medium',
+            remediationSteps: [
+              'Debug disposal script errors',
+              'Update scripts for legacy systems',
+              'Test disposal process',
+              'Monitor execution'
+            ],
+            status: 'Open'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 'CCF-006',
@@ -932,7 +1233,64 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           auditor: 'Internal Audit Team'
         }
       ]
-    }
+    },
+    securityGroups: [0, 1, 3, 4, 5, 7], // References security awareness, data storage, access management and provisioning, data protection, endpoint protection and incident response
+    vulnerabilities: [
+      {
+        source: 'OneTrust - Vendor Risk Management',
+        summary: 'Vendor Access Control Issues',
+        vulnerabilities: [
+          {
+            name: 'CVE-2023-9901',
+            category: 'Access Control',
+            date: getRelativeDate(-20),
+            text: 'Vendor portal lacking proper access restrictions',
+            impact: 'Critical',
+            remediationSteps: [
+              'Implement role-based access control',
+              'Add MFA requirement for vendor access',
+              'Review and revoke unnecessary access',
+              'Update access policies'
+            ],
+            status: 'In Progress'
+          },
+          {
+            name: 'CVE-2023-9902', 
+            category: 'Third Party Risk',
+            date: getRelativeDate(-15),
+            text: 'Incomplete vendor security assessment records',
+            impact: 'High',
+            remediationSteps: [
+              'Complete missing vendor assessments',
+              'Update risk scoring model',
+              'Document vendor security requirements',
+              'Implement continuous monitoring'
+            ],
+            status: 'Open'
+          }
+        ]
+      },
+      {
+        source: 'Internal Audit',
+        summary: 'Vendor Management Gaps',
+        vulnerabilities: [
+          {
+            name: 'AUDIT-2023-112',
+            category: 'Process',
+            date: getRelativeDate(-10),
+            text: 'Inconsistent vendor offboarding procedures',
+            impact: 'Medium',
+            remediationSteps: [
+              'Document offboarding checklist',
+              'Automate access revocation',
+              'Implement vendor exit reviews',
+              'Create audit trail requirements'
+            ],
+            status: 'Open'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 'CCF-007',
@@ -1017,7 +1375,64 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           auditor: 'Change Advisory Board'
         }
       ]
-    }
+    },
+    securityGroups: [2], // References network security
+    vulnerabilities: [
+      {
+        source: 'ServiceNow Vulnerability Response',
+        summary: 'Change Management Issues',
+        vulnerabilities: [
+          {
+            name: 'CHG-2023-001',
+            category: 'Change Control',
+            date: getRelativeDate(-15),
+            text: 'Unauthorized changes detected in production environment',
+            impact: 'High',
+            remediationSteps: [
+              'Review change management process',
+              'Implement automated change detection',
+              'Enforce approval workflows',
+              'Audit unauthorized changes'
+            ],
+            status: 'In Progress'
+          },
+          {
+            name: 'CHG-2023-002',
+            category: 'Configuration Management',
+            date: getRelativeDate(-10),
+            text: 'Configuration drift detected across multiple systems',
+            impact: 'Medium',
+            remediationSteps: [
+              'Deploy configuration management tool',
+              'Establish baseline configurations',
+              'Implement drift detection',
+              'Schedule regular audits'
+            ],
+            status: 'Open'
+          }
+        ]
+      },
+      {
+        source: 'BMC Helix',
+        summary: 'Process Compliance',
+        vulnerabilities: [
+          {
+            name: 'ITIL-2023-003',
+            category: 'Change Documentation',
+            date: getRelativeDate(-7),
+            text: 'Incomplete change documentation for emergency changes',
+            impact: 'Medium',
+            remediationSteps: [
+              'Update emergency change procedure',
+              'Train staff on documentation requirements',
+              'Implement post-change review process',
+              'Monitor compliance'
+            ],
+            status: 'Open'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 'CCF-008',
@@ -1107,7 +1522,64 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           auditor: 'Independent AI Auditor'
         }
       ]
-    }
+    },
+    securityGroups: [0, 1, 4, 5, 7], 
+    vulnerabilities: [
+      {
+        source: 'Liminal',
+        summary: 'AI Model Vulnerabilities',
+        vulnerabilities: [
+          {
+            name: 'AI-2023-001',
+            category: 'Model Security',
+            date: getRelativeDate(-25),
+            text: 'Insufficient access controls on AI model training data',
+            impact: 'Critical',
+            remediationSteps: [
+              'Implement role-based access control for training data',
+              'Add audit logging for data access',
+              'Encrypt training datasets at rest',
+              'Review access permissions'
+            ],
+            status: 'In Progress'
+          },
+          {
+            name: 'AI-2023-002',
+            category: 'Model Transparency',
+            date: getRelativeDate(-20),
+            text: 'Lack of explainability metrics for critical AI decisions',
+            impact: 'High',
+            remediationSteps: [
+              'Implement SHAP value tracking',
+              'Add feature importance logging',
+              'Create decision audit trail',
+              'Document model logic'
+            ],
+            status: 'Open'
+          }
+        ]
+      },
+      {
+        source: 'Microsoft Azure ML',
+        summary: 'Model Governance Issues',
+        vulnerabilities: [
+          {
+            name: 'MLG-2023-003',
+            category: 'Compliance',
+            date: getRelativeDate(-15),
+            text: 'AI model versioning and tracking not meeting audit requirements',
+            impact: 'Medium',
+            remediationSteps: [
+              'Implement model version control',
+              'Add model performance tracking',
+              'Create model deployment logs',
+              'Document model lineage'
+            ],
+            status: 'Open'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 'CCF-009',
@@ -1202,7 +1674,64 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           auditor: 'HR Audit Team'
         }
       ]
-    }
+    },
+    securityGroups: [4], // References security awareness
+    vulnerabilities: [
+      {
+        source: 'KnowBe4 Security Awareness Platform',
+        summary: 'Training Compliance Issues',
+        vulnerabilities: [
+          {
+            name: 'TRAIN-2023-001',
+            category: 'Training Compliance',
+            date: getRelativeDate(-20),
+            text: 'Multiple departments below required security awareness training completion thresholds',
+            impact: 'High',
+            remediationSteps: [
+              'Generate department-level completion reports',
+              'Send escalation notices to department heads',
+              'Schedule makeup training sessions',
+              'Track completion progress weekly'
+            ],
+            status: 'In Progress'
+          },
+          {
+            name: 'TRAIN-2023-002',
+            category: 'Training Records',
+            date: getRelativeDate(-15), 
+            text: 'Missing training completion records for new employees',
+            impact: 'Medium',
+            remediationSteps: [
+              'Audit onboarding training records',
+              'Update training enrollment automation',
+              'Backfill missing records',
+              'Verify training system integration'
+            ],
+            status: 'Open'
+          }
+        ]
+      },
+      {
+        source: 'Cornerstone LMS Analytics',
+        summary: 'Training Platform Issues',
+        vulnerabilities: [
+          {
+            name: 'LMS-2023-003',
+            category: 'System Configuration',
+            date: getRelativeDate(-10),
+            text: 'Automated reminders not triggering for overdue training',
+            impact: 'Medium',
+            remediationSteps: [
+              'Debug reminder workflow configuration',
+              'Test reminder system functionality',
+              'Update notification templates',
+              'Monitor reminder delivery'
+            ],
+            status: 'Open'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 'CCF-010',
@@ -1295,7 +1824,64 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           auditor: 'Disaster Recovery Consultant'
         }
       ]
-    }
+    },
+    securityGroups: [2, 3, 7], // References network security, incident response and data storage
+    vulnerabilities: [
+      {
+        source: 'Veeam ONE',
+        summary: 'Backup and Recovery Issues',
+        vulnerabilities: [
+          {
+            name: 'BCK-2023-001',
+            category: 'Backup Configuration',
+            date: getRelativeDate(-20),
+            text: 'Backup retention policies not aligned with compliance requirements',
+            impact: 'High',
+            remediationSteps: [
+              'Review retention requirements',
+              'Update backup policies',
+              'Verify backup schedules',
+              'Test recovery procedures'
+            ],
+            status: 'In Progress'
+          },
+          {
+            name: 'BCK-2023-002',
+            category: 'Disaster Recovery',
+            date: getRelativeDate(-15),
+            text: 'Recovery time objectives not being met in failover tests',
+            impact: 'Critical',
+            remediationSteps: [
+              'Optimize recovery procedures',
+              'Upgrade backup infrastructure',
+              'Conduct failover testing',
+              'Document performance metrics'
+            ],
+            status: 'Open'
+          }
+        ]
+      },
+      {
+        source: 'Zerto Analytics',
+        summary: 'Replication Issues',
+        vulnerabilities: [
+          {
+            name: 'REP-2023-003',
+            category: 'Data Replication',
+            date: getRelativeDate(-10),
+            text: 'Offsite replication delays exceeding SLA thresholds',
+            impact: 'Medium',
+            remediationSteps: [
+              'Analyze network bandwidth',
+              'Optimize replication schedule',
+              'Monitor replication lag',
+              'Update SLA documentation'
+            ],
+            status: 'In Progress'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 'CCF-011',
@@ -1392,7 +1978,64 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           auditor: 'AI Governance Team'
         }
       ]
-    }
+    },
+    securityGroups: [0, 1, 4, 5, 7], 
+    vulnerabilities: [
+      {
+        source: 'Amazon SageMaker Model Monitor',
+        summary: 'Model Validation Issues',
+        vulnerabilities: [
+          {
+            name: 'MOD-2023-001',
+            category: 'Data Quality',
+            date: getRelativeDate(-25),
+            text: 'Data drift detected in production model features',
+            impact: 'High',
+            remediationSteps: [
+              'Analyze feature distribution changes',
+              'Retrain model with updated data',
+              'Implement automated drift detection',
+              'Update data validation pipeline'
+            ],
+            status: 'In Progress'
+          },
+          {
+            name: 'MOD-2023-002', 
+            category: 'Model Bias',
+            date: getRelativeDate(-20),
+            text: 'Gender bias detected in model predictions',
+            impact: 'Critical',
+            remediationSteps: [
+              'Audit training data for bias',
+              'Implement fairness metrics',
+              'Retrain with debiased dataset',
+              'Add bias monitoring checks'
+            ],
+            status: 'Open'
+          }
+        ]
+      },
+      {
+        source: 'MLflow Model Registry',
+        summary: 'Model Governance Issues',
+        vulnerabilities: [
+          {
+            name: 'MLF-2023-003',
+            category: 'Model Validation',
+            date: getRelativeDate(-15),
+            text: 'Missing validation steps in model deployment pipeline',
+            impact: 'Medium',
+            remediationSteps: [
+              'Update CI/CD pipeline',
+              'Add validation test suite',
+              'Implement quality gates',
+              'Document validation process'
+            ],
+            status: 'In Progress'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 'CCF-012',
@@ -1489,7 +2132,64 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           auditor: 'Privacy Consultant'
         }
       ]
-    }
+    },
+    securityGroups: [0, 1, 4, 5, 7], 
+    vulnerabilities: [
+      {
+        source: 'Datadog',
+        summary: 'Data Quality and Monitoring Issues',
+        vulnerabilities: [
+          {
+            name: 'DQ-2023-001',
+            category: 'Data Quality',
+            date: getRelativeDate(-20),
+            text: 'Missing data quality metrics for critical ML features',
+            impact: 'High',
+            remediationSteps: [
+              'Implement data quality monitoring',
+              'Set up metric thresholds',
+              'Create automated alerts',
+              'Document quality SLAs'
+            ],
+            status: 'In Progress'
+          },
+          {
+            name: 'DQ-2023-002',
+            category: 'Model Monitoring',
+            date: getRelativeDate(-15),
+            text: 'Insufficient monitoring coverage for production ML models',
+            impact: 'Critical',
+            remediationSteps: [
+              'Deploy model performance monitors',
+              'Set up prediction drift detection',
+              'Implement data drift alerts',
+              'Create monitoring dashboards'
+            ],
+            status: 'Open'
+          }
+        ]
+      },
+      {
+        source: 'Prometheus',
+        summary: 'Model Performance Issues',
+        vulnerabilities: [
+          {
+            name: 'ML-2023-003',
+            category: 'Performance Monitoring',
+            date: getRelativeDate(-10),
+            text: 'Model latency spikes exceeding SLA thresholds',
+            impact: 'Medium',
+            remediationSteps: [
+              'Analyze performance bottlenecks',
+              'Optimize model inference',
+              'Scale infrastructure resources',
+              'Update monitoring thresholds'
+            ],
+            status: 'In Progress'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 'CCF-013',
@@ -1578,6 +2278,63 @@ export const commonControlFrameworkData: CCFRequirement[] = [
           auditor: 'ML Ops Team'
         }
       ]
-    }
+    },
+    securityGroups: [0, 1, 4, 5, 7], 
+    vulnerabilities: [
+      {
+        source: 'Datadog ML Monitoring',
+        summary: 'Model Performance Issues',
+        vulnerabilities: [
+          {
+            name: 'ML-2023-001',
+            category: 'Model Drift',
+            date: getRelativeDate(-20),
+            text: 'Significant feature drift detected in production model inputs',
+            impact: 'High',
+            remediationSteps: [
+              'Analyze input distribution changes',
+              'Retrain model with recent data',
+              'Adjust drift detection thresholds',
+              'Update monitoring alerts'
+            ],
+            status: 'In Progress'
+          },
+          {
+            name: 'ML-2023-002',
+            category: 'Model Performance',
+            date: getRelativeDate(-15),
+            text: 'Model accuracy degradation beyond acceptable threshold',
+            impact: 'Critical', 
+            remediationSteps: [
+              'Investigate performance drop root cause',
+              'Collect additional training data',
+              'Tune model hyperparameters',
+              'Deploy model retraining pipeline'
+            ],
+            status: 'Open'
+          }
+        ]
+      },
+      {
+        source: 'Amazon SageMaker Model Monitor',
+        summary: 'Data Quality Issues',
+        vulnerabilities: [
+          {
+            name: 'MLQ-2023-003',
+            category: 'Data Quality',
+            date: getRelativeDate(-10),
+            text: 'Missing values detected in critical model features',
+            impact: 'Medium',
+            remediationSteps: [
+              'Audit data preprocessing pipeline',
+              'Implement data quality checks',
+              'Add missing value handling',
+              'Update data validation rules'
+            ],
+            status: 'In Progress'
+          }
+        ]
+      }
+    ]
   }
 ];

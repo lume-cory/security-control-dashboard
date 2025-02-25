@@ -10,6 +10,10 @@ import { FrameworkSelector } from './components/framework-selector'
 import { CommonControlFrameworkSection } from './components/common-control-framework-section'
 import { CCFRequirement } from './data/common-control-framework'
 import { AuditChat } from './components/audit-chat'
+import { SecurityControlGroupCards } from '../controlgroups/components/security-control-group-cards'
+import { securityControlGroups } from '../controlgroups/data/security-control-groups'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
 
 export type DetailViewType = 'compliance-mapper' | 'hippa' | 'dora' | 'soc2' | 'ccf' | null;
 
@@ -73,6 +77,15 @@ export const HomeViewComponent: React.FC<HomeViewProps> = ({
         selectedItems={selectedItems} 
         onRequirementClick={handleCCFClick}
       />
+
+      <Card>
+        <CardHeader>
+        <h2 className="text-xl font-bold">Security Control Groups</h2>
+        </CardHeader>
+        <CardContent>
+          <SecurityControlGroupCards securityControlGroups={securityControlGroups} />
+        </CardContent>
+      </Card>
 
       <AlignmentTrendSection selectedItems={selectedItems} />
 

@@ -8,6 +8,7 @@ import { useState } from "react"
 import { enrichedHippaArticles } from "./hippa-detail-view"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { enrichedSOC2Articles } from "../data/soc2-enriched-articles"
+import { Badge } from "@/components/ui/badge"
 
 interface BaseArticle {
   id: string;
@@ -43,8 +44,32 @@ interface BaseArticle {
   }>;
 }
 
+interface Article {
+  id: string;
+  name: string;
+  text: string;
+  type: string;
+  policies: any[];
+  impactedSystems: any[];
+  nonCompliantInstances: any[];
+  supportingEvidence?: any;
+  vulnerabilities?: Array<{
+    source: string;
+    summary: string;
+    vulnerabilities: Array<{
+      name: string;
+      category: string;
+      date: string;
+      text: string;
+      impact: 'Critical' | 'High' | 'Medium' | 'Low';
+      remediationSteps: string[];
+      status: 'Open' | 'In Progress' | 'Resolved' | 'Accepted';
+    }>;
+  }>;
+}
+
 interface ArticleDetailViewProps {
-  article: BaseArticle & {
+  article: Article & {
     supportingEvidence?: {
       configurations: Array<{
         tool: string;
@@ -268,6 +293,52 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
             </div>
         </div>
 
+        {/* Vulnerabilities Section - Only show if data exists */}
+        {article.vulnerabilities && article.vulnerabilities.length > 0 && (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Risks & Vulnerabilities</h3>
+            {article.vulnerabilities.map((source, idx) => (
+              <div key={idx} className="border rounded-lg p-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="font-semibold">{source.source}</h4>
+                  <span className="text-sm text-gray-500">{source.summary}</span>
+                </div>
+                <div className="space-y-4">
+                  {source.vulnerabilities.map((vuln, vIdx) => (
+                    <div key={vIdx} className="border-t pt-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="font-medium">{vuln.name}</span>
+                        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100">
+                          <div className={`w-2 h-2 rounded-full ${vuln.status === 'Open' ? 'bg-red-600' : vuln.status === 'In Progress' ? 'bg-yellow-600' : 'bg-green-600'}`} />
+                          {vuln.status}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <p className="text-gray-500">Category: <span className="text-gray-700">{vuln.category}</span></p>
+                          <p className="text-gray-500">Date: <span className="text-gray-700">{vuln.date}</span></p>
+                          <p className="text-gray-500">Impact: <span className={getImpactColor(vuln.impact)}>{vuln.impact}</span></p>
+                        </div>
+                        <div>
+                          <p className="text-gray-700">{vuln.text}</p>
+                        </div>
+                      </div>
+                      <div className="mt-2">
+                        <p className="text-gray-500 text-sm">Remediation Steps:</p>
+                        <ul className="list-disc list-inside text-sm text-gray-700 mt-1">
+                          {vuln.remediationSteps.map((step, sIdx) => (
+                            <li key={sIdx}>{step}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Impacted Systems */}
         <div>
             <h3 className="text-xl font-semibold">Impacted Systems</h3>
@@ -291,7 +362,16 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
             <div>
                 <h3 className="text-xl font-semibold">Security Tool Configurations</h3>
                 <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                {article.supportingEvidence.configurations.map((config, idx) => (
+                {article.supportingEvidence.configurations.map((config: {
+                  tool: string;
+                  type: string;
+                  evidence: {
+                    policyName: string;
+                    settings: Array<{ name: string; value: string }>;
+                    lastUpdated: string;
+                    version: string;
+                  };
+                }, idx: number) => (
                     <Card key={idx}>
                     <CardHeader>
                         <CardTitle className="text-base">{config.tool}</CardTitle>
@@ -320,7 +400,14 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
             <div>
                 <h3 className="text-xl font-semibold">Compliance Metrics</h3>
                 <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-4">
-                {article.supportingEvidence.metrics.map((metric, idx) => (
+                {article.supportingEvidence.metrics.map((metric: {
+                  name: string;
+                  current: number;
+                  target: number;
+                  trend: string;
+                  status: 'good' | 'bad' | 'neutral';
+                  history: Array<{ date: string; value: number }>;
+                }, idx: number) => (
                     <Card key={idx}>
                     <CardContent className="pt-6 flex flex-col items-center text-center">
                         {getTrendIcon(metric.trend, metric.status)}
@@ -341,7 +428,13 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
             <div>
                 <h3 className="text-xl font-semibold">Recent Audits</h3>
                 <div className="mt-2 space-y-4">
-                {article.supportingEvidence.audits.map((audit, idx) => (
+                {article.supportingEvidence.audits.map((audit: {
+                  date: string;
+                  type: string;
+                  scope: string;
+                  findings: string;
+                  auditor: string;
+                }, idx: number) => (
                     <Card key={idx}>
                     <CardContent className="pt-6">
                         <div className="flex justify-between mb-2">
@@ -369,4 +462,24 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
       </div>
     </div>
   )
+}
+
+// Helper functions
+const getStatusVariant = (status: string) => {
+  switch (status) {
+    case 'Open': return 'destructive'
+    case 'In Progress': return 'warning'
+    case 'Resolved': return 'success'
+    case 'Accepted': return 'secondary'
+    default: return 'default'
+  }
+}
+
+const getImpactColor = (impact: string) => {
+  switch (impact) {
+    case 'Critical': return 'text-red-600'
+    case 'High': return 'text-orange-500'
+    case 'Medium': return 'text-yellow-500'
+    default: return 'text-green-500'
+  }
 } 

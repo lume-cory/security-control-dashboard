@@ -7,6 +7,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/subframe/components/Button"
 import { Badge } from "@/components/ui/badge"
 import { ContractualObligation } from "../data/contractual-obligations"
+import { securityControlGroups } from "../../controlgroups/data/security-control-groups"
+
 
 interface CommonControlFrameworkSectionProps {
   selectedItems: Record<string, boolean>;
@@ -233,10 +235,10 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
                   </CardHeader>
                   <CardContent>
 
-                    {/* Two-column Grid */}
-                    <div className="grid grid-cols-2 gap-4 relative">
-                      {/* Left Side */}
-                      <div>
+                    {/* Three-column Grid */}
+                    <div className="grid grid-cols-3 gap-4 relative">
+                      {/* First Column - Policies */}
+                      <div className="pr-6">
                         {/* Active Policies */}
                         <div className="text-sm mb-4">
                           <div className="flex justify-between items-center">
@@ -250,10 +252,7 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
                               .filter(p => p.status === 'active')
                               .slice(0, 3)
                               .map(policy => (
-                                <span 
-                                  key={policy.id} 
-                                  className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100"
-                                >
+                                <span key={policy.id} className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100">
                                   <div className="w-2 h-2 rounded-full bg-green-600" />
                                   {policy.name}
                                 </span>
@@ -279,10 +278,7 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
                               .filter(p => p.status === 'suggested')
                               .slice(0, 3)
                               .map(policy => (
-                                <span 
-                                  key={policy.id} 
-                                  className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100"
-                                >
+                                <span key={policy.id} className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100">
                                   <div className="w-2 h-2 rounded-full bg-yellow-600" />
                                   {policy.name}
                                 </span>
@@ -296,13 +292,33 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
                         </div>
                       </div>
 
-                      {/* Vertical Divider */}
-                      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gray-200" />
+                      {/* Vertical Divider 1 */}
+                      <div className="absolute left-1/3 -ml-px top-0 bottom-0 w-px bg-gray-200 mx-6" />
 
-                      {/* Right Side */}
-                      <div className="pl-4">
-                        {/* Top Right - Tools */}
+                      {/* Second Column - Groups & Tools */}
+                      <div className="px-6">
+                        {/* Security Groups */}
                         <div className="text-sm mb-4">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-gray-500">Security Groups</span>
+                            <span className="text-lg font-bold">
+                              {requirement.securityGroups?.length || 0}
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-2 mt-1">
+                            {requirement.securityGroups?.map((groupIndex) => (
+                              <span key={groupIndex} className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100">
+                                {securityControlGroups[groupIndex].name}
+                              </span>
+                            ))}
+                            {(requirement.securityGroups?.length || 0) > 3 && (
+                              <span className="text-xs text-gray-500">+{requirement.securityGroups!.length - 3} more</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Security Tools & Controls */}
+                        <div className="text-sm">
                           {requirement.supportingEvidence?.configurations && (
                             <>
                               <div className="flex justify-between items-center">
@@ -324,9 +340,15 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
                             </>
                           )}
                         </div>
+                      </div>
 
-                        {/* Bottom Right - Non-compliant */}
-                        <div className="text-sm">
+                      {/* Vertical Divider 2 */}
+                      <div className="absolute left-2/3 -ml-px top-0 bottom-0 w-px bg-gray-200 mx-6" />
+
+                      {/* Third Column - Issues */}
+                      <div className="pl-6">
+                        {/* Non-Compliant Instances */}
+                        <div className="text-sm mb-4">
                           {requirement.nonCompliantInstances.length > 0 && (
                             <>
                               <div className="flex justify-between items-center">
@@ -347,6 +369,26 @@ export function CommonControlFrameworkSection({ selectedItems, onRequirementClic
                               </div>
                             </>
                           )}
+                        </div>
+
+                        {/* Risks & Vulnerabilities */}
+                        <div className="text-sm">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-gray-500">Risks & Vulnerabilities</span>
+                            <span className="text-lg font-bold text-yellow-600">
+                              {requirement.vulnerabilities?.length || 0}
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-2 mt-1">
+                            {requirement.vulnerabilities?.slice(0, 3).map((vuln, idx) => (
+                              <span key={idx} className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100">
+                                {vuln.vulnerabilities[0].category}
+                              </span>
+                            ))}
+                            {(requirement.vulnerabilities?.length || 0) > 3 && (
+                              <span className="text-xs text-gray-500">+{requirement.vulnerabilities!.length - 3} more</span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
