@@ -843,24 +843,23 @@ export const HippaDetailView: React.FC = () => {
 
   if (selectedArticle) {
     const enrichedArticle = {
-      id: selectedArticle.id || '',
-      name: selectedArticle.name || '',
-      text: selectedArticle.text || '',
-      policies: selectedArticle.policies || [],
+      ...selectedArticle,
+      type: 'hipaa',
+      policies: selectedArticle.policies.map(p => ({
+        id: p.id,
+        name: p.name,
+        description: p.description,
+        policyText: p.policyText || '',
+        status: p.status || 'active',
+        link: p.link
+      })),
       impactedSystems: selectedArticle.impactedSystems || [],
       nonCompliantInstances: selectedArticle.nonCompliantInstances || [],
       supportingEvidence: {
         configurations: selectedArticle.supportingEvidence?.configurations || [],
-        metrics: selectedArticle.supportingEvidence?.metrics.map((metric: {
-          name: string;
-          current: number;
-          target: number;
-          trend: string;
-          status: string;
-          history: Array<{ date: string; value: number }>;
-        }) => ({
+        metrics: selectedArticle.supportingEvidence?.metrics.map(metric => ({
           ...metric,
-          status: metric.status as 'good' | 'bad' | 'neutral'
+          status: metric.status as 'good' | 'neutral' | 'bad'
         })) || [],
         audits: selectedArticle.supportingEvidence?.audits || []
       }

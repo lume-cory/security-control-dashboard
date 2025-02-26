@@ -37,6 +37,7 @@ export const Soc2DetailView: React.FC = () => {
   if (selectedArticle) {
     const enrichedArticle = {
       ...selectedArticle,
+      type: 'soc2',
       policies: selectedArticle.policies.map(p => ({
         id: p.id,
         name: p.name,
