@@ -18,6 +18,17 @@ interface SecurityControlGroupCardsProps {
 export function SecurityControlGroupCards({ securityControlGroups }: SecurityControlGroupCardsProps) {
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null)
 
+  const getEffectivenessColor = (effectiveness: number, asTailwind = false) => {
+    if (asTailwind) {
+      return effectiveness >= 90 ? 'bg-green-600' : 
+             effectiveness >= 70 ? 'bg-yellow-600' : 
+             'bg-red-600'
+    }
+    return effectiveness >= 90 ? '#16a34a' : // green-600
+           effectiveness >= 70 ? '#ca8a04' : // yellow-600
+           '#dc2626' // red-600
+  }
+
   const handleCardClick = (themeName: string) => {
     setSelectedTheme(themeName)
   }
@@ -43,36 +54,51 @@ export function SecurityControlGroupCards({ securityControlGroups }: SecurityCon
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {securityControlGroups.map((theme, index) => (
-          <Card key={index} className="flex flex-col cursor-pointer" onClick={() => handleCardClick(theme.name)}>
+          <Card key={index} className="flex flex-col cursor-pointer overflow-hidden hover:bg-gray-50" onClick={() => handleCardClick(theme.name)}>
+            <div className="h-2" style={{ backgroundColor: getEffectivenessColor(theme.effectiveness) }}></div>
             <CardHeader className="flex-grow pb-0">
               <div className="flex justify-between items-center">
                 <CardTitle className="text-lg">{theme.name}</CardTitle>
-                <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs bg-gray-100">
-                  <div className={`w-2 h-2 rounded-full ${
-                    theme.effectiveness >= 80 ? 'bg-green-600' : 
-                    theme.effectiveness >= 60 ? 'bg-yellow-600' : 
-                    'bg-red-600'
-                  }`} />
+                <span className="inline-flex font-medium items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-gray-100">
+                  <div className={`w-2.5 h-2.5 rounded-full ${getEffectivenessColor(theme.effectiveness, true)}`} />
                   {`Effectiveness: ${theme.effectiveness}%`}
                 </span>
               </div>
             </CardHeader>
             <CardContent className="pt-0">
               <div className="text-sm my-2 p-2 rounded">
-                <div className="grid grid-cols-2 gap-2">
-                  <p><span className="font-semibold">Framework Controls:</span> {theme.controls}</p>
-                  <p><span className="font-semibold">Security Resources:</span> {theme.resources}</p>
-                  <p><span className="font-semibold">Metrics:</span> {theme.metrics}</p>
-                  <p><span className="font-semibold">Findings & Responses:</span> {theme.findings}</p>
+                <div className="grid grid-cols-2 divide-x divide-gray-200 gap-4">
+                  <div className="space-y-2">
+                    <p className="flex justify-between items-baseline">
+                      <span className="text-sm font-medium text-gray-500">Framework Controls:</span>
+                      <span className="font-semibold text-base">{theme.controls}</span>
+                    </p>
+                    <p className="flex justify-between items-baseline">
+                      <span className="text-sm font-medium text-gray-500">Security Resources:</span>
+                      <span className="font-semibold text-base">{theme.resources}</span>
+                    </p>
+                  </div>
+                  <div className="space-y-2 pl-4">
+                    <p className="flex justify-between items-baseline">
+                      <span className="text-sm font-medium text-gray-500">Metrics:</span>
+                      <span className="font-semibold text-base">{theme.metrics}</span>
+                    </p>
+                    <p className="flex justify-between items-baseline">
+                      <span className="text-sm font-medium text-gray-500">Findings & Responses:</span>
+                      <span className="font-semibold text-base">{theme.findings}</span>
+                    </p>
+                  </div>
                 </div>
               </div>
               <div className="text-sm mt-2 p-2">
                 <div className="flex justify-between items-start">
-                  <p className="font-semibold">Finding:</p>
+                  <p className="font-semibold">Key Finding:</p>
                 </div>
-                <p>{theme.criticalFinding}</p>
+                <p className="text-sm font-medium text-gray-500">{theme.criticalFinding}</p>
               </div>
-              <Button variant="brand-secondary" className="font-semibold hover:underline">see more...</Button>
+              {/* <div className="flex mt-3 justify-center">
+                <Button variant="brand-secondary" className="font-semibold hover:underline">see more...</Button>
+              </div> */}
             </CardContent>
           </Card>
         ))}

@@ -12,7 +12,7 @@ export interface SecurityControlGroup {
 export const securityControlGroups: SecurityControlGroup[] = [
   {
     name: "Access Management",
-    effectiveness: 75,
+    effectiveness: 85,
     controls: 9,
     resources: 9,
     metrics: 9,
@@ -22,7 +22,7 @@ export const securityControlGroups: SecurityControlGroup[] = [
   },
   {
     name: "Data Protection",
-    effectiveness: 60,
+    effectiveness: 71,
     controls: 7,
     resources: 6,
     metrics: 8,
@@ -32,7 +32,7 @@ export const securityControlGroups: SecurityControlGroup[] = [
   },
   {
     name: "Network Security",
-    effectiveness: 80,
+    effectiveness: 92,
     controls: 8,
     resources: 7,
     metrics: 9,
@@ -42,7 +42,7 @@ export const securityControlGroups: SecurityControlGroup[] = [
   },
   {
     name: "Incident Response",
-    effectiveness: 70,
+    effectiveness: 91,
     controls: 6,
     resources: 5,
     metrics: 7,
@@ -62,7 +62,7 @@ export const securityControlGroups: SecurityControlGroup[] = [
   },
   {
     name: "Provisioning",
-    effectiveness: 55,
+    effectiveness: 65,
     controls: 7,
     resources: 6,
     metrics: 9,
@@ -82,7 +82,7 @@ export const securityControlGroups: SecurityControlGroup[] = [
   },
   {
     name: "Data Storage",
-    effectiveness: 72,
+    effectiveness: 92,
     controls: 10,
     resources: 7,
     metrics: 9,
