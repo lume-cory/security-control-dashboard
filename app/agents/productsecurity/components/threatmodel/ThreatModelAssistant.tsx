@@ -344,7 +344,7 @@ export default function ThreatModelAssistant({ typingSpeed = 2000 }: ComponentPr
                 </div>
               </div>
 
-              <div className={section.isEditing ? 'opacity-50' : ''}>
+              <div className={`${section.isEditing ? 'opacity-50' : ''} border rounded-lg p-4`}>
                 {index === 0 && (
                   <SystemDescription
                     typingSpeed={section.status === 'GENERATING' ? 5 : 0}

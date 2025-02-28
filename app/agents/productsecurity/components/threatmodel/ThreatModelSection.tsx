@@ -72,7 +72,7 @@ export function ThreatModelSection() {
                             <div
                                 key={assessment.id}
                                 onClick={() => setSelectedAssessment(assessment)}
-                                className="cursor-pointer rounded-md border p-4 hover:border-brand-primary hover:bg-neutral-50"
+                                className="cursor-pointer rounded-md border p-4 hover:bg-gray-50"
                             >
                                 <div className="flex flex-col gap-1 mb-4">
                                     <div className="flex items-center justify-between">
@@ -122,17 +122,15 @@ export function ThreatModelSection() {
                                                 <span className="text-muted-foreground truncate pr-2">
                                                     {mitigation.name}
                                                 </span>
-                                                <Badge 
-                                                    variant={
-                                                        mitigation.status === 'IMPLEMENTED' ? 'success' :
-                                                        mitigation.status === 'IN_PROGRESS' ? 'warning' :
-                                                        mitigation.status === 'PLANNED' ? 'neutral' :
-                                                        'error'
-                                                    }
-                                                    className="whitespace-nowrap"
-                                                >
+                                                <span className="inline-flex font-base items-center gap-1 px-2 py-1 rounded-full text-xs bg-gray-100">
+                                                    <div className={`w-2 h-2 rounded-full ${
+                                                        mitigation.status === 'IMPLEMENTED' ? 'bg-green-500' :
+                                                        mitigation.status === 'IN_PROGRESS' ? 'bg-yellow-500' :
+                                                        mitigation.status === 'PLANNED' ? 'bg-yellow-500' :
+                                                        'bg-red-500'
+                                                    }`} />
                                                     {mitigation.status.replace('_', ' ')}
-                                                </Badge>
+                                                </span>
                                             </div>
                                         ))}
                                     </div>
