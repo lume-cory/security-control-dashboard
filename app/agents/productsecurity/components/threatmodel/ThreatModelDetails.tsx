@@ -15,6 +15,7 @@ export function ThreatModelDetails({ assessment }: { assessment: ThreatModelAsse
         }))
     }
 
+    
     const handleSave = (section: string) => {
         setEditingSections(prev => ({
             ...prev,
