@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { DefaultPageLayout } from "@/subframe/layouts/DefaultPageLayout";
 import { IconWithBackground } from "@/subframe/components/IconWithBackground";
 import { Breadcrumbs } from "@/subframe/components/Breadcrumbs";
@@ -8,61 +8,18 @@ import { Button } from "@/subframe/components/Button";
 import * as SubframeCore from "@subframe/core";
 import { FilterBadge } from "@/subframe/components/FilterBadge";
 import { Badge } from "@/subframe/components/Badge";
-import { Table } from "@/subframe/components/Table";
 import { useRouter } from "next/navigation";
-import { useState } from 'react'
-import { SuggestedModifications } from './suggested-modifications'
-import { QuestionsTable } from './questions-table'
-import AddIntegrationDialog from "./AddIntegrationDialog";
-import { ChatDrawer } from './ChatDrawer'
+import { SuggestedModifications } from './components/suggested-modifications'
+import { QuestionsTable } from './components/questions-table'
+import AddIntegrationDialog from "./components/AddIntegrationDialog";
+import { ChatDrawer } from './components/ChatDrawer'
+import { Integration, integrations as defaultIntegrations } from './data/integrations-data'
 
 
 function SecurityHelpDeskAgent() {
   const router = useRouter();
+  const [integrations, setIntegrations] = useState<Integration[]>(defaultIntegrations)
 
-  const [integrations, setIntegrations] = useState<Array<{
-    name: string;
-    subtitle: string;
-    icon: SubframeCore.IconName;
-    link: string;
-  }>>([
-    {
-      name: "Slack Channels",
-      subtitle: "10k+ messages",
-      icon: "FeatherSlack",
-      link: "#"
-    },
-    {
-      name: "Security Policy Docs",
-      subtitle: "150 files",
-      icon: "FeatherFile",
-      link: "#"
-    },
-    {
-      name: "Security Tickets",
-      subtitle: "2.5k ticket threads",
-      icon: "FeatherTicket",
-      link: "#"
-    },
-    {
-      name: "Security Design Reviews",
-      subtitle: "320 files",
-      icon: "FeatherFile",
-      link: "#"
-    }, 
-    {
-      name: "Security & Compliance Tools",
-      subtitle: "197 configurations",
-      icon: "FeatherTool",
-      link: "#"
-    }, 
-    {
-      name: "Knowledge Base",
-      subtitle: "57 articles",
-      icon: "FeatherBook",
-      link: "#"
-    }
-  ])
   const [newIntegration, setNewIntegration] = useState('')
   const [, setNewFile] = useState<File | null>(null)
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
@@ -70,7 +27,12 @@ function SecurityHelpDeskAgent() {
 
   const addIntegration = () => {
     if (newIntegration) {
-      setIntegrations([...integrations, { name: newIntegration, icon: 'FeatherFile', subtitle: '', link: "#" }])
+      setIntegrations([...integrations, { 
+        name: newIntegration, 
+        icon: 'FeatherFile', 
+        subtitle: '', 
+        link: "#" 
+      }])
       setNewIntegration('')
       setIsAddDialogOpen(false)
     }
@@ -82,7 +44,12 @@ function SecurityHelpDeskAgent() {
     const file = files[0]
     if (file) {
       setNewFile(file)
-      setIntegrations([...integrations, { name: `Uploaded: ${file.name}`, icon: 'FeatherFile', subtitle: '', link: "#" }])
+      setIntegrations([...integrations, { 
+        name: `Uploaded: ${file.name}`, 
+        icon: 'FeatherFile', 
+        subtitle: '', 
+        link: "#" 
+      }])
       setIsAddDialogOpen(false)
     }
   }
@@ -124,16 +91,14 @@ function SecurityHelpDeskAgent() {
                 <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font" >
                   Integrations and Data Sources
                 </span>
-                < Button
-                  className="h-6 w-auto flex-none"
-                  disabled={false}
-                  variant="brand-primary"
-                  icon="FeatherPlus"
-                  loading={false}
-                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => { addIntegration(); }}
-                >
-                  Add
-                </Button>
+                <AddIntegrationDialog
+                  isAddDialogOpen={isAddDialogOpen}
+                  setIsAddDialogOpen={setIsAddDialogOpen}
+                  newIntegration={newIntegration}
+                  setNewIntegration={setNewIntegration}
+                  addIntegration={addIntegration}
+                  handleFileUpload={handleFileUpload}
+                />
               </div>
               < div className="flex w-full items-start gap-4" >
                 {integrations.map(({ name, link, subtitle, icon }, i) => {

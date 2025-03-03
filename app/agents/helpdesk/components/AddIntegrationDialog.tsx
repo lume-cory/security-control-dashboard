@@ -24,7 +24,13 @@ export default function AddIntegrationDialog({
   return (
     <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
       <DialogTrigger asChild>
-        <Button>Add New</Button>
+        <Button
+          className="h-6 w-auto flex-none"
+          variant="brand-primary"
+          icon="FeatherPlus"
+        >
+          Add
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
