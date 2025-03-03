@@ -34,10 +34,10 @@ function AgentsLandingPage() {
       path: "/agents/compliancepolicyreview"
     },
     {
-      title: "Customer Requirement Review Agent",
-      description: "Parse RFP, Questionnaire, or contract from customers for specific questions or requirements, analyzing them against the organization's security policy and generating suggested responses",
+      title: "Contract Obligations Reviewer",
+      description: "Analyze contracts from customers, vendors, insurance, etc. comparing obligations against our organization's security policy. Also check for non-compliance when polices are updated.",
       thumbnail: "/thumbnails/4.svg",
-      path: "/agents/clientrequirements"
+      path: "/agents/contractobligations"
     },
     {
       title: "3rd Party Risk Review Agent",

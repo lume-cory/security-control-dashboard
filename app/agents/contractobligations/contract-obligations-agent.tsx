@@ -30,7 +30,7 @@ import { ClientRequirementsDrawer } from './components/client-requirements-drawe
 import { mockPolicyExceptions } from './data/mock-policy-exceptions'
 import { cn } from '@/lib/utils'
 
-export default function ClientSecurityRequirementsCheck() {
+export default function ContractObligationsAgent() {
   const router = useRouter()
 
   const [contractAnalysis, setContractAnalysis] = useState<any>(null)
@@ -131,12 +131,12 @@ export default function ClientSecurityRequirementsCheck() {
             <Breadcrumbs.Item onClick={() => router.push('/agents')}>Agents </Breadcrumbs.Item>
             < Breadcrumbs.Divider />
             <Breadcrumbs.Item active={true}>
-               Customer Requirement Review Agent
+               Contract Obligation Assessment Agent
             </Breadcrumbs.Item>
           </Breadcrumbs>
         </div>
 
-    <div className="container mx-auto p-4">
+    <div className="w-full p-4">
 
       {/* Action Buttons */}
       <div className="flex space-x-4 mb-6">
@@ -147,13 +147,13 @@ export default function ClientSecurityRequirementsCheck() {
               variant="brand-secondary"
               icon="FeatherCheckSquare"
             >
-              Check New Customer RFP, Questionnaire, or Contract
+              Analyze Contract Obligations
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Check Customer Requirements</DialogTitle>
-              <DialogDescription>Upload a contract, questionnaire, or RFP to check its requirements against existing policies.</DialogDescription>
+              <DialogTitle>Analyze Contract Obligations</DialogTitle>
+              <DialogDescription>Upload a contract, questionnaire, or RFP to check its obligations against existing policies.</DialogDescription>
             </DialogHeader>
             <Label htmlFor="contract-check" className="cursor-pointer">
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
@@ -193,8 +193,8 @@ export default function ClientSecurityRequirementsCheck() {
       {/* Client Requirements Overview Section */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>Client Requirements Overview</CardTitle>
-          <CardDescription>Status of security requirements by client</CardDescription>
+          <CardTitle>Contract Obligations Overview</CardTitle>
+          <CardDescription>Status of security obligations by contract</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex gap-6">
@@ -202,7 +202,7 @@ export default function ClientSecurityRequirementsCheck() {
             <div className="flex flex-col gap-4 w-1/3 pt-6">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Client Requirements Not Met</CardTitle>
+                  <CardTitle className="text-sm font-medium">Obligations Not Met</CardTitle>
                   <AlertTriangle className="h-4 w-4 text-yellow-500" />
                 </CardHeader>
                 <CardContent>
@@ -215,7 +215,7 @@ export default function ClientSecurityRequirementsCheck() {
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Client Requirements Met</CardTitle>
+                  <CardTitle className="text-sm font-medium">Obligations Met</CardTitle>
                   <CheckSquare className="h-4 w-4 text-green-500" />
                 </CardHeader>
                 <CardContent>
@@ -233,7 +233,7 @@ export default function ClientSecurityRequirementsCheck() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Client Name</TableHead>
+                    <TableHead>Contract Entity</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Met</TableHead>
                     <TableHead>Unmet</TableHead>
@@ -281,8 +281,8 @@ export default function ClientSecurityRequirementsCheck() {
       {/* Company Policies Section */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>Company Policies</CardTitle>
-          <CardDescription>Company security policies and clients that require it</CardDescription>
+          <CardTitle>Organization Policies</CardTitle>
+          <CardDescription>Organziation security policies and contract entities that require it</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -290,7 +290,7 @@ export default function ClientSecurityRequirementsCheck() {
               <TableRow>
                 <TableHead>Policy</TableHead>
                 <TableHead>Description</TableHead>
-                <TableHead>Clients</TableHead>
+                <TableHead>Contract Entities</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -317,13 +317,13 @@ export default function ClientSecurityRequirementsCheck() {
       <Card>
         <CardHeader>
           <CardTitle>Policy Exceptions</CardTitle>
-          <CardDescription>Exceptions to company security policies across different client contracts</CardDescription>
+          <CardDescription>Exceptions to organization security policies across different contract entities</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Company Policy</TableHead>
+                <TableHead>Organization Policy</TableHead>
                 <TableHead>Description</TableHead>
                 <TableHead>Exceptions</TableHead>
               </TableRow>
