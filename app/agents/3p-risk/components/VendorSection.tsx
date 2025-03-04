@@ -45,6 +45,7 @@ export function VendorSection() {
                     vendor.status === 'NON_COMPLIANT' ? 'error' :
                     vendor.status === 'COMPLIANT_WITH_EXCEPTION' ? 'success' :
                     vendor.status === 'MORE_INFO_REQUESTED' ? 'warning' :
+                    vendor.status === 'UNCONFIRMED' ? 'neutral' :
                     vendor.status === 'SUSPENDED' ? 'error' : 'warning'
                   } className="text-xs">
                     {vendor.status}

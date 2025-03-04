@@ -7,7 +7,8 @@ type VendorStatus =
   | 'NON_COMPLIANT' 
   | 'COMPLIANT_WITH_EXCEPTION' 
   | 'PENDING_REVIEW'
-  | 'SUSPENDED';
+  | 'SUSPENDED'
+  | 'UNCONFIRMED';
 
 type ComplianceStatus = 'EXCEEDED' | 'MET' | 'NOT_MET' | 'NOT_ASSESSED' | 'EXCEPTION';
 
@@ -97,6 +98,12 @@ interface Vendor {
   status: VendorStatus;
   category: string;
   lastReviewDate: string;
+  submittedBy?: {
+    name: string;
+    type: 'AI Agent' | 'Employee' | 'System';
+    source?: string;
+    date: string;
+  };
   assessmentStatus: {
     lastAssessment: string;
     nextAssessmentDue: string;
@@ -185,6 +192,12 @@ export const vendors: Vendor[] = [
     status: "NON_COMPLIANT",
     category: "Infrastructure",
     lastReviewDate: getRelativeDate(DemoDateOffsets.lastReviewDate),
+    submittedBy: {
+      name: "VendorSecurity AI",
+      type: "AI Agent",
+      source: "Slack #devops-infra",
+      date: getRelativeDate(DemoDateOffsets.alertCreated)
+    },
     assessmentStatus: {
       lastAssessment: getRelativeDate(DemoDateOffsets.lastAssessment),
       nextAssessmentDue: getRelativeDate(DemoDateOffsets.nextAssessmentDue),
@@ -285,6 +298,12 @@ export const vendors: Vendor[] = [
     status: "COMPLIANT",
     category: "IAM",
     lastReviewDate: getRelativeDate(DemoDateOffsets.lastReviewDate - 5),
+    submittedBy: {
+      name: "Jane Doe",
+      type: "Employee",
+      source: "Direct",
+      date: getRelativeDate(DemoDateOffsets.alertCreated)
+    },
     assessmentStatus: {
       lastAssessment: getRelativeDate(DemoDateOffsets.lastAssessment - 10),
       nextAssessmentDue: getRelativeDate(DemoDateOffsets.nextAssessmentDue + 30),
@@ -369,6 +388,12 @@ export const vendors: Vendor[] = [
     status: "PENDING_REVIEW",
     category: "Storage",
     lastReviewDate: getRelativeDate(DemoDateOffsets.lastReviewDate - 12),
+    submittedBy: {
+      name: "John Smith",
+      type: "Employee",
+      source: "Direct",
+      date: getRelativeDate(DemoDateOffsets.alertCreated)
+    },
     assessmentStatus: {
       lastAssessment: getRelativeDate(DemoDateOffsets.lastAssessment - 23),
       nextAssessmentDue: getRelativeDate(DemoDateOffsets.nextAssessmentDue - 32),
@@ -436,6 +461,230 @@ export const vendors: Vendor[] = [
         assignedTo: "Security Team",
         description: "Implement encryption for data in transit and at rest",
         lastUpdated: getRelativeDate(DemoDateOffsets.actionPlanLastUpdated)
+      }
+    ]
+  },
+  {
+    id: "4",
+    name: "MongoDB Atlas",
+    description: "Cloud database service for modern applications",
+    website: "https://www.mongodb.com/atlas",
+    trustCenterUrl: "https://www.mongodb.com/trust",
+    pointOfContact: {
+      name: "Sarah Chen",
+      email: "sarah.chen@company.com"
+    },
+    riskLevel: "Medium",
+    status: "UNCONFIRMED",
+    category: "Database",
+    lastReviewDate: getRelativeDate(DemoDateOffsets.alertCreated),
+    submittedBy: {
+      name: "VendorSecurity AI",
+      type: "AI Agent",
+      source: "Slack #eng-infrastructure",
+      date: getRelativeDate(DemoDateOffsets.alertCreated)
+    },
+    assessmentStatus: {
+      lastAssessment: "Not assessed",
+      nextAssessmentDue: getRelativeDate(DemoDateOffsets.alertCreated + 14),
+      assessmentFrequency: "ANNUAL"
+    },
+    certifications: [
+      {
+        name: "SOC 2 Type II",
+        issuer: "AICPA",
+        validUntil: getRelativeDate(DemoDateOffsets.certificationExpiry + 120),
+        documentUrl: "https://www.mongodb.com/cloud/trust/compliance/soc",
+        lastVerified: getRelativeDate(DemoDateOffsets.alertCreated)
+      },
+      {
+        name: "ISO 27001",
+        issuer: "BSI",
+        validUntil: getRelativeDate(DemoDateOffsets.certificationExpiry + 90),
+        documentUrl: "https://www.mongodb.com/cloud/trust/compliance/iso-27001",
+        lastVerified: getRelativeDate(DemoDateOffsets.alertCreated)
+      },
+      {
+        name: "HIPAA",
+        issuer: "Coalfire",
+        validUntil: getRelativeDate(DemoDateOffsets.certificationExpiry + 180),
+        documentUrl: "https://www.mongodb.com/cloud/trust/compliance/hipaa",
+        lastVerified: getRelativeDate(DemoDateOffsets.alertCreated)
+      }
+    ],
+    documents: [
+      {
+        id: "doc-mongo-1",
+        type: "CERTIFICATION",
+        name: "SOC 2 Type II Report",
+        url: "https://www.mongodb.com/cloud/trust/compliance/soc",
+        uploadDate: getRelativeDate(DemoDateOffsets.alertCreated),
+        lastVerified: getRelativeDate(DemoDateOffsets.alertCreated),
+        status: "CURRENT"
+      },
+      {
+        id: "doc-mongo-2",
+        type: "POLICY",
+        name: "MongoDB Atlas Security Controls",
+        url: "https://www.mongodb.com/cloud/trust/security-controls",
+        uploadDate: getRelativeDate(DemoDateOffsets.alertCreated),
+        lastVerified: getRelativeDate(DemoDateOffsets.alertCreated),
+        status: "CURRENT"
+      },
+      {
+        id: "doc-mongo-3",
+        type: "ATTESTATION",
+        name: "MongoDB Atlas Data Processing Addendum",
+        url: "https://www.mongodb.com/cloud/trust/dpa",
+        uploadDate: getRelativeDate(DemoDateOffsets.alertCreated),
+        lastVerified: getRelativeDate(DemoDateOffsets.alertCreated),
+        status: "CURRENT"
+      }
+    ],
+    policyCompliance: [
+      {
+        policyId: "SEC-DB-001",
+        policyName: "Database Security Policy",
+        requirementGroups: [
+          {
+            groupId: "SEC-DB-001-01",
+            groupName: "Access Control",
+            status: "MET",
+            lastAssessed: getRelativeDate(DemoDateOffsets.alertCreated),
+            evidence: [
+              {
+                id: "ev-mongo-1",
+                name: "MongoDB Atlas Access Controls",
+                type: "POLICY",
+                description: "Documentation on MongoDB Atlas access control mechanisms",
+                collectedDate: getRelativeDate(DemoDateOffsets.alertCreated),
+                isNew: true,
+                status: "NEEDS_REVIEW"
+              }
+            ]
+          },
+          {
+            groupId: "SEC-DB-001-02",
+            groupName: "Encryption",
+            status: "MET",
+            lastAssessed: getRelativeDate(DemoDateOffsets.alertCreated),
+            evidence: [
+              {
+                id: "ev-mongo-2",
+                name: "MongoDB Atlas Encryption",
+                type: "POLICY",
+                description: "Documentation on MongoDB Atlas encryption capabilities",
+                collectedDate: getRelativeDate(DemoDateOffsets.alertCreated),
+                isNew: true,
+                status: "NEEDS_REVIEW"
+              }
+            ]
+          },
+          {
+            groupId: "SEC-DB-001-03",
+            groupName: "Backup and Recovery",
+            status: "MET",
+            lastAssessed: getRelativeDate(DemoDateOffsets.alertCreated),
+            evidence: [
+              {
+                id: "ev-mongo-3",
+                name: "MongoDB Atlas Backup",
+                type: "POLICY",
+                description: "Documentation on MongoDB Atlas backup capabilities",
+                collectedDate: getRelativeDate(DemoDateOffsets.alertCreated),
+                isNew: true,
+                status: "NEEDS_REVIEW"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        policyId: "SEC-CLOUD-001",
+        policyName: "Cloud Services Security Policy",
+        requirementGroups: [
+          {
+            groupId: "SEC-CLOUD-001-01",
+            groupName: "Cloud Provider Security",
+            status: "MET",
+            lastAssessed: getRelativeDate(DemoDateOffsets.alertCreated),
+            evidence: [
+              {
+                id: "ev-mongo-4",
+                name: "MongoDB Atlas Security Architecture",
+                type: "POLICY",
+                description: "Documentation on MongoDB Atlas security architecture",
+                collectedDate: getRelativeDate(DemoDateOffsets.alertCreated),
+                isNew: true,
+                status: "NEEDS_REVIEW"
+              }
+            ]
+          },
+          {
+            groupId: "SEC-CLOUD-001-02",
+            groupName: "Data Residency",
+            status: "MET",
+            lastAssessed: getRelativeDate(DemoDateOffsets.alertCreated),
+            evidence: [
+              {
+                id: "ev-mongo-5",
+                name: "MongoDB Atlas Data Residency",
+                type: "POLICY",
+                description: "Documentation on MongoDB Atlas data residency options",
+                collectedDate: getRelativeDate(DemoDateOffsets.alertCreated),
+                isNew: true,
+                status: "NEEDS_REVIEW"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    criticalDates: {
+      contractRenewal: "Not established",
+      nextAssessment: getRelativeDate(DemoDateOffsets.alertCreated + 14),
+      certificationRenewals: [
+        {
+          certificationType: "SOC 2 Type II",
+          dueDate: getRelativeDate(DemoDateOffsets.certificationExpiry + 120)
+        },
+        {
+          certificationType: "ISO 27001",
+          dueDate: getRelativeDate(DemoDateOffsets.certificationExpiry + 90)
+        }
+      ]
+    },
+    questionnaires: [
+      {
+        id: "q-mongo-1",
+        sentDate: getRelativeDate(DemoDateOffsets.alertCreated),
+        dueDate: getRelativeDate(DemoDateOffsets.alertCreated + 14),
+        status: "SENT",
+        responses: []
+      }
+    ],
+    actionPlans: [
+      {
+        id: "ap-mongo-1",
+        issue: "Initial Security Assessment",
+        riskLevel: "Medium",
+        status: "OPEN",
+        type: "REMEDIATION",
+        dueDate: getRelativeDate(DemoDateOffsets.alertCreated + 14),
+        assignedTo: "Security Team",
+        description: "Complete initial security assessment for MongoDB Atlas based on Slack conversation",
+        lastUpdated: getRelativeDate(DemoDateOffsets.alertCreated)
+      },
+      {
+        id: "ap-mongo-2",
+        issue: "Verify Data Classification Requirements",
+        riskLevel: "Medium",
+        status: "OPEN",
+        type: "REMEDIATION",
+        dueDate: getRelativeDate(DemoDateOffsets.alertCreated + 7),
+        assignedTo: "Sarah Chen",
+        description: "Verify data classification requirements for the user analytics service",
+        lastUpdated: getRelativeDate(DemoDateOffsets.alertCreated)
       }
     ]
   }
