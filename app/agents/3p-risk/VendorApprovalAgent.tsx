@@ -4,15 +4,10 @@ import React from "react";
 import { DefaultPageLayout } from "@/subframe/layouts/DefaultPageLayout";
 import { IconWithBackground } from "@/subframe/components/IconWithBackground";
 import { Breadcrumbs } from "@/subframe/components/Breadcrumbs";
-import { Button } from "@/subframe/components/Button";
 import * as SubframeCore from "@subframe/core";
-import { FilterBadge } from "@/subframe/components/FilterBadge";
-import { Badge } from "@/subframe/components/Badge";
-import { Table } from "@/subframe/components/Table";
 import { useRouter } from "next/navigation";
 import { useState } from 'react'
-import { QuestionsTable } from './components/questions-table'
-import AddIntegrationDialog from "./components/AddIntegrationDialog";
+import { RequestTable } from './components/VendorRequestSection'
 import { ChatDrawer } from './components/ChatDrawer'
 import { IntegrationsSection } from './components/IntegrationsSection'
 import { VendorSection } from './components/VendorSection'
@@ -101,9 +96,8 @@ function VendorApprovalAgent() {
 
   return (
     <DefaultPageLayout>
-
-      {/*Title and navigation breadcrumbs*/}
       <div className="flex h-full w-full flex-col items-start gap-6 px-6 py-6">
+        {/*Title and navigation breadcrumbs*/}
         <div className="flex w-full items-start gap-4 mobile:flex-col mobile:items-center mobile:justify-start mobile:gap-6">
           <IconWithBackground size="medium" icon="FeatherRocket" />
           <span className="text-heading-2 font-heading-2 text-default-font mobile:text-center">
@@ -124,10 +118,9 @@ function VendorApprovalAgent() {
           <IntegrationsSection />
           <AlertsSection alerts={alerts} />
           <VendorSection />
+          <RequestTable />
         </div>
       </div>
-
-      {/*chat drawer*/}
       <ChatDrawer />
     </DefaultPageLayout>
   );
