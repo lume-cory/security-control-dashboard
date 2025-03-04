@@ -16,8 +16,8 @@ function AgentsLandingPage() {
 
   const agents = [
     {
-      title: "Security Help Desk",
-      description: "See incoming requests to the security team from any source and quickly approve or modify AI suggested responses",
+      title: "Security Knowledge Assistant",
+      description: "View incoming requests to the security team from any source. Approve or modify AI pre-generated responses. Allow agent to auto-respond to common requests.",
       thumbnail: "/thumbnails/1.svg",
       path: "/agents/helpdesk"
     },

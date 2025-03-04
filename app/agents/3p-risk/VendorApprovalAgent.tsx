@@ -120,6 +120,9 @@ function VendorApprovalAgent() {
           <VendorSection />
           <RequestTable />
         </div>
+        <div className="flex w-full items-center justify-between px-6 py-6">
+
+        </div>
       </div>
       <ChatDrawer />
     </DefaultPageLayout>

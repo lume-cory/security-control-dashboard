@@ -105,12 +105,12 @@ const DefaultPageLayoutRoot = React.forwardRef<
         <SidebarRailWithLabels.NavItem
           className="h-auto min-h-[44px] w-full flex-none"
           icon="FeatherShapes"
-          selected={pathname === '/resources'}
-          onClick={() => router.push('/resources')}
+          selected={pathname === '/connectors'}
+          onClick={() => router.push('/connectors')}
         >
-          Resources
+          Connectors
         </SidebarRailWithLabels.NavItem>
-        <SidebarRailWithLabels.NavItem
+        {/* <SidebarRailWithLabels.NavItem
           className="h-auto min-h-[44px] w-full flex-none"
           icon="FeatherShield"
           selected={pathname === '/defenses'}
@@ -124,7 +124,7 @@ const DefaultPageLayoutRoot = React.forwardRef<
           onClick={() => router.push('/tests')}
         >
           Tests
-        </SidebarRailWithLabels.NavItem>
+        </SidebarRailWithLabels.NavItem> */}
         <SidebarRailWithLabels.NavItem 
           icon="FeatherRefreshCw"
           selected={pathname === '/agents'}

@@ -72,7 +72,7 @@ function SecurityHelpDeskAgent() {
             <Breadcrumbs.Item onClick={() => router.push('/agents')}>Agents </Breadcrumbs.Item>
             < Breadcrumbs.Divider />
             <Breadcrumbs.Item active={true}>
-              Security Help Desk
+              Security Knowledge Assistant
             </Breadcrumbs.Item>
           </Breadcrumbs>
         </div>
@@ -219,6 +219,9 @@ function SecurityHelpDeskAgent() {
             </div>
           </>
         )}
+      </div>
+      <div className="flex w-full items-center justify-between px-6 py-6">
+
       </div>
       <ChatDrawer />
     </DefaultPageLayout>
