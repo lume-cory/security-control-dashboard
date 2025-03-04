@@ -76,6 +76,7 @@ export function VendorDetailView({ vendor, onClose }: VendorDetailViewProps) {
       'COMPLIANT_WITH_EXCEPTION': 'warning',
       'MORE_INFO_REQUESTED': 'warning',
       'PENDING_REVIEW': 'neutral',
+      'UNCONFIRMED': 'neutral',
       'SUSPENDED': 'error'
     }
     return variants[status] || 'neutral'

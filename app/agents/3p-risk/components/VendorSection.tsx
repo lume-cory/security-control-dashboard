@@ -21,6 +21,7 @@ export function VendorSection() {
         <div className="flex w-full items-center justify-between">
           <h2 className="text-lg font-semibold">Vendors Policy & Control Compliance</h2>
           <Button 
+            className="h-6 w-auto flex-none"
             variant="brand-primary"
             icon="FeatherPlus"
             onClick={() => setShowAddDialog(true)}
