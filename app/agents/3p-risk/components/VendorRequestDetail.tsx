@@ -16,7 +16,7 @@ interface VendorRequestDetailProps {
   setSelectedRequest: React.Dispatch<React.SetStateAction<VendorRequest | VendorCompletedRequest | null>>;
 }
 
-const getSLAStatus = (request: VendorRequest) => {
+const getSLAStatus = (request: VendorRequest | VendorCompletedRequest) => {
   const due = new Date(request.dueDate)
   const now = new Date()
   const diffHours = (due.getTime() - now.getTime()) / (1000 * 60 * 60)
@@ -41,6 +41,7 @@ const getSLAStatus = (request: VendorRequest) => {
 export function VendorRequestDetail({ request, showResolved, onClose, setSelectedRequest }: VendorRequestDetailProps) {
   const [response, setResponse] = useState('')
   const [selectedTriage, setSelectedTriage] = useState<string>('')
+  const [showConversation, setShowConversation] = useState(false)
 
   const handleUseResponse = () => {
     if (request && 'suggestedResponse' in request) {
@@ -169,40 +170,147 @@ export function VendorRequestDetail({ request, showResolved, onClose, setSelecte
                       <div className="grid grid-cols-4 items-center gap-4">
                         <Label className="text-right font-semibold self-start pt-1">Request Form:</Label>
                         <div className="col-span-3">
-                          <div className="space-y-4">
-                            <div>
-                              <strong>Overview:</strong>
-                              <p>{request.requestForm.overview.appName} - {request.requestForm.overview.reasonForAccess}</p>
-                            </div>
-                            <div>
-                              <strong>Financial:</strong>
-                              <p>Cost: ${request.requestForm.financial.cost}</p>
-                              <p>Existing License: {request.requestForm.financial.existingLicense ? 'Yes' : 'No'}</p>
-                              <p>Manager Approval: {request.requestForm.financial.managerApproval ? 'Yes' : 'No'}</p>
-                              <p>Cost Center Approved: {request.requestForm.financial.costCenterApproved ? 'Yes' : 'No'}</p>
-                            </div>
-                            <div>
-                              <strong>Users:</strong>
-                              <p>Number of Users: {request.requestForm.users.numberOfUsers}</p>
-                              <p>Team Roles: {request.requestForm.users.teamRoles.join(', ')}</p>
-                            </div>
-                            <div>
-                              <strong>Resource:</strong>
-                              <p>Access Duration: {request.requestForm.resource.accessDuration}</p>
-                            </div>
-                            <div>
-                              <strong>Security:</strong>
-                              <p>Login Method: {request.requestForm.security.loginMethod}</p>
-                              <p>Integrations: {request.requestForm.security.integrations.join(', ')}</p>
-                              <p>SSO: {request.requestForm.security.sso ? 'Yes' : 'No'}</p>
-                              <p>SCIM: {request.requestForm.security.scim ? 'Yes' : 'No'}</p>
-                              <p>Data Ingestion: {request.requestForm.security.dataIngestion}</p>
-                              <p>Data Type: {request.requestForm.security.dataType}</p>
-                              <p>Data Classification: {request.requestForm.security.dataClassification}</p>
-                            </div>
+                          <div className="flex justify-between items-center mb-4">
+                            <h3 className="font-semibold text-lg">Form Details</h3>
+                            <Button 
+                              variant="neutral-secondary" 
+                              onClick={() => setShowConversation(!showConversation)}
+                              className="text-sm"
+                            >
+                              {showConversation ? "Hide Conversation" : "Show Conversation History"}
+                            </Button>
                           </div>
+                          
+                          {showConversation ? (
+                            <div className="border rounded-md p-4 mb-4 bg-gray-50">
+                              <h4 className="font-medium mb-3">AI Agent Conversation</h4>
+                              <div className="space-y-4 max-h-[800px] overflow-y-auto">
+                                {request.conversation && request.conversation.map((msg, index) => (
+                                  <div key={index} className={`flex gap-3 ${msg.sender !== 'AI Agent' ? 'justify-end' : ''}`}>
+                                    <div className={`rounded-lg p-3 max-w-[80%] ${msg.sender === 'AI Agent' ? 'bg-blue-100' : 'bg-gray-200'}`}>
+                                      <p className={`text-sm font-semibold ${msg.sender === 'AI Agent' ? 'text-blue-800' : ''}`}>
+                                        {msg.sender}
+                                      </p>
+                                      <p>{msg.message}</p>
+                                      <p className="text-xs text-gray-500 mt-1">
+                                        {new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                      </p>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="space-y-4">
+                              <div>
+                                <strong>Overview:</strong>
+                                <p>{request.requestForm.overview.appName} - {request.requestForm.overview.reasonForAccess}</p>
+                              </div>
+                              <div>
+                                <strong>Financial:</strong>
+                                <p>Cost: ${request.requestForm.financial.cost}</p>
+                                <p>Existing License: {request.requestForm.financial.existingLicense ? 'Yes' : 'No'}</p>
+                                <p>Manager Approval: {request.requestForm.financial.managerApproval ? 'Yes' : 'No'}</p>
+                                <p>Cost Center Approved: {request.requestForm.financial.costCenterApproved ? 'Yes' : 'No'}</p>
+                              </div>
+                              <div>
+                                <strong>Users:</strong>
+                                <p>Number of Users: {request.requestForm.users.numberOfUsers}</p>
+                                <p>Team Roles: {request.requestForm.users.teamRoles.join(', ')}</p>
+                              </div>
+                              <div>
+                                <strong>Resource:</strong>
+                                <p>Access Duration: {request.requestForm.resource.accessDuration}</p>
+                              </div>
+                              <div>
+                                <strong>Security:</strong>
+                                <p>Login Method: {request.requestForm.security.loginMethod}</p>
+                                <p>Integrations: {request.requestForm.security.integrations.join(', ')}</p>
+                                <p>SSO: {request.requestForm.security.sso ? 'Yes' : 'No'}</p>
+                                <p>SCIM: {request.requestForm.security.scim ? 'Yes' : 'No'}</p>
+                                <p>Data Ingestion: {request.requestForm.security.dataIngestion}</p>
+                                <p>Data Type: {request.requestForm.security.dataType}</p>
+                                <p>Data Classification: {request.requestForm.security.dataClassification}</p>
+                              </div>
+                              {request.requestForm.documentation && (
+                                <div>
+                                  <strong>Documentation:</strong>
+                                  <div className="mt-2 space-y-3">
+                                    {request.requestForm.documentation.designDocs && request.requestForm.documentation.designDocs.length > 0 && (
+                                      <div>
+                                        <h4 className="text-sm font-medium text-gray-700">Design Documents</h4>
+                                        <ul className="list-disc list-inside pl-2">
+                                          {request.requestForm.documentation.designDocs.map((doc, idx) => (
+                                            <li key={`design-${idx}`}>
+                                              <a href={doc.link} target="_blank" rel="noopener noreferrer" 
+                                                 className="text-blue-600 hover:underline flex items-center inline-flex">
+                                                {doc.name}
+                                                <ExternalLink className="h-3 w-3 ml-1" />
+                                              </a>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                    
+                                    {request.requestForm.documentation.procurementDocs && request.requestForm.documentation.procurementDocs.length > 0 && (
+                                      <div>
+                                        <h4 className="text-sm font-medium text-gray-700">Procurement Documents</h4>
+                                        <ul className="list-disc list-inside pl-2">
+                                          {request.requestForm.documentation.procurementDocs.map((doc, idx) => (
+                                            <li key={`proc-${idx}`}>
+                                              <a href={doc.link} target="_blank" rel="noopener noreferrer" 
+                                                 className="text-blue-600 hover:underline flex items-center inline-flex">
+                                                {doc.name}
+                                                <ExternalLink className="h-3 w-3 ml-1" />
+                                              </a>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                    
+                                    {request.requestForm.documentation.assessmentDocs && request.requestForm.documentation.assessmentDocs.length > 0 && (
+                                      <div>
+                                        <h4 className="text-sm font-medium text-gray-700">Vendor Assessment Resources</h4>
+                                        <ul className="list-disc list-inside pl-2">
+                                          {request.requestForm.documentation.assessmentDocs.map((doc, idx) => (
+                                            <li key={`assess-${idx}`}>
+                                              <a href={doc.link} target="_blank" rel="noopener noreferrer" 
+                                                 className="text-blue-600 hover:underline flex items-center inline-flex">
+                                                {doc.name}
+                                                <ExternalLink className="h-3 w-3 ml-1" />
+                                              </a>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                    
+                                    {request.requestForm.documentation.toolNeedsDocs && request.requestForm.documentation.toolNeedsDocs.length > 0 && (
+                                      <div>
+                                        <h4 className="text-sm font-medium text-gray-700">Tool Requirements</h4>
+                                        <ul className="list-disc list-inside pl-2">
+                                          {request.requestForm.documentation.toolNeedsDocs.map((doc, idx) => (
+                                            <li key={`needs-${idx}`}>
+                                              <a href={doc.link} target="_blank" rel="noopener noreferrer" 
+                                                 className="text-blue-600 hover:underline flex items-center inline-flex">
+                                                {doc.name}
+                                                <ExternalLink className="h-3 w-3 ml-1" />
+                                              </a>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
+                      
                       <div className="grid grid-cols-4 items-center gap-4 mt-4">
                         <Label className="text-right font-semibold self-start pt-1">Follow-up Questions:</Label>
                         <div className="col-span-3">

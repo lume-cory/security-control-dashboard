@@ -54,7 +54,7 @@ export function RequestTable() {
     console.log(`Document "${docName}" is ${isAssociated ? '' : 'not '}associated with question ${questionId}`)
   }
 
-  const getSLAStatus = (request: VendorRequest) => {
+  const getSLAStatus = (request: VendorRequest | VendorCompletedRequest) => {
     const due = new Date(request.dueDate)
     const now = new Date()
     const diffHours = (due.getTime() - now.getTime()) / (1000 * 60 * 60)
