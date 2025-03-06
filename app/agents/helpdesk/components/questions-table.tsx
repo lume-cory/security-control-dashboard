@@ -6,7 +6,7 @@ import { Button } from "@/subframe/components/Button"
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { ExternalLink, MessageSquare, Mail, Ticket, Phone, Fish, ArrowUpDown, NotebookPen, Code} from 'lucide-react'
+import { ExternalLink, MessageSquare, Mail, Ticket, Phone, Fish, ArrowUpDown, NotebookPen, Code, Mic} from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Accordion } from "@/subframe/components/Accordion";
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -74,9 +74,9 @@ export function QuestionsTable() {
       case 'Emergency hotline':
         return <Phone className="h-4 w-4 mr-2" />
       case 'Architecture Review Meeting':
-        return <NotebookPen className="h-4 w-4 mr-2" />
+        return <Mic className="h-4 w-4 mr-2" />
       case 'DevSecOps Planning Meeting':
-        return <NotebookPen className="h-4 w-4 mr-2" />
+        return <Mic className="h-4 w-4 mr-2" />
       case 'Architecture Review Ticket':
         return <Ticket className="h-4 w-4 mr-2" />
       case 'Code Review':
@@ -148,7 +148,7 @@ export function QuestionsTable() {
   return (
     <div className="space-y-4 w-full">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">Security Help Desk Questions</h2>
+        <h2 className="text-2xl font-semibold">Requests for Assistance</h2>
         < div className="flex grow shrink-0 basis-0 items-center justify-end gap-2" >
               <Button
                 className="h-auto w-auto flex-none self-stretch"
@@ -241,19 +241,20 @@ export function QuestionsTable() {
               <TableCell>{question.user}</TableCell>
               <TableCell>{question.stage}</TableCell>
               <TableCell>
-                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                  question.triage === 'urgent' ? 'bg-red-100 text-red-800' :
-                  question.triage === 'high' ? 'bg-orange-100 text-orange-800' :
-                  question.triage === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-green-100 text-green-800'
-                }`}>
+                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100`}>
+                  <div className={`w-2 h-2 rounded-full ${
+                    question.triage === 'urgent' ? 'bg-red-500' :
+                    question.triage === 'high' ? 'bg-orange-500' :
+                    question.triage === 'medium' ? 'bg-yellow-500' :
+                    'bg-green-500'
+                  }`} />
                   {question.triage || 'medium'}
                 </span>
               </TableCell>
               {!showResolved && 'dueDate' in question && (
                 <TableCell>
                   {(() => {
-                    const status = getSLAStatus(question)
+                    const status = getSLAStatus(question as OutstandingQuestion)
                     return (
                       <div className="flex items-center space-x-2">
                         <span className={`text-sm font-medium ${status.onTrack ? 'text-green-600' : 'text-red-600'}`}>
@@ -285,15 +286,40 @@ export function QuestionsTable() {
         <Sheet open={!!selectedQuestion} onOpenChange={() => setSelectedQuestion(null)}>
           <SheetContent 
             style={{ maxWidth: 'min(50vw, 800px)' }} 
-            className="w-full" 
+            className="w-full flex flex-col h-full"
             side="right"
           >
             <SheetHeader>
               <SheetTitle>{selectedQuestion.question}</SheetTitle>
-              <SheetDescription>Review and respond to this security question</SheetDescription>
             </SheetHeader>
 
-            <ScrollArea className="h-[calc(100vh-250px)]">
+            <ScrollArea className="flex-1 -mx-6 px-6">
+            {'aiSummary' in selectedQuestion && (
+                <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mt-2">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-sm font-semibold text-blue-700">AI Summary</span>
+                  </div>
+                  <p className="text-sm text-blue-700">
+                    {selectedQuestion.aiSummary}
+                  </p>
+                </div>
+              )}
+              {'aiNextSteps' in selectedQuestion && selectedQuestion.aiNextSteps && (
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {selectedQuestion.aiNextSteps.map((step, index) => (
+                    <Button
+                      key={index}
+                      variant="brand-secondary"
+                      size="small"
+                      className="h-8"
+                      icon="FeatherSparkles"
+                      onClick={() => {/* Handle AI action */}}
+                    >
+                        {step}
+                    </Button>
+                  ))}
+                </div>
+              )}
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label className="text-right">Submitted by:</Label>
@@ -347,7 +373,7 @@ export function QuestionsTable() {
                         <Label className="text-right">SLA Status:</Label>
                         <div className="col-span-3">
                           {(() => {
-                            const status = getSLAStatus(selectedQuestion)
+                            const status = getSLAStatus(selectedQuestion as OutstandingQuestion)
                             return (
                               <div className="flex items-center space-x-2">
                                 <span className={`font-medium ${status.onTrack ? 'text-green-600' : 'text-red-600'}`}>
@@ -370,12 +396,13 @@ export function QuestionsTable() {
                             <div>
                               <div className="flex items-center gap-4">
                                   <label className="text-sm font-semibold text-gray-600">Team</label>
-                                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                  selectedQuestion.policyOwner.teamConfidence.level === 'high' ? 'bg-green-100 text-green-800' :
-                                  selectedQuestion.policyOwner.teamConfidence.level === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                                  'bg-red-100 text-red-800'
-                                  }`}>
-                                  {selectedQuestion.policyOwner.teamConfidence.level} confidence
+                                  <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100`}>
+                                    <div className={`w-2 h-2 rounded-full ${
+                                      selectedQuestion.policyOwner.teamConfidence.level === 'high' ? 'bg-green-500' :
+                                      selectedQuestion.policyOwner.teamConfidence.level === 'medium' ? 'bg-yellow-500' :
+                                      'bg-red-500'
+                                    }`} />
+                                    {selectedQuestion.policyOwner.teamConfidence.level} confidence
                                   </span>
                               </div>
                               <p>
@@ -416,12 +443,13 @@ export function QuestionsTable() {
                             <div>
                               <div className="flex items-center gap-4">
                                   <label className="text-sm font-semibold text-gray-600">Contact</label>
-                                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                  selectedQuestion.policyOwner.contactConfidence.level === 'high' ? 'bg-green-100 text-green-800' :
-                                  selectedQuestion.policyOwner.contactConfidence.level === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                                  'bg-red-100 text-red-800'
-                                  }`}>
-                                  {selectedQuestion.policyOwner.contactConfidence.level} confidence
+                                  <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100`}>
+                                    <div className={`w-2 h-2 rounded-full ${
+                                      selectedQuestion.policyOwner.contactConfidence.level === 'high' ? 'bg-green-500' :
+                                      selectedQuestion.policyOwner.contactConfidence.level === 'medium' ? 'bg-yellow-500' :
+                                      'bg-red-500'
+                                    }`} />
+                                    {selectedQuestion.policyOwner.contactConfidence.level} confidence
                                   </span>
                               </div>
                               <p>
@@ -460,13 +488,14 @@ export function QuestionsTable() {
                           <div className="grid grid-cols-4 items-center gap-4 mt-4">
                               <div className="col-span-3 flex items-center gap-4">
                                   <label className="text-sm font-semibold text-gray-600">Sign Off Status:</label>
-                                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                      selectedQuestion.policyOwner.signOffStatus === 'Yes' ? 'bg-green-100 text-green-800' :
-                                      selectedQuestion.policyOwner.signOffStatus === 'No' ? 'bg-red-100 text-red-800' :
-                                      selectedQuestion.policyOwner.signOffStatus === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                                      'bg-gray-100 text-gray-800'
-                                  }`}>
-                                      {selectedQuestion.policyOwner.signOffStatus || 'Pending'}
+                                  <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100`}>
+                                    <div className={`w-2 h-2 rounded-full ${
+                                      selectedQuestion.policyOwner.signOffStatus === 'Yes' ? 'bg-green-500' :
+                                      selectedQuestion.policyOwner.signOffStatus === 'No' ? 'bg-red-500' :
+                                      selectedQuestion.policyOwner.signOffStatus === 'Pending' ? 'bg-yellow-500' :
+                                      'bg-gray-500'
+                                    }`} />
+                                    {selectedQuestion.policyOwner.signOffStatus || 'Pending'}
                                   </span>
                               </div>
                               <div className="col-span-3 flex items-center gap-2">
@@ -549,7 +578,7 @@ export function QuestionsTable() {
                         <span className="block text-sm text-gray-500">This content may be related, but was not used. Should it be referenced for topics like this in the future?</span>
                       </Label>
                       <div className="col-span-3">
-                        {'otherDocs' in selectedQuestion && selectedQuestion.otherDocs.map((doc, index) => (
+                        {('otherDocs' in selectedQuestion && selectedQuestion.otherDocs?.map((doc, index) => (
                           <div key={index} className="flex items-center justify-between mb-2">
                             <a href={doc.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline flex items-center">
                               {doc.name}
@@ -572,7 +601,7 @@ export function QuestionsTable() {
                               </Button>
                             </div>
                           </div>
-                        ))}
+                        )))}
                       </div>
                     </div>
                   </>
@@ -611,23 +640,24 @@ export function QuestionsTable() {
               </div>
             </ScrollArea>
 
-            <SheetFooter className="flex justify-end gap-4 border-t pt-4 mt-4">
-              <Button
-                variant="neutral-secondary"
-                onClick={() => setSelectedQuestion(null)}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="brand-primary"
-                onClick={() => {
-                  // Add approval logic here
-                  console.log('Approving question:', selectedQuestion?.id);
-                  setSelectedQuestion(null);
-                }}
-              >
-                Post Response to Source
-              </Button>
+            <SheetFooter className="border-t pt-4 mt-4">
+              <div className="flex justify-end gap-4">
+                <Button
+                  variant="neutral-secondary"
+                  onClick={() => setSelectedQuestion(null)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="brand-primary"
+                  onClick={() => {
+                    console.log('Approving question:', selectedQuestion?.id);
+                    setSelectedQuestion(null);
+                  }}
+                >
+                  Post Response to Source
+                </Button>
+              </div>
             </SheetFooter>
           </SheetContent>
         </Sheet>

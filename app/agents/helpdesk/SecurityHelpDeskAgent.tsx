@@ -86,6 +86,7 @@ function SecurityHelpDeskAgent() {
           <SuggestedModifications onBack={() => setShowModifications(false)} />
         ) : (
           <>
+            {/* Integrations and Data Sources Section */}
             < div className="flex w-full flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm" >
               <div className="flex w-full items-center gap-2" >
                 <span className="line-clamp-1 grow shrink-0 basis-0 text-heading-3 font-heading-3 text-default-font" >
@@ -125,6 +126,8 @@ function SecurityHelpDeskAgent() {
                 })}
               </div>
             </div>
+
+            {/* Metrics and SLAs Section */}
             < div className="flex w-full flex-wrap items-start gap-4" >
               <div className="flex flex-col items-start gap-4 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm" >
                 <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color" >
@@ -214,6 +217,8 @@ function SecurityHelpDeskAgent() {
                 </div>
               </div>
             </div>
+
+            {/* Questions Table Section */}
             < div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm" >
               <QuestionsTable />
             </div>

@@ -10,8 +10,14 @@ export interface Integration {
 export const integrations: Integration[] = [
   {
     name: "Slack Channels",
-    subtitle: "10k+ messages",
+    subtitle: "37 channels",
     icon: "FeatherSlack",
+    link: "#"
+  },
+  {
+    name: "Knowledge Base",
+    subtitle: "57 articles",
+    icon: "FeatherBook",
     link: "#"
   },
   {
@@ -21,15 +27,9 @@ export const integrations: Integration[] = [
     link: "#"
   },
   {
-    name: "Security Tickets",
+    name: "Prior Security Tickets",
     subtitle: "2.5k ticket threads",
     icon: "FeatherTicket",
-    link: "#"
-  },
-  {
-    name: "Security Design Reviews",
-    subtitle: "320 files",
-    icon: "FeatherFile",
     link: "#"
   },
   {
@@ -37,11 +37,11 @@ export const integrations: Integration[] = [
     subtitle: "197 configurations",
     icon: "FeatherTool",
     link: "#"
-  },
+  }, 
   {
-    name: "Knowledge Base",
-    subtitle: "57 articles",
-    icon: "FeatherBook",
+    name: "Security Design Reviews",
+    subtitle: "320 files",
+    icon: "FeatherFile",
     link: "#"
   }
 ] 

@@ -4,7 +4,7 @@ import { DefaultPageLayout } from "@/subframe/layouts/DefaultPageLayout";
 import { useRouter } from "next/navigation";
 import { IconWithBackground } from "@/subframe/components/IconWithBackground";
 import { Breadcrumbs } from "@/subframe/components/Breadcrumbs";
-import { VulnerabilitySection } from "./components/vulnerability/VulnerabilitySection"
+import { VulnerabilitySection } from "./components/VulnerabilitySection"
 
 
 function ProductSecurityHome() {

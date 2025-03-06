@@ -15,7 +15,11 @@ export interface Question {
   sourceLink: string;
   triage?: 'urgent' | 'high' | 'medium' | 'low';
   suggestedResponse: Array<ResponseSection>;
+  policyOwner: PolicyOwner;
+  dueDate?: string;
 }
+
+export type SubmissionMethod = 'AI_AGENT' | 'APPLICATION' | 'PERSON';
 
 export interface OutstandingQuestion extends Question {
   dueDate: string;
@@ -23,6 +27,9 @@ export interface OutstandingQuestion extends Question {
   otherDocs: Array<{ name: string; link: string }>;
   policyOwner: PolicyOwner;
   followUpQuestions?: string[];
+  submissionMethod: SubmissionMethod;
+  aiSummary?: string;
+  aiNextSteps?: string[];
 }
 
 export interface ResolvedQuestion extends Question {
@@ -30,8 +37,10 @@ export interface ResolvedQuestion extends Question {
   response: string;
   decision: string;
   documentationLink: string;
-  policyOwner: PolicyOwner;
-  suggestedResponse: Array<ResponseSection>;
+  supportingDocs?: Array<{ name: string; link: string }>;
+  otherDocs?: Array<{ name: string; link: string }>;
+  submissionMethod: SubmissionMethod;
+  followUpQuestions?: string[];
 }
 
 export interface Confidence {
@@ -101,7 +110,10 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       { name: "Third-Party Integration Guidelines", link: "https://docs.company.com/integration/guidelines" }
     ],
     source: "Slack #ask-security channel",
-    sourceLink: "https://slack.com/archives/C01234567/p1623456789000200"
+    sourceLink: "https://slack.com/archives/C01234567/p1623456789000200",
+    aiSummary: "Request submitted by John Doe from Platform Engineering team via Slack. Seeking guidance on third-party auth service security implications. Pending sign-off from Maya Patel. Due in 2 days.",
+    aiNextSteps: ["Send a reminder to Maya", "Update the third-party integration guidelines to include this information"],
+    submissionMethod: 'PERSON'
   },
   {
     id: 2,
@@ -154,7 +166,10 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       { name: "Website Request Form", link: "https://forms.company.com/website-request" }
     ],
     source: "Email to security-helpdesk alias",
-    sourceLink: "https://mail.company.com/threads/website-inquiry-july12"
+    sourceLink: "https://mail.company.com/threads/website-inquiry-july12",
+    aiSummary: "Website hosting request from Sarah Chen, submitted via email. Medium priority request for self-hosting approval. No sign-off required. Due tomorrow.",
+    aiNextSteps: ["Send a reminder to Chris", "Update the website request form with a link to the domain management guidelines"],
+    submissionMethod: 'PERSON'
   },
   {
     id: 3,
@@ -208,7 +223,10 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       { name: "Country-Specific Security Advisories", link: "https://docs.company.com/security/advisories" }
     ],
     source: "Slack #ask-security channel",
-    sourceLink: "https://slack.com/archives/C01234567/p1623456789000400"
+    sourceLink: "https://slack.com/archives/C01234567/p1623456789000400",
+    aiSummary: "Travel security request from Michael Rodriguez regarding Mexico business trip. No sign-off needed. Due today.",
+    aiNextSteps: ["Post this response in Slack", "Send a travel security reminder to #team-all in Slack"],
+    submissionMethod: 'PERSON'
   },
   {
     id: 4,
@@ -253,7 +271,7 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       }
     ],
     supportingDocs: [
-      { name: "External Data Sharing Policy", link: "https://docs.company.com/security/DATA-002" },
+      { name: "Slack - #james-wilson", link: "https://slack.com/archives/C01234567/p1623456789000200" },
       { name: "Auditor Security Requirements", link: "https://docs.company.com/security/audit-requirements" }
     ],
     otherDocs: [
@@ -261,7 +279,10 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       { name: "Data Classification Guidelines", link: "https://docs.company.com/security/data-classification" }
     ],
     source: "Email to security-helpdesk alias",
-    sourceLink: "https://mail.company.com/threads/external-sharing-query"
+    sourceLink: "https://mail.company.com/threads/external-sharing-query",
+    aiSummary: "Request submitted by Alex Kumar from Data Protection team via email. Seeking guidance on external data sharing policy compliance. Pending sign-off from James Wilson. Due yesterday.",
+    aiNextSteps: ["Send a reminder to James"],
+    submissionMethod: 'PERSON'
   },
   {
     id: 5,
@@ -306,15 +327,18 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       }
     ],
     supportingDocs: [
-      { name: "Contractor Security Policy", link: "https://docs.company.com/security/CONTRACTOR-001" },
-      { name: "Device Access Requirements", link: "https://docs.company.com/security/device-access" }
+      { name: "JIRA (UP-1234) - Contractor User Provisioning", link: "https://jira.company.com/security/CONTRACTOR-001" },
+      { name: "JIRA (UP-1235) - Device Provisioning", link: "https://jira.company.com/security/device-access" }
     ],
     otherDocs: [
       { name: "BYOD Guidelines", link: "https://docs.company.com/security/byod" },
       { name: "Security Training Portal", link: "https://training.company.com/security" }
     ],
     source: "Slack #ask-security channel",
-    sourceLink: "https://slack.com/archives/C01234567/p1623456789000500"
+    sourceLink: "https://slack.com/archives/C01234567/p1623456789000500",
+    aiSummary: "Request submitted by Patricia Wong from Identity & Access Management team via Slack. Created tickets for IAM team to add contractors to AD/Okta and IT to provision devices. Due yesterday.",
+    aiNextSteps: ["Follow up with IT to provision devices", "Follow up with IAM team to add contractors to AD/Okta"],
+    submissionMethod: 'PERSON'
   },
   {
     id: 6,
@@ -367,7 +391,10 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       { name: "Approved Tools List", link: "https://docs.company.com/security/approved-tools" }
     ],
     source: "Zendesk ticket",
-    sourceLink: "https://zendesk.company.com/tickets/SEC-2023-789"
+    sourceLink: "https://zendesk.company.com/tickets/SEC-2023-789",
+    aiSummary: "Request submitted by Tom Mitchell from Identity & Access Management team via Zendesk. Pending sign-off from Maya Patel. Due in 3 days.",
+    aiNextSteps: ["Post this response in the Zendesk ticket"],
+    submissionMethod: 'PERSON'
   },
   {
     id: 7,
@@ -414,19 +441,22 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     supportingDocs: [
       { name: "Phishing Response Playbook", link: "https://docs.company.com/security/phishing-response" },
-      { name: "Email Security Controls", link: "https://docs.company.com/security/email-controls" }
+      { name: "JIRA (SEC-2023-789) - Phishing Report", link: "https://jira.company.com/security/email-controls" }
     ],
     otherDocs: [
       { name: "Security Awareness Training", link: "https://docs.company.com/training/security" },
       { name: "DocuSign Security Guidelines", link: "https://docs.company.com/security/docusign" }
     ],
     source: "Phishing report button",
-    sourceLink: "https://phishing.company.com/reports/2023-15"
+    sourceLink: "https://phishing.company.com/reports/2023-15",
+    aiSummary: "Request submitted by Security Operations agent. Currently assigned to email security team with urgent priority.",
+    aiNextSteps: ["Ask SOC if they need additional context", "Send email to Abnormal Security representative to see if this can be blocked in the future"],
+    submissionMethod: 'AI_AGENT'
   },
   {
     id: 8,
     question: "Data center fire alarm triggered - Emergency response needed",
-    user: "NOC Team",
+    user: "Fire Alert System",
     stage: "Critical Incident",
     dueDate: new Date(Date.now() + (4 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
     triage: "urgent",
@@ -474,7 +504,10 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       { name: "Emergency Contact List", link: "https://docs.company.com/facilities/emergency-contacts" }
     ],
     source: "Emergency hotline",
-    sourceLink: "https://incidents.company.com/DC-2023-89"
+    sourceLink: "https://incidents.company.com/DC-2023-89",
+    aiSummary: "Request submitted by the fire alert system. Seeking guidance on data center fire alarm response. Currently assigned to Infrastructure & Facilities team with urgent priority.",
+    aiNextSteps: ["Check the fire alarm system logs", "Escalate to management once issue confirmed"],
+    submissionMethod: 'APPLICATION'
   },
   {
     id: 9,
@@ -482,6 +515,7 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     user: "John Doe",
     stage: "Architecture Review",
     dueDate: new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "low",
     policyOwner: {
       team: "Identity & Access Management Team",
       teamEmail: "iam@company.com",
@@ -534,6 +568,9 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       "How will you handle service outages?",
       "What compliance requirements apply to your user authentication?"
     ],
+    aiSummary: "Request submitted by John Doe from Platform Engineering team via Slack. Seeking guidance on third-party auth service security implications. Currently assigned to IAM team with low priority. Pending sign-off from Maya Patel. Due in 1 day.",
+    aiNextSteps: ["Post this response in the Slack channel"],
+    submissionMethod: 'PERSON'
   },
   {
     id: 10,
@@ -541,6 +578,7 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     user: "Jennifer Lee",
     stage: "Implementation",
     dueDate: new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "low",
     policyOwner: {
       team: "Data Security Team",
       teamEmail: "datasec@company.com",
@@ -593,6 +631,9 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       "What is your backup strategy for encrypted data?",
       "How will you handle key recovery scenarios?"
     ],
+    aiSummary: "Request submitted by Jennifer Lee from Data Security team via architecture review meeting. Seeking guidance on data encryption at rest policy compliance. Currently assigned to Data Security team with low priority. Pending sign-off from David Chen. Due in 2 days.",
+    aiNextSteps: ["Post this response in the Slack channel"],
+    submissionMethod: 'PERSON'
   },
   {
     id: 11,
@@ -600,6 +641,7 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     user: "Alex Rodriguez",
     stage: "Implementation",
     dueDate: new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "medium",
     policyOwner: {
       team: "Application Security Team",
       teamEmail: "appsec@company.com",
@@ -652,6 +694,9 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       "Do you have automated security testing?",
       "What types of reports will users be able to generate?"
     ],
+    aiSummary: "Request submitted by Alex Rodriguez from Application Security team via code review. Seeking guidance on SQL injection prevention in new reporting service. Currently assigned to Application Security team with medium priority. No sign-off needed. Due in 3 days.",
+    aiNextSteps: ["Post this response in the Slack channel"],
+    submissionMethod: 'PERSON'
   },
   {
     id: 12,
@@ -659,6 +704,7 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     user: "Samantha Taylor",
     stage: "Design",
     dueDate: new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "low",
     policyOwner: {
       team: "Network Security Team",
       teamEmail: "netsec@company.com",
@@ -711,6 +757,9 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       "What client platforms need to be supported?",
       "How will you handle message validation?"
     ],
+    aiSummary: "Request submitted by Samantha Taylor from Network Security team via architecture review ticket. Seeking guidance on WebSocket security requirements. Currently assigned to Network Security team with low priority. Pending sign-off from James Wilson. Due in 2 days.",
+    aiNextSteps: ["Post this response in the Slack channel"],
+    submissionMethod: 'PERSON'
   },
   {
     id: 13,
@@ -718,6 +767,7 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     user: "Mike Johnson",
     stage: "DevOps Design",
     dueDate: new Date(Date.now() + (4 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "low",
     policyOwner: {
       team: "DevSecOps Team",
       teamEmail: "devsecops@company.com",
@@ -770,6 +820,9 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       "How are container images stored and verified?",
       "What is your secret rotation strategy in Kubernetes?"
     ],
+    aiSummary: "Request submitted by Mike Johnson from DevSecOps team via devsecops planning meeting. Seeking guidance on secure CI/CD pipelines for new Kubernetes-based microservices. Currently assigned to DevSecOps team with low priority. No sign-off needed. Due in 4 days.",
+    aiNextSteps: ["Post this response in the Slack channel"],
+    submissionMethod: 'PERSON'
   }
 ]
 
@@ -801,7 +854,8 @@ export const resolvedQuestions: ResolvedQuestion[] = [
       },
       signOffStatus: 'Yes'
     },
-    suggestedResponse: []
+    suggestedResponse: [],
+    submissionMethod: 'PERSON'
   },
   {
     id: 2,
@@ -830,7 +884,8 @@ export const resolvedQuestions: ResolvedQuestion[] = [
       },
       signOffStatus: 'N/A'
     },
-    suggestedResponse: []
+    suggestedResponse: [],
+    submissionMethod: 'PERSON'
   },
   {
     id: 3,
@@ -859,7 +914,8 @@ export const resolvedQuestions: ResolvedQuestion[] = [
       },
       signOffStatus: 'Yes'
     },
-    suggestedResponse: []
+    suggestedResponse: [],
+    submissionMethod: 'PERSON'
   },
   {
     id: 4,
@@ -888,7 +944,8 @@ export const resolvedQuestions: ResolvedQuestion[] = [
       },
       signOffStatus: 'Yes'
     },
-    suggestedResponse: []
+    suggestedResponse: [],
+    submissionMethod: 'PERSON'
   },
   {
     id: 5,
@@ -917,7 +974,8 @@ export const resolvedQuestions: ResolvedQuestion[] = [
       },
       signOffStatus: 'Yes'
     },
-    suggestedResponse: []
+    suggestedResponse: [],
+    submissionMethod: 'PERSON'
   },
   {
     id: 6,
@@ -946,7 +1004,8 @@ export const resolvedQuestions: ResolvedQuestion[] = [
       },
       signOffStatus: 'Yes'
     },
-    suggestedResponse: []
+    suggestedResponse: [],
+    submissionMethod: 'PERSON'
   },
   {
     id: 7,
@@ -975,6 +1034,7 @@ export const resolvedQuestions: ResolvedQuestion[] = [
       },
       signOffStatus: 'Yes'
     },
-    suggestedResponse: []
+    suggestedResponse: [],
+    submissionMethod: 'PERSON'
   }
 ] 
