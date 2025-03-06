@@ -22,6 +22,7 @@ export interface OutstandingQuestion extends Question {
   supportingDocs: Array<{ name: string; link: string }>;
   otherDocs: Array<{ name: string; link: string }>;
   policyOwner: PolicyOwner;
+  followUpQuestions?: string[];
 }
 
 export interface ResolvedQuestion extends Question {
@@ -474,6 +475,301 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     source: "Emergency hotline",
     sourceLink: "https://incidents.company.com/DC-2023-89"
+  },
+  {
+    id: 9,
+    question: "What are the security implications of using a third-party authentication service?",
+    user: "John Doe",
+    stage: "Architecture Review",
+    dueDate: new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    policyOwner: {
+      team: "Identity & Access Management Team",
+      teamEmail: "iam@company.com",
+      contact: "Maya Patel",
+      email: "maya.patel@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: [`Contributors from prior tickets belong to this team`, `Email alias for this team found on policy docs`, `Members of this team often respond to similar questions on Slack`, `Team owns KB article for this policy`]
+      },
+      contactConfidence: {
+        level: 'medium',
+        reasons: [`Manager of prior policy owner`, `Has answered similar questions on previous tickets`]
+      },
+      signOffStatus: 'Pending'
+    },
+    suggestedResponse: [
+      {
+        text: "Using a third-party authentication service can have both benefits and risks. Benefits include reduced development time and potentially more robust security measures.",
+        supportingDocs: [
+          { name: "IAM Design Document #DESIGN-AUTH-001", link: "https://docs.company.com/security/DESIGN-AUTH-001" }
+        ]
+      },
+      {
+        text: "However, risks include potential data breaches at the third-party provider, loss of control over the authentication process, and potential service outages.",
+        supportingDocs: [
+          { name: "Third-Party Risk Assessment Template", link: "https://docs.company.com/security/third-party-risk" }
+        ]
+      },
+      {
+        text: "It's crucial to thoroughly vet the provider, understand their security measures, and have contingency plans in place.",
+        supportingDocs: [
+          { name: "Prior Review #PR-789", link: "https://reviews.company.com/PR-789" }
+        ]
+      }
+    ],
+    supportingDocs: [
+      { name: "IAM Design Document #DESIGN-AUTH-001", link: "https://docs.company.com/security/DESIGN-AUTH-001" },
+      { name: "Prior Review #PR-789", link: "https://reviews.company.com/PR-789" }
+    ],
+    otherDocs: [
+      { name: "User Authentication Flow", link: "https://docs.company.com/auth/flow" },
+      { name: "Third-Party Integration Guidelines", link: "https://docs.company.com/integration/guidelines" }
+    ],
+    source: "Slack #ask-security channel",
+    sourceLink: "https://slack.com/archives/C01234567/p1623456789000200",
+    followUpQuestions: [
+      "What specific third-party service are you considering?",
+      "What types of user data will be handled by this service?",
+      "What is your fallback authentication mechanism?",
+      "How will you handle service outages?",
+      "What compliance requirements apply to your user authentication?"
+    ],
+  },
+  {
+    id: 10,
+    question: "What encryption standard should we use for data at rest in our new database?",
+    user: "Jennifer Lee",
+    stage: "Implementation",
+    dueDate: new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    policyOwner: {
+      team: "Data Security Team",
+      teamEmail: "datasec@company.com",
+      contact: "David Chen",
+      email: "david.chen@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: [`Team owns data security standards`, `Mentioned in policy documentation`]
+      },
+      contactConfidence: {
+        level: 'high',
+        reasons: [`Author of encryption standards`, `Regular contributor to data security discussions`]
+      },
+      signOffStatus: 'Pending'
+    },
+    suggestedResponse: [
+      {
+        text: "For data encryption at rest, we recommend using AES-256 encryption. The implementation should include: 1) Use of a secure key management system to generate, store, and rotate encryption keys.",
+        supportingDocs: [
+          { name: "Encryption Guidelines #ENC-002", link: "https://docs.company.com/security/ENC-002" }
+        ]
+      },
+      {
+        text: "2) Encryption of data before it's written to disk. 3) Proper access controls to limit who can access the encrypted data and decryption keys.",
+        supportingDocs: [
+          { name: "Security Ticket #SEC-234", link: "https://jira.company.com/browse/SEC-234" }
+        ]
+      },
+      {
+        text: "4) Regular audits of the encryption process and key management. 5) Consideration of hardware-based encryption for additional security.",
+        supportingDocs: [
+          { name: "Data Protection Standard", link: "https://docs.company.com/security/data-protection" }
+        ]
+      }
+    ],
+    supportingDocs: [
+      { name: "Encryption Guidelines #ENC-002", link: "https://docs.company.com/security/ENC-002" },
+      { name: "Security Ticket #SEC-234", link: "https://jira.company.com/browse/SEC-234" }
+    ],
+    otherDocs: [
+      { name: "Data Protection Standard", link: "https://docs.company.com/security/data-protection" },
+      { name: "Key Management Procedures", link: "https://docs.company.com/security/key-management" }
+    ],
+    source: "Architecture Review Meeting",
+    sourceLink: "https://meetings.company.com/arch-review-db-123",
+    followUpQuestions: [
+      "What type of data will be stored in this database?",
+      "What is your key rotation strategy?",
+      "Will you need to search on encrypted data?",
+      "What is your backup strategy for encrypted data?",
+      "How will you handle key recovery scenarios?"
+    ],
+  },
+  {
+    id: 11,
+    question: "How do we prevent SQL injection in our new reporting service?",
+    user: "Alex Rodriguez",
+    stage: "Implementation",
+    dueDate: new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    policyOwner: {
+      team: "Application Security Team",
+      teamEmail: "appsec@company.com",
+      contact: "Rachel Kim",
+      email: "rachel.kim@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: [`Team responsible for secure coding standards`, `Mentioned in policy documentation`]
+      },
+      contactConfidence: {
+        level: 'high',
+        reasons: [`Regular contributor to secure coding guidelines`, `Conducts SQL injection training`]
+      },
+      signOffStatus: 'Pending'
+    },
+    suggestedResponse: [
+      {
+        text: "All database queries must use parameterized queries or ORMs. Replace string concatenation with prepared statements.",
+        supportingDocs: [
+          { name: "Secure Coding Guidelines #DESIGN-SQL-001", link: "https://docs.company.com/security/DESIGN-SQL-001" }
+        ]
+      },
+      {
+        text: "For the reporting service specifically: 1) Use TypeORM's built-in query builder with parameters, 2) Implement input validation at API boundaries.",
+        supportingDocs: [
+          { name: "Static Analysis Report #SA-456", link: "https://security.company.com/reports/SA-456" }
+        ]
+      },
+      {
+        text: "3) Add SQL injection testing to the CI pipeline using SQLMap.",
+        supportingDocs: [
+          { name: "CI/CD Security Integration", link: "https://docs.company.com/security/cicd-security" }
+        ]
+      }
+    ],
+    supportingDocs: [
+      { name: "Secure Coding Guidelines #DESIGN-SQL-001", link: "https://docs.company.com/security/DESIGN-SQL-001" },
+      { name: "Static Analysis Report #SA-456", link: "https://security.company.com/reports/SA-456" }
+    ],
+    otherDocs: [
+      { name: "OWASP SQL Injection Prevention Cheat Sheet", link: "https://owasp.org/www-project-cheat-sheets/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html" },
+      { name: "TypeORM Documentation", link: "https://typeorm.io/" }
+    ],
+    source: "Code Review",
+    sourceLink: "https://github.company.com/reporting-service/pull/123",
+    followUpQuestions: [
+      "What database technology are you using?",
+      "Are you using an ORM or raw SQL queries?",
+      "What input validation is currently in place?",
+      "Do you have automated security testing?",
+      "What types of reports will users be able to generate?"
+    ],
+  },
+  {
+    id: 12,
+    question: "What security requirements should we implement for our new WebSocket service?",
+    user: "Samantha Taylor",
+    stage: "Design",
+    dueDate: new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    policyOwner: {
+      team: "Network Security Team",
+      teamEmail: "netsec@company.com",
+      contact: "James Wilson",
+      email: "james.wilson@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: [`Team responsible for network security standards`, `Mentioned in policy documentation`]
+      },
+      contactConfidence: {
+        level: 'medium',
+        reasons: [`Has reviewed similar designs`, `Member of network security team`]
+      },
+      signOffStatus: 'Pending'
+    },
+    suggestedResponse: [
+      {
+        text: "WebSocket security requirements include: 1) TLS 1.3 for all connections, 2) Token-based authentication with short-lived JWTs.",
+        supportingDocs: [
+          { name: "Network Security Standard #NW-001", link: "https://docs.company.com/security/WS-001" }
+        ]
+      },
+      {
+        text: "3) Rate limiting per client, 4) Message size limits, 5) Input validation for all messages.",
+        supportingDocs: [
+          { name: "Real-time Systems Security", link: "https://docs.company.com/security/realtime" }
+        ]
+      },
+      {
+        text: "6) Automatic connection termination after 15 minutes of inactivity.",
+        supportingDocs: [
+          { name: "Session Management Guidelines", link: "https://docs.company.com/security/session-management" }
+        ]
+      }
+    ],
+    supportingDocs: [
+      { name: "Network Security Standard #NW-001", link: "https://docs.company.com/security/WS-001" },
+      { name: "Real-time Systems Security", link: "https://docs.company.com/security/realtime" }
+    ],
+    otherDocs: [
+      { name: "WebSocket Protocol RFC", link: "https://tools.ietf.org/html/rfc6455" },
+      { name: "OWASP WebSocket Security Cheat Sheet", link: "https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html#websocket-implementation" }
+    ],
+    source: "Architecture Review Ticket",
+    sourceLink: "https://jira.company.com/browse/ARCH-789",
+    followUpQuestions: [
+      "What type of data will be transmitted over WebSockets?",
+      "How many concurrent connections do you expect?",
+      "Will you need to support reconnection scenarios?",
+      "What client platforms need to be supported?",
+      "How will you handle message validation?"
+    ],
+  },
+  {
+    id: 13,
+    question: "How should we implement secure CI/CD pipelines for our new Kubernetes-based microservices?",
+    user: "Mike Johnson",
+    stage: "DevOps Design",
+    dueDate: new Date(Date.now() + (4 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    policyOwner: {
+      team: "DevSecOps Team",
+      teamEmail: "devsecops@company.com",
+      contact: "Olivia Davis",
+      email: "olivia.davis@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: [`Team leads CI/CD security initiatives`, `Developed CI/CD security controls`]
+      },
+      contactConfidence: {
+        level: 'high',
+        reasons: [`Primary contact for CI/CD security`, `Regularly updates CI/CD security policies`]
+      },
+      signOffStatus: 'Pending'
+    },
+    suggestedResponse: [
+      {
+        text: "Secure CI/CD implementation requires: 1) Signed commits and container images, 2) SLSA Level 3 compliance.",
+        supportingDocs: [
+          { name: "CI/CD Security Controls #CICD-002", link: "https://docs.company.com/security/CICD-002" }
+        ]
+      },
+      {
+        text: "3) Automated container scanning, 4) Secret scanning in pipeline, 5) IaC security scanning.",
+        supportingDocs: [
+          { name: "Container Security Policy", link: "https://docs.company.com/security/containers" }
+        ]
+      },
+      {
+        text: "6) Automated SBOM generation and vulnerability tracking, 7) Separate credentials per environment.",
+        supportingDocs: [
+          { name: "Pipeline Security Best Practices", link: "https://docs.company.com/security/pipeline-security" }
+        ]
+      }
+    ],
+    supportingDocs: [
+      { name: "CI/CD Security Controls #CICD-002", link: "https://docs.company.com/security/CICD-002" },
+      { name: "Container Security Policy", link: "https://docs.company.com/security/containers" }
+    ],
+    otherDocs: [
+      { name: "Kubernetes Security Hardening", link: "https://docs.company.com/platform/k8s-security" },
+      { name: "Pipeline Templates", link: "https://docs.company.com/cicd/templates" }
+    ],
+    source: "DevSecOps Planning Meeting",
+    sourceLink: "https://meetings.company.com/devsecops-planning-2024-03",
+    followUpQuestions: [
+      "What environments are in your deployment pipeline?",
+      "How are deployment credentials managed?",
+      "What security scanning tools are currently in use?",
+      "How are container images stored and verified?",
+      "What is your secret rotation strategy in Kubernetes?"
+    ],
   }
 ]
 

@@ -6,7 +6,7 @@ import { Button } from "@/subframe/components/Button"
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { ExternalLink, MessageSquare, Mail, Ticket, Phone, Fish, ArrowUpDown} from 'lucide-react'
+import { ExternalLink, MessageSquare, Mail, Ticket, Phone, Fish, ArrowUpDown, NotebookPen, Code} from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Accordion } from "@/subframe/components/Accordion";
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -73,6 +73,14 @@ export function QuestionsTable() {
         return <Fish className="h-4 w-4 mr-2" />
       case 'Emergency hotline':
         return <Phone className="h-4 w-4 mr-2" />
+      case 'Architecture Review Meeting':
+        return <NotebookPen className="h-4 w-4 mr-2" />
+      case 'DevSecOps Planning Meeting':
+        return <NotebookPen className="h-4 w-4 mr-2" />
+      case 'Architecture Review Ticket':
+        return <Ticket className="h-4 w-4 mr-2" />
+      case 'Code Review':
+        return <Code className="h-4 w-4 mr-2" />
       default:
         return null
     }

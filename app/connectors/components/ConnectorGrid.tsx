@@ -9,7 +9,7 @@ interface ConnectorGridProps {
 
 export function ConnectorGrid({ connectors }: ConnectorGridProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {connectors.map(connector => (
         <ConnectorCard key={connector.id} connector={connector} />
       ))}
@@ -28,11 +28,11 @@ function ConnectorCard({ connector }: ConnectorCardProps) {
   const getStatusColor = (status: 'connected' | 'available' | 'coming-soon') => {
     switch (status) {
       case 'connected':
-        return 'bg-green-600';
+        return 'bg-green-400';
       case 'available':
-        return 'bg-blue-600';
+        return 'bg-blue-400';
       case 'coming-soon':
-        return 'bg-amber-500';
+        return 'bg-purple-400';
       default:
         return 'bg-gray-400';
     }
@@ -54,7 +54,7 @@ function ConnectorCard({ connector }: ConnectorCardProps) {
 
   return (
     <Card key={connector.id} className="overflow-hidden flex flex-row">
-      <div className="h-full w-24 flex items-center justify-center p-2">
+      <div className="h-full w-24 bg-gray-100 flex items-center justify-center p-2">
         {connector.logo && !imageError ? (
           <img 
             src={connector.logo} 
