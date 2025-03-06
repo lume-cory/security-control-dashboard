@@ -88,6 +88,7 @@ interface Vendor {
   name: string;
   description: string;
   website: string;
+  icon: string;
   trustCenterUrl?: string;
   pointOfContact: {
     name: string;
@@ -179,13 +180,14 @@ export function calculateVendorComplianceSummary(vendor: Vendor) {
 export const vendors: Vendor[] = [
   {
     id: "1",
-    name: "Amazon Web Services",
-    description: "Cloud infrastructure provider",
-    website: "https://acmecloud.com",
-    trustCenterUrl: "https://acmecloud.com/trust",
+    name: "AWS S3",
+    description: "Cloud storage provider",
+    website: "https://aws.amazon.com/s3",
+    trustCenterUrl: "https://aws.amazon.com/trust",
+    icon: '/logos/aws-s3-icon.png',
     pointOfContact: {
       name: "John Smith",
-      email: "john@acmecloud.com",
+      email: "john@aws.com",
       phone: "555-0123"
     },
     riskLevel: "High",
@@ -290,6 +292,7 @@ export const vendors: Vendor[] = [
     description: "Identity and access management provider",
     website: "https://secureauth.com",
     trustCenterUrl: "https://secureauth.com/security",
+    icon: '/logos/okta-icon.png',
     pointOfContact: {
       name: "Sarah Johnson",
       email: "sarah@secureauth.com"
@@ -379,6 +382,7 @@ export const vendors: Vendor[] = [
     name: "Snowflake",
     description: "Enterprise backup and storage solutions",
     website: "https://datavault.com",
+    icon: '/logos/snowflake-icon.png',
     pointOfContact: {
       name: "Mike Wilson",
       email: "mike@datavault.com",
@@ -470,6 +474,7 @@ export const vendors: Vendor[] = [
     description: "Cloud database service for modern applications",
     website: "https://www.mongodb.com/atlas",
     trustCenterUrl: "https://www.mongodb.com/trust",
+    icon: '/logos/mongodb-logo.png',
     pointOfContact: {
       name: "Sarah Chen",
       email: "sarah.chen@company.com"

@@ -40,19 +40,28 @@ export function VendorSection() {
             >
               <div className="flex flex-col gap-1 mb-4">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-bold font-bold">{vendor.name}</h3>
-                  <Badge variant={
-                    vendor.status === 'COMPLIANT' ? 'success' :
-                    vendor.status === 'NON_COMPLIANT' ? 'error' :
-                    vendor.status === 'COMPLIANT_WITH_EXCEPTION' ? 'success' :
-                    vendor.status === 'MORE_INFO_REQUESTED' ? 'warning' :
-                    vendor.status === 'UNCONFIRMED' ? 'neutral' :
-                    vendor.status === 'SUSPENDED' ? 'error' : 'warning'
-                  } className="text-xs">
-                    {vendor.status}
-                  </Badge>
+                  <img 
+                    src={vendor.icon} 
+                    alt={`${vendor.name} logo`}
+                    className="h-16 w-16 object-contain"
+                  />
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-bold font-bold">{vendor.name}</h3>
+                      <Badge variant={
+                        vendor.status === 'COMPLIANT' ? 'success' :
+                        vendor.status === 'NON_COMPLIANT' ? 'error' :
+                        vendor.status === 'COMPLIANT_WITH_EXCEPTION' ? 'success' :
+                        vendor.status === 'MORE_INFO_REQUESTED' ? 'warning' :
+                        vendor.status === 'UNCONFIRMED' ? 'neutral' :
+                        vendor.status === 'SUSPENDED' ? 'error' : 'warning'
+                      } className="text-xs">
+                        {vendor.status}
+                      </Badge>
+                    </div>
+                    <p className="text-caption text-subtext-color">{vendor.category}</p>
+                  </div>
                 </div>
-                <p className="text-caption text-subtext-color">{vendor.category}</p>
               </div>
 
               {/* <div className="flex justify-between mb-2">
