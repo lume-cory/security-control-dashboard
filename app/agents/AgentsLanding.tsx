@@ -46,10 +46,10 @@ function AgentsLandingPage() {
       path: "/agents/3p-risk"
     },
     {
-      title: "Security Control Groups",
-      description: "This agent displays security control groups and methods to increase effectiveness considering business context",
+      title: "Exposure Remediation Agent",
+      description: "This agent assesses vulnerabilities and exposure from multiple sources and generates actions to remediate, either automatically or with human review",
       thumbnail: "/thumbnails/6.svg",
-      path: "/agents/controlgroups"
+      path: "/agents/exposureremediation"
     },
     {
       title: "Engineering Question Review",
