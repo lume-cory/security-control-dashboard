@@ -3,6 +3,7 @@ import { Button } from "@/subframe/components/Button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { TrendingUp, TrendingDown, Minus, MessageSquare, AlertCircle, Send, Bell } from 'lucide-react'
 import { Risk } from "../data/risk-data"
+import { dataSources } from "../data/data-sources"
 
 interface RiskDetailSheetProps {
   risk: Risk | null
@@ -17,6 +18,11 @@ interface OwnerUpdateSuggestion {
   status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'NO_RESPONSE';
   suggestedDate: string;
   lastFollowUp?: string;
+}
+
+// Add this function to find the data source by ID
+function getDataSourceById(id: string) {
+  return dataSources.find(source => source.id === id);
 }
 
 export function RiskDetailSheet({ risk, onClose }: RiskDetailSheetProps) {
@@ -123,8 +129,35 @@ export function RiskDetailSheet({ risk, onClose }: RiskDetailSheetProps) {
                     <>
                       <div className="border-t pt-4">
                         <div className="flex items-center justify-between mb-3">
-                          <h4 className="text-sm font-bold">Owner Update Report</h4>
                           <div className="flex items-center gap-2">
+                            <h4 className="text-sm font-bold">Owner Update Report</h4>
+                            <span className="text-xs text-muted-foreground">
+                              Last Update: {new Date(risk.ownerUpdateReport.lastFollowUp).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {risk.ownerUpdateReport.status === 'OPEN' && (
+                              <Button
+                                variant="brand-secondary"
+                                size="small"
+                                icon="FeatherSend"
+                                onClick={() => {/* Handle send update */}}
+                              >
+                                Send For Review
+                              </Button>
+                            )}
+                            
+                            {risk.ownerUpdateReport.status === 'AWAITING_RESPONSE' && (
+                              <Button
+                                variant="neutral-primary"
+                                size="small"
+                                icon="FeatherBell"
+                                onClick={() => {/* Handle follow up */}}
+                              >
+                                Follow Up
+                              </Button>
+                            )}
+                            
                             <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100">
                               <div className={`w-2 h-2 rounded-full ${
                                 risk.ownerUpdateReport.status === 'OPEN' ? 'bg-blue-500' :
@@ -132,9 +165,6 @@ export function RiskDetailSheet({ risk, onClose }: RiskDetailSheetProps) {
                                 'bg-green-500'
                               }`} />
                               {risk.ownerUpdateReport.status}
-                            </span>
-                            <span className="text-xs text-muted-foreground">
-                              Last Update: {new Date(risk.ownerUpdateReport.lastFollowUp).toLocaleDateString()}
                             </span>
                           </div>
                         </div>
@@ -206,28 +236,6 @@ export function RiskDetailSheet({ risk, onClose }: RiskDetailSheetProps) {
                           </div>
                         </div>
                       </div>
-
-                      <div className="flex gap-2 mt-4">
-                        <Button
-                          variant="brand-secondary"
-                          size="small"
-                          icon="FeatherSend"
-                          onClick={() => {/* Handle send update */}}
-                          disabled={risk.ownerUpdateReport.status === 'RESPONSE_RECEIVED'}
-                        >
-                          Send Update Request
-                        </Button>
-                        {risk.ownerUpdateReport.status === 'AWAITING_RESPONSE' && (
-                          <Button
-                            variant="neutral-primary"
-                            size="small"
-                            icon="FeatherBell"
-                            onClick={() => {/* Handle follow up */}}
-                          >
-                            Follow Up
-                          </Button>
-                        )}
-                      </div>
                     </>
                   )}
                 </div>
@@ -237,27 +245,83 @@ export function RiskDetailSheet({ risk, onClose }: RiskDetailSheetProps) {
               <div>
                 <h3 className="text-sm font-bold mb-2">Key Metrics</h3>
                 <div className="space-y-3">
-                  {risk.metrics.map((metric, index) => (
-                    <div key={index} className="bg-gray-50 p-3 rounded-lg">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm font-medium">{metric.name}</span>
-                        <span className="inline-flex items-center gap-1 text-xs">
-                          {getTrendIcon(metric.trend)}
-                          {metric.value}
-                        </span>
+                  {risk.metrics.map((metric, index) => {
+                    // Get the corresponding data source
+                    const dataSource = getDataSourceById(metric.dataSource);
+                    
+                    return (
+                      <div key={index} className="border border-gray-200 p-3 rounded-lg">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-medium">{metric.name}</span>
+                          <div className="flex items-center gap-2">
+                            <span className={`text-xs font-medium ${
+                              metric.trend === 'INCREASING' ? 'text-red-600' : 
+                              metric.trend === 'DECREASING' ? 'text-green-600' : 
+                              'text-gray-600'
+                            }`}>
+                              {metric.trend} (30d)
+                            </span>
+                            {getTrendIcon(metric.trend)}
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="flex-1 flex items-center justify-between bg-white rounded-md p-2 border">
+                            <span className="text-xs text-muted-foreground">Current</span>
+                            <span className={`text-sm font-medium ${
+                              metric.value > metric.target && metric.name.toLowerCase().includes('violation') ? 'text-red-600' :
+                              metric.value < metric.target && !metric.name.toLowerCase().includes('violation') ? 'text-red-600' :
+                              'text-green-600'
+                            }`}>
+                              {metric.value}
+                            </span>
+                          </div>
+                          
+                          <div className="flex-1 flex items-center justify-between bg-white rounded-md p-2 border">
+                            <span className="text-xs text-muted-foreground">Target</span>
+                            <span className="text-sm font-medium">{metric.target}</span>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-3 text-xs text-muted-foreground border-t pt-2">
+                          <p className="mb-1.5">{metric.context}</p>
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                            <div className="flex items-center gap-1">
+                              <span className="text-muted-foreground">Source:</span>
+                              <a 
+                                href={dataSource?.link || "#"} 
+                                className="text-blue-600 hover:underline flex items-center gap-1"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {dataSource?.name || metric.dataSourceName}
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs bg-blue-100 text-blue-700 whitespace-nowrap">
+                                  {metric.dataSource}
+                                </span>
+                              </a>
+                            </div>
+                            <div className="flex items-center gap-1 ml-auto">
+                              <span className="text-muted-foreground">Updated:</span>
+                              <span>{new Date(dataSource?.lastUpdate || metric.lastUpdated).toLocaleDateString()}</span>
+                            </div>
+                          </div>
+                          
+                          {dataSource?.integrations && dataSource.integrations.length > 0 && (
+                            <div className="mt-2 flex items-center gap-1">
+                              <span className="text-muted-foreground">Integrations:</span>
+                              <div className="flex flex-wrap gap-1">
+                                {dataSource.integrations.map(integration => (
+                                  <span key={integration} className="px-1.5 py-0.5 bg-gray-100 text-gray-700 rounded text-xs">
+                                    {integration}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-1.5">
-                        <div 
-                          className="bg-brand-primary rounded-full h-1.5" 
-                          style={{ width: `${(metric.value / metric.target) * 100}%` }}
-                        />
-                      </div>
-                      <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                        <span>Current: {metric.value}</span>
-                        <span>Target: {metric.target}</span>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
@@ -266,13 +330,13 @@ export function RiskDetailSheet({ risk, onClose }: RiskDetailSheetProps) {
                 <h3 className="text-sm font-bold mb-2">Mitigation Activities</h3>
                 <div className="space-y-3">
                   {risk.mitigationActivities.map((activity, index) => (
-                    <div key={index} className="bg-gray-50 p-3 rounded-lg">
+                    <div key={index} className="border border-gray-200 p-3 rounded-lg">
                       <div className="flex justify-between items-start mb-2">
                         <div>
                           <p className="text-sm font-medium">{activity.description}</p>
-                          <p className="text-xs text-muted-foreground">Owner: {activity.owner}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">Owner: {activity.owner}</p>
                         </div>
-                        <span className={`text-xs px-2 py-1 rounded-full ${
+                        <span className={`text-xs px-2 py-1 rounded-full whitespace-nowrap ${
                           activity.status === 'ON_TRACK' ? 'bg-green-100 text-green-800' :
                           activity.status === 'AT_RISK' ? 'bg-yellow-100 text-yellow-800' :
                           activity.status === 'OFF_TRACK' ? 'bg-red-100 text-red-800' :
@@ -281,6 +345,7 @@ export function RiskDetailSheet({ risk, onClose }: RiskDetailSheetProps) {
                           {activity.status}
                         </span>
                       </div>
+                      
                       <div className="w-full bg-gray-200 rounded-full h-1.5">
                         <div 
                           className={`rounded-full h-1.5 ${
@@ -291,9 +356,61 @@ export function RiskDetailSheet({ risk, onClose }: RiskDetailSheetProps) {
                           style={{ width: `${activity.progress}%` }}
                         />
                       </div>
-                      <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                      
+                      <div className="flex justify-between text-xs text-muted-foreground mt-1 mb-2">
                         <span>{activity.progress}% Complete</span>
                         <span>Due: {new Date(activity.dueDate).toLocaleDateString()}</span>
+                      </div>
+                      
+                      <div className="border-t pt-2 flex flex-wrap gap-y-2">
+                        <div className="w-full flex items-center justify-between">
+                          {activity.ticketId ? (
+                            <a 
+                              href={activity.ticketLink} 
+                              className="text-xs text-blue-600 hover:underline flex items-center gap-1"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <span className="px-1.5 py-0.5 bg-blue-50 text-blue-700 rounded">
+                                {activity.ticketSystem} {activity.ticketId}
+                              </span>
+                            </a>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">No ticket assigned</span>
+                          )}
+                          <span className="text-xs text-muted-foreground">
+                            Updated: {new Date(activity.lastUpdated).toLocaleDateString()}
+                          </span>
+                        </div>
+                        
+                        <div className="w-full flex items-center justify-between mt-1">
+                          <div className="flex items-center gap-1">
+                            <span className="text-xs text-muted-foreground">System:</span>
+                            <span className="text-xs font-medium">{activity.affectedSystem}</span>
+                          </div>
+                          
+                          {activity.relatedSources && activity.relatedSources.length > 0 && (
+                            <div className="flex items-center gap-1">
+                              <span className="text-xs text-muted-foreground">Related sources:</span>
+                              <div className="flex flex-wrap gap-1">
+                                {activity.relatedSources.map(sourceId => {
+                                  const source = getDataSourceById(sourceId);
+                                  return (
+                                    <a 
+                                      key={sourceId} 
+                                      href={source?.link || "#"}
+                                      className="text-xs px-1.5 py-0.5 bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      {source?.name || sourceId}
+                                    </a>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
