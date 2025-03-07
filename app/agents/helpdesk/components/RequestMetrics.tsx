@@ -192,7 +192,7 @@ export function RequestMetrics({
         </span>
         <div className="w-full">
           {outstandingMetrics.map((metric, index) => (
-            <div key={index} className="flex w-full items-center justify-between mb-2">
+            <div key={index} className="flex w-full items-center hover:bg-muted hover:cursor-pointer rounded-md justify-between mb-2">
               <div className="flex w-full items-center justify-between px-3 py-2">
                 <span className="text-sm font-medium text-default-font">{metric.label}</span>
                 <span className={`text-heading-2 font-heading-2 text-default-font ${getTextColor(metric.color)} px-2`}>
@@ -215,7 +215,7 @@ export function RequestMetrics({
       <div className="flex grow shrink-0 basis-0 flex-col flex-wrap items-start gap-4">
         <div className="flex w-full flex-wrap items-start gap-4">
           {metrics.slice(0, 2).map((metric, index) => (
-            <div key={index} className="flex grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
+            <div key={index} className="flex grow shrink-0 basis-0 flex-col items-start gap-4 hover:bg-muted hover:cursor-pointer rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
               <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color">
                 {metric.title}
               </span>
@@ -263,7 +263,7 @@ export function RequestMetrics({
         <div className="flex w-full flex-col items-start gap-3 flex-grow justify-between">
           <div className="w-full">
             {noteworthyUpdates.map((update, index) => (
-              <div key={index} className="flex w-full items-center justify-between mb-2">
+              <div key={index} className="flex w-full items-center hover:bg-muted hover:cursor-pointer rounded-md justify-between mb-2">
                 <div className="flex w-full items-center justify-between px-3 py-2">
                   <p className="text-sm font-medium text-default-font">{update.label}</p>
                   <p className="text-heading-2 font-heading-2 text-default-font text-amber-600">{update.count}</p>
