@@ -52,10 +52,10 @@ function AgentsLandingPage() {
       path: "/agents/exposureremediation"
     },
     {
-      title: "Engineering Question Review",
-      description: "See incoming requests and questions from the engineering team and respond with the help of AI suggested answers",
+      title: "Organization Risk Management Assistant",
+      description: "This agent is designed to continuously monitor the organization's risk posture, retreiving supporting data from across the organization and synthesizing them to provide a comprehensive risk report",
       thumbnail: "/thumbnails/10.svg",
-      path: "/agents/engsecurityreview"
+      path: "/agents/orgrisk"
     },
     {
       title: "Customer Security Inquiry Agent",
