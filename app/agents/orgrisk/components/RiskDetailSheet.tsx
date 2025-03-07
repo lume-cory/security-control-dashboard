@@ -20,9 +20,13 @@ interface OwnerUpdateSuggestion {
   lastFollowUp?: string;
 }
 
+interface EnhancedDataSource extends Omit<typeof dataSources[0], 'link'> {
+  link?: string;
+}
+
 // Add this function to find the data source by ID
-function getDataSourceById(id: string) {
-  return dataSources.find(source => source.id === id);
+function getDataSourceById(id: string): EnhancedDataSource | undefined {
+  return dataSources.find(source => source.id === id) as EnhancedDataSource;
 }
 
 export function RiskDetailSheet({ risk, onClose }: RiskDetailSheetProps) {
@@ -269,9 +273,10 @@ export function RiskDetailSheet({ risk, onClose }: RiskDetailSheetProps) {
                           <div className="flex-1 flex items-center justify-between bg-white rounded-md p-2 border">
                             <span className="text-xs text-muted-foreground">Current</span>
                             <span className={`text-sm font-medium ${
-                              metric.value > metric.target && metric.name.toLowerCase().includes('violation') ? 'text-red-600' :
-                              metric.value < metric.target && !metric.name.toLowerCase().includes('violation') ? 'text-red-600' :
-                              'text-green-600'
+                              (metric.name.toLowerCase().includes('violation') && metric.value > metric.target) || 
+                              (!metric.name.toLowerCase().includes('violation') && metric.value < metric.target) 
+                                ? 'text-red-600' 
+                                : 'text-green-600'
                             }`}>
                               {metric.value}
                             </span>
@@ -289,7 +294,7 @@ export function RiskDetailSheet({ risk, onClose }: RiskDetailSheetProps) {
                             <div className="flex items-center gap-1">
                               <span className="text-muted-foreground">Source:</span>
                               <a 
-                                href={dataSource?.link || "#"} 
+                                href={(dataSource as any)?.link || "#"} 
                                 className="text-blue-600 hover:underline flex items-center gap-1"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -398,7 +403,7 @@ export function RiskDetailSheet({ risk, onClose }: RiskDetailSheetProps) {
                                   return (
                                     <a 
                                       key={sourceId} 
-                                      href={source?.link || "#"}
+                                      href={(source as any)?.link || "#"}
                                       className="text-xs px-1.5 py-0.5 bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors"
                                       target="_blank"
                                       rel="noopener noreferrer"
