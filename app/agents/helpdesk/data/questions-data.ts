@@ -823,6 +823,74 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     aiSummary: "Request submitted by Mike Johnson from DevSecOps team via devsecops planning meeting. Seeking guidance on secure CI/CD pipelines for new Kubernetes-based microservices. Currently assigned to DevSecOps team with low priority. No sign-off needed. Due in 4 days.",
     aiNextSteps: ["Post this response in the Slack channel"],
     submissionMethod: 'PERSON'
+  },
+  {
+    id: 14,
+    question: "Can we store authentication tokens in AsyncStorage for our mobile app?",
+    user: "Security Assistant (Agent)",
+    stage: "Design Discussion",
+    dueDate: new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "high",
+    policyOwner: {
+      team: "Mobile Security Team",
+      teamEmail: "mobilesec@company.com",
+      contact: "Lisa Zhang",
+      email: "lisa.zhang@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: [
+          `Team owns mobile security standards`,
+          `Prior involvement in mobile authentication design`,
+          `Team maintains mobile security guidelines`
+        ]
+      },
+      contactConfidence: {
+        level: 'high',
+        reasons: [
+          `Author of mobile security guidelines`,
+          `Led previous mobile auth implementations`,
+          `Regular contributor to mobile security reviews`
+        ]
+      },
+      signOffStatus: 'Pending'
+    },
+    suggestedResponse: [
+      {
+        text: "AsyncStorage is not secure for storing sensitive data like auth tokens. Use the platform-specific secure storage: Keychain for iOS and EncryptedSharedPreferences for Android.",
+        supportingDocs: [
+          { name: "Mobile Security Guidelines", link: "https://docs.company.com/security/mobile-security" }
+        ]
+      },
+      {
+        text: "Implement biometric authentication as an additional layer before accessing stored credentials. This follows our mobile app security requirements.",
+        supportingDocs: [
+          { name: "Authentication Standards", link: "https://docs.company.com/security/auth-standards" }
+        ]
+      },
+      {
+        text: "For temporary storage during app usage, consider using in-memory storage with proper app lifecycle management.",
+        supportingDocs: [
+          { name: "Mobile Data Storage Policy", link: "https://docs.company.com/security/mobile-storage" }
+        ]
+      }
+    ],
+    supportingDocs: [
+      { name: "Mobile Security Guidelines", link: "https://docs.company.com/security/mobile-security" },
+      { name: "Authentication Standards", link: "https://docs.company.com/security/auth-standards" }
+    ],
+    otherDocs: [
+      { name: "React Native Security Best Practices", link: "https://docs.company.com/mobile/react-native-security" },
+      { name: "Mobile App Architecture", link: "https://docs.company.com/mobile/architecture" }
+    ],
+    source: "Slack #mobile-engineering channel",
+    sourceLink: "https://slack.company.com/archives/C01234567/p1623456789000600",
+    aiSummary: "AI detected security-relevant discussion in mobile engineering channel regarding token storage. High priority due to sensitive data handling implications. Requires security team review.",
+    aiNextSteps: [
+      "Share response in #mobile-engineering channel",
+      "Schedule mobile security review session",
+      "Update mobile security guidelines with specific examples"
+    ],
+    submissionMethod: 'AI_AGENT'
   }
 ]
 

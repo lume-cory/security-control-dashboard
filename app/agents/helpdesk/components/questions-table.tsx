@@ -63,6 +63,8 @@ export function QuestionsTable() {
     switch (source) {
       case 'Slack #ask-security channel':
         return <MessageSquare className="h-4 w-4 mr-2" />
+      case 'Slack #mobile-engineering channel':
+        return <MessageSquare className="h-4 w-4 mr-2" />
       case 'Email to security-helpdesk alias':
         return <Mail className="h-4 w-4 mr-2" />  
       case 'Security review ticket':
@@ -112,6 +114,37 @@ export function QuestionsTable() {
     if (!sortConfig) return questions
 
     return [...questions].sort((a, b) => {
+      if (sortConfig.key === 'triage') {
+        const triageOrder = {
+          urgent: 0,
+          high: 1,
+          medium: 2,
+          low: 3
+        }
+        const aValue = triageOrder[a.triage as keyof typeof triageOrder] ?? 4
+        const bValue = triageOrder[b.triage as keyof typeof triageOrder] ?? 4
+        
+        return sortConfig.direction === 'asc' 
+          ? aValue - bValue 
+          : bValue - aValue
+      }
+
+      if (sortConfig.key === 'slaStatus' && !showResolved) {
+        const aStatus = getSLAStatus(a as OutstandingQuestion)
+        const bStatus = getSLAStatus(b as OutstandingQuestion)
+        
+        // Sort by on track first, then by remaining hours
+        if (aStatus.onTrack !== bStatus.onTrack) {
+          return sortConfig.direction === 'asc'
+            ? (aStatus.onTrack ? -1 : 1)
+            : (aStatus.onTrack ? 1 : -1)
+        }
+        
+        return sortConfig.direction === 'asc'
+          ? aStatus.remaining - bStatus.remaining
+          : bStatus.remaining - aStatus.remaining
+      }
+
       const aValue = a[sortConfig.key as keyof typeof a]
       const bValue = b[sortConfig.key as keyof typeof b]
 
@@ -204,10 +237,10 @@ export function QuestionsTable() {
               </div>
             </TableHead>
             {!showResolved && (
-              <TableHead onClick={() => handleSort('dueDate')} className="cursor-pointer hover:bg-muted">
+              <TableHead onClick={() => handleSort('slaStatus')} className="cursor-pointer hover:bg-muted">
                 <div className="flex items-center space-x-1">
                   <span>SLA Status</span>
-                  {sortConfig?.key === 'dueDate' && (
+                  {sortConfig?.key === 'slaStatus' && (
                     <ArrowUpDown className="h-4 w-4" />
                   )}
                 </div>

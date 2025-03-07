@@ -128,12 +128,12 @@ function SecurityHelpDeskAgent() {
             </div>
 
             {/* Metrics and SLAs Section */}
-            < div className="flex w-full flex-wrap items-start gap-4" >
-              <div className="flex flex-col items-start gap-4 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm" >
+            <div className="flex w-full flex-wrap items-start gap-4 justify-between">
+              <div className="flex flex-col items-start gap-4 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
                 <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color" >
                   Outstanding questions
                 </span>
-                < div className="flex items-center gap-2" >
+                < div className="flex w-full items-center gap-2" >
                   <FilterBadge label="Urgent" count="3" selected={false} />
                   <Badge variant="error" icon="FeatherArrowUp" >
                     13 %
@@ -212,6 +212,31 @@ function SecurityHelpDeskAgent() {
                       < Badge variant="neutral" icon="FeatherArrowUp" >
                         33 %
                       </Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm h-full">
+                <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color">
+                  Noteworthy Updates
+                </span>
+                <div className="flex w-full flex-col items-start gap-3 flex-grow justify-between">
+                  <div className="w-full">
+                    <div className="flex justify-between items-center w-full mb-4">
+                      <p className="text-sm font-medium text-default-font">Awaiting Response</p>
+                      <p className="text-heading-2 font-heading-2 text-default-font text-amber-600">7</p>
+                    </div>
+                    <div className="flex justify-between items-center w-full mb-4">
+                      <p className="text-sm font-medium text-default-font">Inactive (4+ days)</p>
+                      <p className="text-heading-2 font-heading-2 text-default-font text-amber-600">5</p>
+                    </div>
+                    <div className="flex justify-between items-center w-full mb-4">
+                      <p className="text-sm font-medium text-default-font">Topics identified, but not submitted</p>
+                      <p className="text-heading-2 font-heading-2 text-default-font text-amber-600">4</p>
+                    </div>
+                    <div className="flex justify-between items-center w-full">
+                      <p className="text-sm font-medium text-default-font">Submitted this week</p>
+                      <p className="text-heading-2 font-heading-2 text-default-font text-amber-600">8</p>
                     </div>
                   </div>
                 </div>
