@@ -13,6 +13,7 @@ export interface Question {
   stage: string;
   source: string;
   sourceLink: string;
+  sourceTool: string;
   triage?: 'urgent' | 'high' | 'medium' | 'low';
   suggestedResponse: Array<ResponseSection>;
   policyOwner: PolicyOwner;
@@ -20,6 +21,15 @@ export interface Question {
 }
 
 export type SubmissionMethod = 'AI_AGENT' | 'APPLICATION' | 'PERSON';
+
+export interface RequestContext {
+  type: 'email' | 'slack' | 'meeting_notes' | 'code_review' | 'ticket' | 'phishing_email' | 'call_summary';
+  content: string;
+  timestamp: string;
+  participants?: string[];
+  threadId?: string;
+  attachments?: Array<{ name: string; link: string }>;
+}
 
 export interface OutstandingQuestion extends Question {
   dueDate: string;
@@ -30,6 +40,10 @@ export interface OutstandingQuestion extends Question {
   submissionMethod: SubmissionMethod;
   aiSummary?: string;
   aiNextSteps?: string[];
+  requestContext: RequestContext;
+  createdDate: string;
+  lastUpdatedDate: string;
+  lastReplyBy: 'requestor' | 'security_team';
 }
 
 export interface ResolvedQuestion extends Question {
@@ -58,6 +72,46 @@ export interface PolicyOwner {
   signOffStatus?: 'Yes' | 'No' | 'Pending' | 'N/A';
 }
 
+// Helper function to calculate relative dates
+function getRelativeDates(dueDate: string, triage: 'urgent' | 'high' | 'medium' | 'low' | undefined) {
+  const dueDateObj = new Date(dueDate);
+  
+  // Set creation date based on triage level
+  const creationDateObj = new Date(dueDateObj);
+  switch(triage) {
+    case 'urgent':
+      // Urgent: 1-2 days before due date
+      creationDateObj.setDate(dueDateObj.getDate() - Math.floor(Math.random() * 2) - 1);
+      break;
+    case 'high':
+      // High: 3-5 days before due date
+      creationDateObj.setDate(dueDateObj.getDate() - Math.floor(Math.random() * 3) - 3);
+      break;
+    case 'medium':
+      // Medium: 5-10 days before due date
+      creationDateObj.setDate(dueDateObj.getDate() - Math.floor(Math.random() * 6) - 5);
+      break;
+    case 'low':
+      // Low: 10-14 days before due date
+      creationDateObj.setDate(dueDateObj.getDate() - Math.floor(Math.random() * 5) - 10);
+      break;
+    default:
+      // Default to medium
+      creationDateObj.setDate(dueDateObj.getDate() - Math.floor(Math.random() * 6) - 5);
+  }
+  
+  // Set last updated date between creation and due date
+  const lastUpdatedObj = new Date(creationDateObj);
+  const daysBetween = Math.max(1, Math.floor((dueDateObj.getTime() - creationDateObj.getTime()) / (1000 * 60 * 60 * 24)));
+  const updateOffset = Math.floor(Math.random() * daysBetween);
+  lastUpdatedObj.setDate(creationDateObj.getDate() + updateOffset);
+  
+  return {
+    createdDate: creationDateObj.toISOString().split('T')[0],
+    lastUpdatedDate: lastUpdatedObj.toISOString().split('T')[0]
+  };
+}
+
 export const outstandingQuestions: OutstandingQuestion[] = [
   {
     id: 1,
@@ -66,6 +120,9 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     stage: "Architecture Review",
     dueDate: new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
     triage: "high",
+    source: "Slack #ask-security channel",
+    sourceLink: "https://slack.com/archives/C01234567/p1623456789000200",
+    sourceTool: "Slack",
     policyOwner: {
       team: "Identity & Access Management Team",
       teamEmail: "iam@company.com",
@@ -109,11 +166,25 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       { name: "User Authentication Flow", link: "https://docs.company.com/auth/flow" },
       { name: "Third-Party Integration Guidelines", link: "https://docs.company.com/integration/guidelines" }
     ],
-    source: "Slack #ask-security channel",
-    sourceLink: "https://slack.com/archives/C01234567/p1623456789000200",
     aiSummary: "Request submitted by John Doe from Platform Engineering team via Slack. Seeking guidance on third-party auth service security implications. Pending sign-off from Maya Patel. Due in 2 days.",
     aiNextSteps: ["Send a reminder to Maya", "Update the third-party integration guidelines to include this information"],
-    submissionMethod: 'PERSON'
+    submissionMethod: 'PERSON',
+    requestContext: {
+      type: 'slack',
+      timestamp: '2023-07-12T14:23:45Z',
+      threadId: 'C01234567/p1623456789000200',
+      participants: ['John Doe', 'Maya Patel', 'Thomas Lee'],
+      content: `*John Doe*: @security-team What are the security implications of using a third-party authentication service? We're considering Auth0 for our new project.
+
+*Maya Patel*: Hi John, that's a good question. There are several considerations here. When are you planning to implement this?
+
+*John Doe*: We're in the architecture review phase right now, so probably within the next sprint if approved.
+
+*Thomas Lee*: I'd be interested in the answer too - we're looking at similar options for the mobile app.`,
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "high").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "high").lastUpdatedDate,
+    lastReplyBy: "requestor"
   },
   {
     id: 2,
@@ -122,6 +193,9 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     stage: "Planning",
     dueDate: new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
     triage: "medium",
+    source: "Email to security-helpdesk alias",
+    sourceLink: "https://mail.company.com/threads/website-inquiry-july12",
+    sourceTool: "Email",
     policyOwner: {
       team: "Infrastructure Security Team",
       teamEmail: "infrasec@company.com",
@@ -165,11 +239,33 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       { name: "Cloud Hosting Standards", link: "https://docs.company.com/cloud/standards" },
       { name: "Website Request Form", link: "https://forms.company.com/website-request" }
     ],
-    source: "Email to security-helpdesk alias",
-    sourceLink: "https://mail.company.com/threads/website-inquiry-july12",
     aiSummary: "Website hosting request from Sarah Chen, submitted via email. Medium priority request for self-hosting approval. No sign-off required. Due tomorrow.",
     aiNextSteps: ["Send a reminder to Chris", "Update the website request form with a link to the domain management guidelines"],
-    submissionMethod: 'PERSON'
+    submissionMethod: 'PERSON',
+    requestContext: {
+      type: 'email',
+      timestamp: '2023-07-13T09:15:22Z',
+      participants: ['Sarah Chen', 'security-helpdesk@company.com'],
+      content: `From: Sarah Chen <sarah.chen@company.com>
+To: security-helpdesk@company.com
+Subject: Question about team website hosting
+
+Hello Security Team,
+
+I want to host a website for our team project. Can I register a .org domain and set it up myself? This would be for our internal hackathon project to showcase our work to other teams.
+
+The site would only contain project descriptions and demo videos, no sensitive data.
+
+Thanks,
+Sarah Chen
+Senior Developer, Platform Team`,
+      attachments: [
+        { name: 'project_outline.pdf', link: 'https://company.sharepoint.com/sites/security/project_outline.pdf' }
+      ]
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "medium").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "medium").lastUpdatedDate,
+    lastReplyBy: "security_team"
   },
   {
     id: 3,
@@ -224,9 +320,26 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     source: "Slack #ask-security channel",
     sourceLink: "https://slack.com/archives/C01234567/p1623456789000400",
+    sourceTool: "Slack",
     aiSummary: "Travel security request from Michael Rodriguez regarding Mexico business trip. No sign-off needed. Due today.",
     aiNextSteps: ["Post this response in Slack", "Send a travel security reminder to #team-all in Slack"],
-    submissionMethod: 'PERSON'
+    submissionMethod: 'PERSON',
+    requestContext: {
+      type: 'slack',
+      timestamp: '2023-07-15T10:42:18Z',
+      threadId: 'C01234567/p1623456789000400',
+      participants: ['Michael Rodriguez', 'Sarah O\'Connor', 'Raj Patel', '#ask-security'],
+      content: `*Michael Rodriguez*: @security-travel I'm traveling to Mexico next week for the conference. Can I bring my work phone? Are there any special security measures I need to take?
+
+*Raj Patel*: @Michael I went last year and had to do some special setup. Let's see what the security team says.
+
+*Sarah O'Connor*: Hi Michael, there are specific requirements for Mexico travel. When exactly are you leaving?
+
+*Michael Rodriguez*: Thanks Sarah. I'm leaving next Wednesday, so I have about a week to prepare.`,
+    },
+    createdDate: getRelativeDates(new Date().toISOString().split('T')[0], "low").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date().toISOString().split('T')[0], "low").lastUpdatedDate,
+    lastReplyBy: "requestor"
   },
   {
     id: 4,
@@ -280,9 +393,34 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     source: "Email to security-helpdesk alias",
     sourceLink: "https://mail.company.com/threads/external-sharing-query",
+    sourceTool: "Email",
     aiSummary: "Request submitted by Alex Kumar from Data Protection team via email. Seeking guidance on external data sharing policy compliance. Pending sign-off from James Wilson. Due yesterday.",
     aiNextSteps: ["Send a reminder to James"],
-    submissionMethod: 'PERSON'
+    submissionMethod: 'PERSON',
+    requestContext: {
+      type: 'email',
+      timestamp: '2023-07-10T15:33:27Z',
+      participants: ['Alex Kumar', 'security-helpdesk@company.com'],
+      content: `From: Alex Kumar <alex.kumar@company.com>
+To: security-helpdesk@company.com
+Subject: External file sharing with auditors
+
+Hello Security Team,
+
+Our team needs to share some sensitive financial documents with external auditors for the upcoming quarterly review. These include financial statements, transaction logs, and some customer data (anonymized).
+
+What's the approved process for this? The auditors need access by the end of next week.
+
+Thanks,
+Alex Kumar
+Finance Department`,
+      attachments: [
+        { name: 'audit_requirements.pdf', link: 'https://company.sharepoint.com/sites/finance/audit_requirements.pdf' }
+      ]
+    },
+    createdDate: getRelativeDates(new Date(Date.now() - (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "high").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() - (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "high").lastUpdatedDate,
+    lastReplyBy: "security_team"
   },
   {
     id: 5,
@@ -336,9 +474,28 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     source: "Slack #ask-security channel",
     sourceLink: "https://slack.com/archives/C01234567/p1623456789000500",
+    sourceTool: "Slack",
     aiSummary: "Request submitted by Patricia Wong from Identity & Access Management team via Slack. Created tickets for IAM team to add contractors to AD/Okta and IT to provision devices. Due yesterday.",
     aiNextSteps: ["Follow up with IT to provision devices", "Follow up with IAM team to add contractors to AD/Okta"],
-    submissionMethod: 'PERSON'
+    submissionMethod: 'PERSON',
+    requestContext: {
+      type: 'slack',
+      timestamp: '2023-07-08T09:17:42Z',
+      threadId: 'C01234567/p1623456789000500',
+      participants: ['Patricia Wong', 'Maya Patel', 'David Chen', '#ask-security'],
+      content: `*Patricia Wong*: @security-team We're hiring contractors next week and need to get them laptop access. What's the process for this? We have 3 developers joining the mobile team.
+
+*David Chen*: I think there's a special process for contractors vs. full-time employees.
+
+*Maya Patel*: @Patricia Yes, there's a different process. How long will these contractors be with us?
+
+*Patricia Wong*: They'll be here for 6 months initially, with possible extension.
+
+*Maya Patel*: @Patricia I'll have the security assistant kick off the process and link you into the supporting tickets. Let me know if you need anything else.`,
+    },
+    createdDate: getRelativeDates(new Date(Date.now() - (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "medium").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() - (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "medium").lastUpdatedDate,
+    lastReplyBy: "requestor"
   },
   {
     id: 6,
@@ -392,17 +549,42 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     source: "Zendesk ticket",
     sourceLink: "https://zendesk.company.com/tickets/SEC-2023-789",
+    sourceTool: "Zendesk",
     aiSummary: "Request submitted by Tom Mitchell from Identity & Access Management team via Zendesk. Pending sign-off from Maya Patel. Due in 3 days.",
     aiNextSteps: ["Post this response in the Zendesk ticket"],
-    submissionMethod: 'PERSON'
+    submissionMethod: 'PERSON',
+    requestContext: {
+      type: 'ticket',
+      timestamp: '2023-07-18T11:05:33Z',
+      participants: ['Tom Mitchell', 'Security Helpdesk'],
+      content: `Ticket #SEC-2023-789
+Submitted by: Tom Mitchell
+Department: Engineering
+Priority: Urgent
+
+Subject: Team password sharing solution needed
+
+Description:
+Our team currently has several shared accounts for various development services. We've been using a shared document to track these credentials, but I know this isn't secure.
+
+Can we use personal LastPass accounts to share team credentials? Several team members already have personal accounts.
+
+If not, what's the recommended solution for sharing team credentials securely? We need something immediately as we're onboarding new team members this week.`,
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "urgent").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "urgent").lastUpdatedDate,
+    lastReplyBy: "requestor"
   },
   {
     id: 7,
     question: "Reporting suspicious emails with DocuSign links",
-    user: "Security Operations",
+    user: "Lionel Lee",
     stage: "Active Incident",
     dueDate: new Date(Date.now() - (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
     triage: "urgent",
+    source: "Phishing report button",
+    sourceLink: "https://phishing.company.com/reports/2023-15",
+    sourceTool: "Abnormal Security",
     policyOwner: {
       team: "Security Operations Team",
       teamEmail: "secops@company.com",
@@ -447,17 +629,45 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       { name: "Security Awareness Training", link: "https://docs.company.com/training/security" },
       { name: "DocuSign Security Guidelines", link: "https://docs.company.com/security/docusign" }
     ],
-    source: "Phishing report button",
-    sourceLink: "https://phishing.company.com/reports/2023-15",
     aiSummary: "Request submitted by Security Operations agent. Currently assigned to email security team with urgent priority.",
     aiNextSteps: ["Ask SOC if they need additional context", "Send email to Abnormal Security representative to see if this can be blocked in the future"],
-    submissionMethod: 'AI_AGENT'
+    submissionMethod: 'APPLICATION',
+    requestContext: {
+      type: 'phishing_email',
+      timestamp: '2023-07-07T08:22:15Z',
+      participants: ['Security Operations', 'Multiple Recipients'],
+      content: `From: docusign.notification@doc-sign-secure.com
+To: [Multiple Recipients]
+Subject: ACTION REQUIRED: Please review and sign important document
+
+Dear Valued Employee,
+
+You have received an important document that requires your immediate signature. This document contains updated company policies that must be acknowledged by all employees.
+
+Document: Company_Policy_Update_July2023.pdf
+Sender: John Smith, HR Director
+Due Date: July 8, 2023
+
+[SIGN DOCUMENT NOW] <- Suspicious URL: hxxps://docusign-secure.signin.net/document/78945
+
+If you have any questions about this document, please contact HR directly.
+
+Thank you,
+DocuSign Notification Service`,
+      attachments: [
+        { name: 'phishing_headers.txt', link: 'https://company.sharepoint.com/sites/security/phishing/headers_2023-15.txt' },
+        { name: 'screenshot.png', link: 'https://company.sharepoint.com/sites/security/phishing/screenshot_2023-15.png' }
+      ]
+    },
+    createdDate: getRelativeDates(new Date(Date.now() - (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "urgent").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() - (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "urgent").lastUpdatedDate,
+    lastReplyBy: "security_team"
   },
   {
     id: 8,
     question: "Data center fire alarm triggered - Emergency response needed",
-    user: "Fire Alert System",
-    stage: "Critical Incident",
+    user: "Jenny Henry",
+    stage: "Fire Alert System",
     dueDate: new Date(Date.now() + (4 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
     triage: "urgent",
     policyOwner: {
@@ -505,9 +715,35 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     source: "Emergency hotline",
     sourceLink: "https://incidents.company.com/DC-2023-89",
+    sourceTool: "Emergency Hotline",
     aiSummary: "Request submitted by the fire alert system. Seeking guidance on data center fire alarm response. Currently assigned to Infrastructure & Facilities team with urgent priority.",
     aiNextSteps: ["Check the fire alarm system logs", "Escalate to management once issue confirmed"],
-    submissionMethod: 'APPLICATION'
+    submissionMethod: 'APPLICATION',
+    requestContext: {
+      type: 'call_summary',
+      timestamp: '2023-07-19T14:03:22Z',
+      participants: ['Fire Alert System', 'Emergency Response Team', 'Sarah Johnson'],
+      content: `EMERGENCY CALL TRANSCRIPT
+Time: 14:03:22
+Alert Type: Fire Alarm - Data Center B
+Location: Server Room 4, Rack Section C-12
+
+Automated Message: "Warning: Fire detection system has been triggered in Data Center B, Server Room 4. This is not a drill. Please follow emergency protocols."
+
+Emergency Response Team Notes:
+- Initial smoke detection in HVAC system near Rack C-12
+- Temperature sensors showing rapid increase in ambient temperature
+- Automatic fire suppression system countdown initiated
+- Facility manager Sarah Johnson notified and en route
+- IT emergency shutdown procedures should be initiated immediately
+- Estimated arrival of fire department: 8 minutes
+
+Priority: CRITICAL - Immediate response required
+Action: Security team to coordinate with IT for emergency shutdown procedures and data protection protocols`,
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (4 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "urgent").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (4 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "urgent").lastUpdatedDate,
+    lastReplyBy: "requestor"
   },
   {
     id: 9,
@@ -559,8 +795,9 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       { name: "User Authentication Flow", link: "https://docs.company.com/auth/flow" },
       { name: "Third-Party Integration Guidelines", link: "https://docs.company.com/integration/guidelines" }
     ],
-    source: "Slack #ask-security channel",
+    source: "Slack #eng-all channel",
     sourceLink: "https://slack.com/archives/C01234567/p1623456789000200",
+    sourceTool: "Slack",
     followUpQuestions: [
       "What specific third-party service are you considering?",
       "What types of user data will be handled by this service?",
@@ -570,7 +807,25 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     aiSummary: "Request submitted by John Doe from Platform Engineering team via Slack. Seeking guidance on third-party auth service security implications. Currently assigned to IAM team with low priority. Pending sign-off from Maya Patel. Due in 1 day.",
     aiNextSteps: ["Post this response in the Slack channel"],
-    submissionMethod: 'PERSON'
+    submissionMethod: 'PERSON',
+    requestContext: {
+      type: 'slack',
+      timestamp: '2023-07-17T13:45:29Z',
+      threadId: 'C01234567/p1623456789000200',
+      participants: ['John Doe', 'Maya Patel', '#eng-all'],
+      content: `*John Doe*: @security-team What are the security implications of using a third-party authentication service? We're considering Auth0 for our new project.
+
+*Maya Patel*: Hi John, that's a good question. There are several considerations here. When are you planning to implement this?
+
+*John Doe*: We're in the architecture review phase right now, so probably within the next sprint if approved.
+
+*John Doe*: To provide more context, we're building a customer portal that will need to integrate with our existing systems but also support social logins. We're considering Auth0 because it seems to handle this well, but we want to understand any security concerns before proceeding.
+
+*Maya Patel*: Thanks for the additional context. Let me get back to you with a comprehensive response.`,
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "low").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "low").lastUpdatedDate,
+    lastReplyBy: "requestor"
   },
   {
     id: 10,
@@ -624,6 +879,7 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     source: "Architecture Review Meeting",
     sourceLink: "https://meetings.company.com/arch-review-db-123",
+    sourceTool: "Google Meet",
     followUpQuestions: [
       "What type of data will be stored in this database?",
       "What is your key rotation strategy?",
@@ -633,7 +889,36 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     aiSummary: "Request submitted by Jennifer Lee from Data Security team via architecture review meeting. Seeking guidance on data encryption at rest policy compliance. Currently assigned to Data Security team with low priority. Pending sign-off from David Chen. Due in 2 days.",
     aiNextSteps: ["Post this response in the Slack channel"],
-    submissionMethod: 'PERSON'
+    submissionMethod: 'PERSON',
+    requestContext: {
+      type: 'meeting_notes',
+      timestamp: '2023-07-18T10:30:00Z',
+      participants: ['Jennifer Lee', 'David Chen', 'Architecture Review Board'],
+      content: `Architecture Review Meeting - July 18, 2023
+Topic: Customer Data Platform Security Review
+Attendees: Jennifer Lee (Data Engineering), David Chen (Security), Alex Wong (Platform), Sarah Miller (Product)
+
+Meeting Notes:
+10:30 - Jennifer presented the new customer data platform architecture
+10:45 - Discussion of data flow and storage requirements
+11:00 - Security considerations raised
+
+Jennifer Lee: "For the new database that will store customer profile data, what encryption standard should we use for data at rest? We're planning to use PostgreSQL on AWS RDS."
+
+David Chen: "That's an important question. What classification of data will be stored there?"
+
+Jennifer Lee: "It will contain PII including names, addresses, and purchase history. Some financial data like last 4 digits of payment cards. No full payment details."
+
+David Chen: "Given the sensitivity, we'll need strong encryption. Let me check our current standards and get back to you with the specific requirements."
+
+Action Items:
+- David to provide encryption standards for the database by Friday
+- Jennifer to share detailed data schema with security team
+- Alex to document AWS security controls already in place`,
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "low").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "low").lastUpdatedDate,
+    lastReplyBy: "security_team"
   },
   {
     id: 11,
@@ -685,8 +970,9 @@ export const outstandingQuestions: OutstandingQuestion[] = [
       { name: "OWASP SQL Injection Prevention Cheat Sheet", link: "https://owasp.org/www-project-cheat-sheets/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html" },
       { name: "TypeORM Documentation", link: "https://typeorm.io/" }
     ],
-    source: "Code Review",
+    source: "PR #39535 Code Review",
     sourceLink: "https://github.company.com/reporting-service/pull/123",
+    sourceTool: "GitHub",
     followUpQuestions: [
       "What database technology are you using?",
       "Are you using an ORM or raw SQL queries?",
@@ -696,7 +982,42 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     aiSummary: "Request submitted by Alex Rodriguez from Application Security team via code review. Seeking guidance on SQL injection prevention in new reporting service. Currently assigned to Application Security team with medium priority. No sign-off needed. Due in 3 days.",
     aiNextSteps: ["Post this response in the Slack channel"],
-    submissionMethod: 'PERSON'
+    submissionMethod: 'PERSON',
+    requestContext: {
+      type: 'code_review',
+      timestamp: '2023-07-19T09:15:42Z',
+      threadId: 'github.company.com/reporting-service/pull/123',
+      participants: ['Alex Rodriguez', 'Rachel Kim', 'Dev Team'],
+      content: `Pull Request #123: Add custom report generation API
+Repository: reporting-service
+Author: Alex Rodriguez
+Reviewers: Rachel Kim, Michael Chen
+
+Rachel Kim commented:
+> In ReportController.ts, line 78-92, I see you're constructing SQL queries using string concatenation with user input. This could lead to SQL injection vulnerabilities. How do we prevent SQL injection in our new reporting service?
+
+Alex Rodriguez replied:
+> Good catch. I was planning to sanitize the inputs before constructing the query. What's the recommended approach?
+
+Rachel Kim commented:
+> String sanitization isn't sufficient protection. We should use parameterized queries or an ORM.
+
+Alex Rodriguez replied:
+> I'll need some guidance on implementing this properly. Can the security team provide specific recommendations for our TypeScript/Node.js backend?
+
+Code snippet from PR:
+\`\`\`typescript
+function generateCustomReport(filters: any) {
+  const query = "SELECT * FROM customer_data WHERE region = '" + filters.region + 
+                "' AND signup_date > '" + filters.startDate + 
+                "' ORDER BY " + filters.sortField;
+  return db.execute(query);
+}
+\`\`\``,
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "medium").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "medium").lastUpdatedDate,
+    lastReplyBy: "requestor"
   },
   {
     id: 12,
@@ -750,6 +1071,7 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     source: "Architecture Review Ticket",
     sourceLink: "https://jira.company.com/browse/ARCH-789",
+    sourceTool: "Zendesk",
     followUpQuestions: [
       "What type of data will be transmitted over WebSockets?",
       "How many concurrent connections do you expect?",
@@ -759,7 +1081,35 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     aiSummary: "Request submitted by Samantha Taylor from Network Security team via architecture review ticket. Seeking guidance on WebSocket security requirements. Currently assigned to Network Security team with low priority. Pending sign-off from James Wilson. Due in 2 days.",
     aiNextSteps: ["Post this response in the Slack channel"],
-    submissionMethod: 'PERSON'
+    submissionMethod: 'PERSON',
+    requestContext: {
+      type: 'ticket',
+      timestamp: '2023-07-16T16:22:37Z',
+      participants: ['Samantha Taylor', 'James Wilson', 'Architecture Team'],
+      content: `Ticket #ARCH-789
+Type: Architecture Review
+Component: Real-time Notification Service
+Submitted by: Samantha Taylor
+
+Description:
+We're designing a new WebSocket service for real-time notifications and updates to users. This will replace our current polling mechanism and provide immediate updates for critical alerts, chat messages, and system notifications.
+
+Question:
+What security requirements should we implement for our new WebSocket service? We need guidance on authentication, message validation, rate limiting, and any other security considerations specific to WebSockets.
+
+Technical Details:
+- Backend: Node.js with Socket.IO
+- Frontend: React with Socket.IO client
+- Expected concurrent connections: ~5,000
+- Will transmit: User notifications, system alerts, chat messages
+- Some notifications may contain sensitive information
+
+Timeline:
+Design phase now, implementation starts in 2 weeks`,
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "low").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "low").lastUpdatedDate,
+    lastReplyBy: "requestor"
   },
   {
     id: 13,
@@ -813,6 +1163,7 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     source: "DevSecOps Planning Meeting",
     sourceLink: "https://meetings.company.com/devsecops-planning-2024-03",
+    sourceTool: "Microsoft Teams",
     followUpQuestions: [
       "What environments are in your deployment pipeline?",
       "How are deployment credentials managed?",
@@ -822,7 +1173,37 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     aiSummary: "Request submitted by Mike Johnson from DevSecOps team via devsecops planning meeting. Seeking guidance on secure CI/CD pipelines for new Kubernetes-based microservices. Currently assigned to DevSecOps team with low priority. No sign-off needed. Due in 4 days.",
     aiNextSteps: ["Post this response in the Slack channel"],
-    submissionMethod: 'PERSON'
+    submissionMethod: 'PERSON',
+    requestContext: {
+      type: 'meeting_notes',
+      timestamp: '2023-07-20T13:00:00Z',
+      participants: ['Mike Johnson', 'Olivia Davis', 'DevOps Team', 'Security Team'],
+      content: `DevSecOps Planning Meeting - July 20, 2023
+Topic: Secure CI/CD Pipeline for Kubernetes Microservices
+Attendees: Mike Johnson (DevOps), Olivia Davis (Security), Team Leads
+
+Meeting Notes:
+13:00 - Mike presented the new microservices architecture
+13:15 - Discussion of deployment pipeline requirements
+13:30 - Security considerations for CI/CD
+
+Mike Johnson: "We're moving to a Kubernetes-based microservices architecture and need to redesign our CI/CD pipelines. How should we implement secure CI/CD pipelines for our new Kubernetes-based microservices?"
+
+Olivia Davis: "That's a comprehensive question. What specific security concerns are you most worried about?"
+
+Mike Johnson: "Several areas: securing container images, protecting secrets in the pipeline, ensuring secure deployments across environments, and maintaining compliance with our security standards."
+
+Olivia Davis: "We'll need to address all of those. Let me prepare a comprehensive set of requirements that covers the full pipeline."
+
+Action Items:
+- Olivia to document secure CI/CD requirements by next week
+- Mike to share current pipeline design for security review
+- Schedule follow-up workshop to implement security controls
+- Create security testing plan for the pipeline`,
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (4 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "low").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (4 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "low").lastUpdatedDate,
+    lastReplyBy: "requestor"
   },
   {
     id: 14,
@@ -884,13 +1265,540 @@ export const outstandingQuestions: OutstandingQuestion[] = [
     ],
     source: "Slack #mobile-engineering channel",
     sourceLink: "https://slack.company.com/archives/C01234567/p1623456789000600",
+    sourceTool: "Slack",
     aiSummary: "AI detected security-relevant discussion in mobile engineering channel regarding token storage. High priority due to sensitive data handling implications. Requires security team review.",
     aiNextSteps: [
       "Share response in #mobile-engineering channel",
       "Schedule mobile security review session",
       "Update mobile security guidelines with specific examples"
     ],
-    submissionMethod: 'AI_AGENT'
+    submissionMethod: 'AI_AGENT',
+    requestContext: {
+      type: 'slack',
+      timestamp: '2023-07-21T11:37:14Z',
+      threadId: 'C01234567/p1623456789000600',
+      participants: ['Dev Team', 'Security Assistant (Agent)', 'Lisa Zhang'],
+      content: `*Ryan Chen*: Hey team, I'm working on the authentication flow for our React Native app. I'm thinking of storing the JWT in AsyncStorage for persistence. Any concerns with that approach?
+
+*Jamie Wong*: I think that should work. AsyncStorage is pretty standard for React Native.
+
+*Tyler Smith*: Not sure if there are security implications though. @security-assistant what do you think?
+
+*Security Assistant (Agent)*: I noticed you're discussing token storage in mobile apps. Storing authentication tokens in AsyncStorage might present security risks as it's not encrypted storage. Can we store authentication tokens in AsyncStorage for our mobile app?
+
+*Lisa Zhang*: Good catch @security-assistant. AsyncStorage is not secure for sensitive data like auth tokens. Let me prepare a proper response with the recommended approach.`,
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "high").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "high").lastUpdatedDate,
+    lastReplyBy: "requestor"
+  },
+  {
+    id: 15,
+    question: "Hardcoded API keys found in frontend code repository",
+    user: "Security Assistant (Agent)",
+    stage: "Code Review",
+    dueDate: new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "high",
+    policyOwner: {
+      team: "Application Security Team",
+      teamEmail: "appsec@company.com",
+      contact: "David Chen",
+      email: "david.chen@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: [
+          `Team owns secure coding standards`,
+          `Previous similar issues assigned to this team`,
+          `Team manages secret scanning tools`
+        ]
+      },
+      contactConfidence: {
+        level: 'medium',
+        reasons: [
+          `Lead for secure coding initiatives`,
+          `Responded to similar issues in the past`
+        ]
+      },
+      signOffStatus: 'N/A'
+    },
+    suggestedResponse: [
+      {
+        text: "I noticed hardcoded API keys in the frontend repository. This violates our secure coding policy as these keys are visible in the client-side code and can be extracted by users.",
+        supportingDocs: [
+          { name: "Secure Coding Standards", link: "https://docs.company.com/security/secure-coding" }
+        ]
+      },
+      {
+        text: "Please move these API keys to environment variables on the server side and use a backend API to make authenticated requests. For frontend-only applications, consider implementing token exchange or proxying through a backend service.",
+        supportingDocs: [
+          { name: "API Security Guidelines", link: "https://docs.company.com/security/api-security" }
+        ]
+      },
+      {
+        text: "Additionally, these exposed keys should be rotated immediately as they should be considered compromised.",
+        supportingDocs: [
+          { name: "Secret Management Policy", link: "https://docs.company.com/security/secret-management" }
+        ]
+      }
+    ],
+    supportingDocs: [
+      { name: "Secure Coding Standards", link: "https://docs.company.com/security/secure-coding" },
+      { name: "API Security Guidelines", link: "https://docs.company.com/security/api-security" }
+    ],
+    otherDocs: [
+      { name: "Secret Management Policy", link: "https://docs.company.com/security/secret-management" },
+      { name: "Frontend Security Checklist", link: "https://docs.company.com/security/frontend-checklist" }
+    ],
+    source: "PR #42891 Code Review",
+    sourceLink: "https://github.company.com/customer-portal/pull/42891",
+    sourceTool: "GitHub",
+    followUpQuestions: [
+      "How should we handle existing deployments with the exposed keys?",
+      "What's the recommended approach for frontend authentication to APIs?"
+    ],
+    aiSummary: "Security Assistant identified hardcoded API keys in frontend code during automated PR scanning. High priority due to potential credential exposure. Requires immediate key rotation and architectural changes.",
+    aiNextSteps: [
+      "Contact repository owner directly",
+      "Create Jira ticket for tracking remediation",
+      "Schedule security review of related repositories"
+    ],
+    submissionMethod: 'AI_AGENT',
+    requestContext: {
+      type: 'code_review',
+      timestamp: '2023-07-22T09:45:12Z',
+      threadId: 'github.company.com/customer-portal/pull/42891',
+      participants: ['Emma Johnson', 'Tyler Smith', 'Security Assistant (Agent)'],
+      content: `Pull Request #42891: Add customer profile dashboard
+Repository: customer-portal
+Author: Emma Johnson
+Reviewers: Tyler Smith
+
+Security Assistant (Agent) commented:
+> I've detected hardcoded API keys in the following files:
+> 
+> src/services/api.js:
+> \`\`\`javascript
+> const API_KEY = 'ak_live_7f4bJ92KPoV8Lp21qwEfG9Hs';
+> const API_SECRET = 'ask_live_NqK8fT2xR5vBpL7zD1jH3mYs';
+> 
+> export const fetchCustomerData = async (customerId) => {
+>   const response = await fetch(\`https://api.analytics.com/v2/customers/\${customerId}\`, {
+>     headers: {
+>       'Authorization': \`Bearer \${API_KEY}\`,
+>       'X-Api-Secret': API_SECRET
+>     }
+>   });
+>   return response.json();
+> };
+> \`\`\`
+> 
+> This is a security issue as these API keys are exposed in client-side code and can be extracted by users. Please move these to environment variables on the server side.
+
+Emma Johnson replied:
+> Thanks for catching this! I was using these for testing and forgot to remove them. I'll update the code to use our backend API instead.
+
+Tyler Smith commented:
+> @Emma we should also rotate these keys immediately since they've been committed to the repo.`
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "high").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (1 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "high").lastUpdatedDate,
+    lastReplyBy: "security_team"
+  },
+  {
+    id: 16,
+    question: "Insecure file upload implementation in customer support portal",
+    user: "Security Assistant (Agent)",
+    stage: "Design Review",
+    dueDate: new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "medium",
+    policyOwner: {
+      team: "Application Security Team",
+      teamEmail: "appsec@company.com",
+      contact: "Lisa Zhang",
+      email: "lisa.zhang@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: [
+          `Team owns secure design standards`,
+          `Previous file upload security reviews performed by this team`,
+          `Team manages web application security standards`
+        ]
+      },
+      contactConfidence: {
+        level: 'high',
+        reasons: [
+          `Author of file upload security guidelines`,
+          `Led previous file upload security reviews`,
+          `Subject matter expert for web security`
+        ]
+      },
+      signOffStatus: 'N/A'
+    },
+    suggestedResponse: [
+      {
+        text: "I noticed the design for the new file upload feature in the customer support portal lacks several security controls. The current implementation doesn't validate file types, doesn't scan for malware, and stores files with user-controlled names.",
+        supportingDocs: [
+          { name: "Secure File Upload Guidelines", link: "https://docs.company.com/security/file-upload" }
+        ]
+      },
+      {
+        text: "Please implement the following controls: 1) Server-side file type validation using content inspection, not just extension checking, 2) File size limits, 3) Malware scanning via our security gateway, 4) Randomized file names for storage, and 5) Proper access controls on the storage bucket.",
+        supportingDocs: [
+          { name: "Cloud Storage Security Standards", link: "https://docs.company.com/security/cloud-storage" }
+        ]
+      },
+      {
+        text: "Additionally, consider implementing a separate domain for serving user-uploaded content to prevent XSS attacks.",
+        supportingDocs: [
+          { name: "Web Application Security Checklist", link: "https://docs.company.com/security/webapp-checklist" }
+        ]
+      }
+    ],
+    supportingDocs: [
+      { name: "Secure File Upload Guidelines", link: "https://docs.company.com/security/file-upload" },
+      { name: "Cloud Storage Security Standards", link: "https://docs.company.com/security/cloud-storage" }
+    ],
+    otherDocs: [
+      { name: "Web Application Security Checklist", link: "https://docs.company.com/security/webapp-checklist" },
+      { name: "OWASP File Upload Cheat Sheet", link: "https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html" }
+    ],
+    source: "Slack #support-portal-dev channel",
+    sourceLink: "https://slack.company.com/archives/C01234567/p1623456789000700",
+    sourceTool: "Slack",
+    followUpQuestions: [
+      "What malware scanning solution should we integrate with?",
+      "Are there specific file types that should be blocked entirely?"
+    ],
+    aiSummary: "Security Assistant identified insecure file upload design in customer support portal during Slack conversation monitoring. Medium priority issue requiring implementation of multiple security controls before feature release.",
+    aiNextSteps: [
+      "Schedule design review meeting with support portal team",
+      "Share file upload security guidelines with development team",
+      "Create security requirements document for this feature"
+    ],
+    submissionMethod: 'AI_AGENT',
+    requestContext: {
+      type: 'slack',
+      timestamp: '2023-07-20T14:22:37Z',
+      threadId: 'C01234567/p1623456789000700',
+      participants: ['Rachel Kim', 'Jason Park', 'Support Portal Team', 'Security Assistant (Agent)'],
+      content: `*Rachel Kim*: Hey team, I've pushed the initial implementation of the file upload feature for the support portal. Customers can now attach files to their support tickets.
+
+*Jason Park*: Nice! How are we handling the uploads? Are they going straight to S3?
+
+*Rachel Kim*: Yeah, we're using presigned URLs to upload directly to the support-uploads bucket. The frontend gets the URL from our API, then posts the file directly to S3.
+
+*Jason Park*: Cool. What about file types? Are we restricting what they can upload?
+
+*Rachel Kim*: Right now we're checking the file extension on the frontend and only allowing common document types (.pdf, .docx, .xlsx, .png, .jpg). We store them with the original filename in a folder structure based on the ticket ID.
+
+*Security Assistant (Agent)*: I noticed you're discussing file uploads for the support portal. The current implementation may have security risks: 1) Frontend-only extension checking can be bypassed, 2) Using original filenames can lead to path traversal issues, 3) No mention of malware scanning. Would you like guidance on secure file upload implementation?
+
+*Rachel Kim*: Oh, good catch @security-assistant! Yes, we'd appreciate guidance on making this more secure before we release it.`,
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "medium").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "medium").lastUpdatedDate,
+    lastReplyBy: "requestor"
+  },
+  {
+    id: 17,
+    question: "Excessive permissions in IAM roles for data analytics team",
+    user: "Security Assistant (Agent)",
+    stage: "Cloud Security Review",
+    dueDate: new Date(Date.now() + (5 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "medium",
+    policyOwner: {
+      team: "Cloud Security Team",
+      teamEmail: "cloudsec@company.com",
+      contact: "Marcus Johnson",
+      email: "marcus.johnson@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: [
+          `Team owns cloud security standards`,
+          `Team manages IAM policies and reviews`,
+          `Previous similar issues assigned to this team`
+        ]
+      },
+      contactConfidence: {
+        level: 'high',
+        reasons: [
+          `Cloud security architect`,
+          `Author of least privilege access guidelines`,
+          `Regular reviewer of IAM configurations`
+        ]
+      },
+      signOffStatus: 'N/A'
+    },
+    suggestedResponse: [
+      {
+        text: "I've identified overly permissive IAM roles for the data analytics team in our AWS environment. The current role has full access to all S3 buckets, when only specific data buckets are needed for their work.",
+        supportingDocs: [
+          { name: "Cloud IAM Security Standards", link: "https://docs.company.com/security/cloud-iam" }
+        ]
+      },
+      {
+        text: "Please implement least privilege access by: 1) Creating a new role with access only to required buckets, 2) Implementing resource-level permissions with specific actions (GetObject, ListBucket), and 3) Adding condition keys to restrict access to specific paths within buckets.",
+        supportingDocs: [
+          { name: "Least Privilege Access Guidelines", link: "https://docs.company.com/security/least-privilege" }
+        ]
+      },
+      {
+        text: "Additionally, implement CloudTrail monitoring for sensitive data access and regular access reviews for these roles.",
+        supportingDocs: [
+          { name: "Cloud Monitoring Standards", link: "https://docs.company.com/security/cloud-monitoring" }
+        ]
+      }
+    ],
+    supportingDocs: [
+      { name: "Cloud IAM Security Standards", link: "https://docs.company.com/security/cloud-iam" },
+      { name: "Least Privilege Access Guidelines", link: "https://docs.company.com/security/least-privilege" }
+    ],
+    otherDocs: [
+      { name: "Cloud Monitoring Standards", link: "https://docs.company.com/security/cloud-monitoring" },
+      { name: "AWS Security Best Practices", link: "https://docs.company.com/security/aws-best-practices" }
+    ],
+    source: "Architecture Review Meeting",
+    sourceLink: "https://meetings.company.com/recordings/arch-review-july21",
+    sourceTool: "Otter.ai",
+    followUpQuestions: [
+      "What specific S3 buckets does the data analytics team need access to?",
+      "Should we implement temporary elevated access for special projects?"
+    ],
+    aiSummary: "Security Assistant identified excessive IAM permissions during architecture review meeting. Data analytics team has broader S3 access than needed, violating least privilege principle. Medium priority requiring IAM role refinement.",
+    aiNextSteps: [
+      "Schedule meeting with data analytics team lead to understand access requirements",
+      "Create Jira ticket for IAM remediation",
+      "Develop least privilege access template for analytics roles"
+    ],
+    submissionMethod: 'AI_AGENT',
+    requestContext: {
+      type: 'meeting_notes',
+      timestamp: '2023-07-21T10:00:00Z',
+      participants: ['Alex Wong', 'Sophia Chen', 'Data Analytics Team', 'Cloud Architecture Team', 'Security Assistant (Agent)'],
+      content: `Architecture Review Meeting - July 21, 2023
+Topic: Data Analytics Platform Expansion
+Attendees: Alex Wong (Data Analytics), Sophia Chen (Cloud Architecture), Team Members
+
+Meeting Notes:
+10:00 - Alex presented the data analytics platform expansion plans
+10:15 - Discussion of new data sources and processing requirements
+10:30 - Cloud resource requirements and access patterns
+
+Alex Wong: "For the new data sources, we'll need access to the customer transaction data in S3. We currently have a role called 'data-analytics-prod' that our team uses."
+
+Sophia Chen: "Let me check that role... It looks like data-analytics-prod has S3:* permissions on all buckets. That's pretty broad access."
+
+Alex Wong: "Yeah, it was set up that way initially to make development easier. We really only need access to the 'customer-transactions', 'marketing-analytics', and 'product-usage' buckets."
+
+Sophia Chen: "And what operations do you need to perform on those buckets?"
+
+Alex Wong: "Mostly read operations - GetObject, ListBucket. For the 'marketing-analytics' bucket we also need PutObject for our processed results."
+
+Security Assistant (Agent) [automated transcript analysis]: "Potential security issue detected: The data-analytics-prod IAM role has excessive permissions (S3:* on all buckets) when only specific buckets and operations are required. This violates least privilege principle from our cloud security standards."
+
+Sophia Chen: "We should probably refine those permissions to follow least privilege. I'll make a note to update the IAM policies."
+
+Alex Wong: "That makes sense. We don't need access to everything."`,
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (5 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "medium").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (5 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "medium").lastUpdatedDate,
+    lastReplyBy: "requestor"
+  },
+  {
+    id: 18,
+    question: "Unencrypted PII data in development database",
+    user: "Security Assistant (Agent)",
+    stage: "Data Security",
+    dueDate: new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "high",
+    policyOwner: {
+      team: "Data Security Team",
+      teamEmail: "datasec@company.com",
+      contact: "Olivia Davis",
+      email: "olivia.davis@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: [
+          `Team owns data protection standards`,
+          `Previous PII handling issues assigned to this team`,
+          `Team manages data classification policy`
+        ]
+      },
+      contactConfidence: {
+        level: 'high',
+        reasons: [
+          `Data protection officer`,
+          `Author of PII handling guidelines`,
+          `Regular reviewer of data security issues`
+        ]
+      },
+      signOffStatus: 'N/A'
+    },
+    suggestedResponse: [
+      {
+        text: "I've identified unencrypted Personally Identifiable Information (PII) in the development database 'customer-dev-db1'. This includes full names, addresses, phone numbers, and email addresses stored in plaintext.",
+        supportingDocs: [
+          { name: "Data Protection Policy", link: "https://docs.company.com/security/data-protection" }
+        ]
+      },
+      {
+        text: "This violates our data security policy which requires all PII to be encrypted at rest, even in development environments. Additionally, development environments should use anonymized or synthetic data rather than actual customer information.",
+        supportingDocs: [
+          { name: "PII Handling Guidelines", link: "https://docs.company.com/security/pii-handling" }
+        ]
+      },
+      {
+        text: "Please implement the following: 1) Enable database encryption for the development database, 2) Replace real customer data with anonymized data using our data masking tool, and 3) Review other development databases for similar issues.",
+        supportingDocs: [
+          { name: "Database Security Standards", link: "https://docs.company.com/security/database-security" }
+        ]
+      }
+    ],
+    supportingDocs: [
+      { name: "Data Protection Policy", link: "https://docs.company.com/security/data-protection" },
+      { name: "PII Handling Guidelines", link: "https://docs.company.com/security/pii-handling" }
+    ],
+    otherDocs: [
+      { name: "Database Security Standards", link: "https://docs.company.com/security/database-security" },
+      { name: "Data Masking Guidelines", link: "https://docs.company.com/security/data-masking" }
+    ],
+    source: "Slack #dev-database channel",
+    sourceLink: "https://slack.company.com/archives/C01234567/p1623456789000800",
+    sourceTool: "Slack",
+    followUpQuestions: [
+      "How should we handle the existing unencrypted data?",
+      "What data masking solution should we use for development?"
+    ],
+    aiSummary: "Security Assistant identified unencrypted PII in development database during Slack conversation monitoring. High priority due to potential regulatory compliance issues. Requires immediate encryption and data anonymization.",
+    aiNextSteps: [
+      "Contact database administrators immediately",
+      "Create high-priority Jira ticket for remediation",
+      "Schedule data protection training for development team"
+    ],
+    submissionMethod: 'AI_AGENT',
+    requestContext: {
+      type: 'slack',
+      timestamp: '2023-07-19T16:38:42Z',
+      threadId: 'C01234567/p1623456789000800',
+      participants: ['Daniel Lee', 'Priya Patel', 'Dev Team', 'Security Assistant (Agent)'],
+      content: `*Daniel Lee*: Hey team, I've restored a fresh copy of the production database to customer-dev-db1 for our testing. It has the latest customer data as of yesterday.
+
+*Priya Patel*: Thanks! That will help with debugging the address validation issue we're seeing.
+
+*Daniel Lee*: Yeah, it's much easier working with real customer data. I've granted everyone on the team read/write access to the database.
+
+*Priya Patel*: Perfect. I'll start querying the customer_profiles table to find examples with international addresses.
+
+*Security Assistant (Agent)*: I noticed you're discussing copying production customer data to a development environment. This may violate our data protection policy which requires PII to be encrypted at rest and anonymized in non-production environments. Would you like guidance on properly handling customer data in development?
+
+*Daniel Lee*: Oh, I didn't realize we weren't supposed to use real customer data in dev. @security-assistant yes, please provide guidance on the proper approach.`,
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "high").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "high").lastUpdatedDate,
+    lastReplyBy: "requestor"
+  },
+  {
+    id: 19,
+    question: "Missing security headers on customer-facing web applications",
+    user: "Security Assistant (Agent)",
+    stage: "Web Security",
+    dueDate: new Date(Date.now() + (4 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+    triage: "medium",
+    policyOwner: {
+      team: "Application Security Team",
+      teamEmail: "appsec@company.com",
+      contact: "James Wilson",
+      email: "james.wilson@company.com",
+      teamConfidence: {
+        level: 'high',
+        reasons: [
+          `Team owns web application security standards`,
+          `Previous security header issues assigned to this team`,
+          `Team manages web security scanning tools`
+        ]
+      },
+      contactConfidence: {
+        level: 'medium',
+        reasons: [
+          `Web security specialist`,
+          `Contributor to security header guidelines`,
+          `Has reviewed similar issues previously`
+        ]
+      },
+      signOffStatus: 'N/A'
+    },
+    suggestedResponse: [
+      {
+        text: "I've identified missing security headers on our customer-facing web applications. Specifically, the customer portal, support site, and account management applications are missing critical headers like Content-Security-Policy, X-Frame-Options, and Strict-Transport-Security.",
+        supportingDocs: [
+          { name: "Web Security Headers Policy", link: "https://docs.company.com/security/security-headers" }
+        ]
+      },
+      {
+        text: "These headers are required by our web security standards and help prevent common attacks like XSS, clickjacking, and SSL stripping. The absence of these headers was identified in an automated scan of our public endpoints.",
+        supportingDocs: [
+          { name: "Web Application Security Standards", link: "https://docs.company.com/security/webapp-security" }
+        ]
+      },
+      {
+        text: "Please implement the required headers as specified in our security header policy. Consider using a web application firewall or CDN configuration to apply these headers consistently across all applications.",
+        supportingDocs: [
+          { name: "Security Header Implementation Guide", link: "https://docs.company.com/security/header-implementation" }
+        ]
+      }
+    ],
+    supportingDocs: [
+      { name: "Web Security Headers Policy", link: "https://docs.company.com/security/security-headers" },
+      { name: "Web Application Security Standards", link: "https://docs.company.com/security/webapp-security" }
+    ],
+    otherDocs: [
+      { name: "Security Header Implementation Guide", link: "https://docs.company.com/security/header-implementation" },
+      { name: "OWASP Secure Headers Project", link: "https://owasp.org/www-project-secure-headers/" }
+    ],
+    source: "DevSecOps Planning Meeting",
+    sourceLink: "https://meetings.company.com/recordings/devsecops-july18",
+    sourceTool: "Microsoft Teams",
+    followUpQuestions: [
+      "Should we implement these headers at the application level or infrastructure level?",
+      "What is the recommended Content-Security-Policy configuration for our applications?"
+    ],
+    aiSummary: "Security Assistant identified missing security headers on customer-facing web applications during automated scanning. Medium priority issue affecting multiple applications. Requires implementation of standard security headers to comply with web security policy.",
+    aiNextSteps: [
+      "Share findings with web platform team",
+      "Create Jira tickets for each affected application",
+      "Schedule security header implementation workshop"
+    ],
+    submissionMethod: 'AI_AGENT',
+    requestContext: {
+      type: 'meeting_notes',
+      timestamp: '2023-07-18T14:00:00Z',
+      participants: ['Mike Johnson', 'Olivia Davis', 'Web Platform Team', 'Security Assistant (Agent)'],
+      content: `DevSecOps Planning Meeting - July 18, 2023
+Topic: Web Platform Security Improvements
+Attendees: Mike Johnson (DevOps), Olivia Davis (Security), Web Platform Team
+
+Meeting Notes:
+14:00 - Discussion of current web platform architecture
+14:15 - Review of recent deployments and changes
+14:30 - Planning for security improvements
+
+Mike Johnson: "We've deployed the new customer portal last week and it's been stable so far. We're planning to migrate the support site to the same architecture next month."
+
+Olivia Davis: "That's good progress. Have we run security scans on the new portal yet?"
+
+Mike Johnson: "We ran the basic vulnerability scan before deployment and fixed the critical issues, but we haven't done a comprehensive assessment yet."
+
+Team Member: "The account management application is also due for an update. We're planning to modernize the frontend next quarter."
+
+Security Assistant (Agent) [automated transcript analysis]: "Security scan results for customer portal available: Missing security headers detected including Content-Security-Policy, X-Frame-Options, Strict-Transport-Security. Similar issues exist on support site and account management applications based on last scan (July 10)."
+
+Olivia Davis: "We should make sure all our customer-facing applications have the proper security headers. That's an easy win for security."
+
+Mike Johnson: "Good point. We could implement those at the CDN level to ensure consistency across all applications."`,
+    },
+    createdDate: getRelativeDates(new Date(Date.now() + (4 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "medium").createdDate,
+    lastUpdatedDate: getRelativeDates(new Date(Date.now() + (4 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0], "medium").lastUpdatedDate,
+    lastReplyBy: "requestor"
   }
 ]
 
@@ -907,6 +1815,7 @@ export const resolvedQuestions: ResolvedQuestion[] = [
     documentationLink: "/security/policies/password-policy",
     source: "Security review ticket",
     sourceLink: "https://jira.company.com/browse/SEC-001",
+    sourceTool: "Zendesk",
     policyOwner: {
       team: "Identity & Access Management Team",
       teamEmail: "iam@company.com",
@@ -937,6 +1846,7 @@ export const resolvedQuestions: ResolvedQuestion[] = [
     documentationLink: "/security/operations/audit-schedule",
     source: "Slack #ask-security channel",
     sourceLink: "https://slack.com/archives/C01234567/p1623456789000300",
+    sourceTool: "Slack",
     policyOwner: {
       team: "Identity & Access Management Team",
       teamEmail: "iam@company.com",
@@ -967,6 +1877,7 @@ export const resolvedQuestions: ResolvedQuestion[] = [
     documentationLink: "/security/byod/mobile-access",
     source: "Email to security-helpdesk alias",
     sourceLink: "https://mail.company.com/threads/mobile-access-request",
+    sourceTool: "Email",
     policyOwner: {
       team: "Identity & Access Management Team",
       teamEmail: "iam@company.com",
@@ -997,6 +1908,7 @@ export const resolvedQuestions: ResolvedQuestion[] = [
     documentationLink: "/security/incidents/LOST-2023-45",
     source: "Emergency hotline",
     sourceLink: "https://incidents.company.com/LOST-2023-45",
+    sourceTool: "Emergency Hotline",
     policyOwner: {
       team: "Identity & Access Management Team",
       teamEmail: "iam@company.com",
@@ -1027,6 +1939,7 @@ export const resolvedQuestions: ResolvedQuestion[] = [
     documentationLink: "/security/approved-software/video-conferencing",
     source: "Zendesk ticket",
     sourceLink: "https://zendesk.company.com/tickets/SEC-2023-089",
+    sourceTool: "Zendesk",
     policyOwner: {
       team: "Identity & Access Management Team",
       teamEmail: "iam@company.com",
@@ -1057,6 +1970,7 @@ export const resolvedQuestions: ResolvedQuestion[] = [
     documentationLink: "/security/incidents/PHISH-2023-12",
     source: "Phishing report button",
     sourceLink: "https://phishing.company.com/reports/2023-12",
+    sourceTool: "Abnormal Security",
     policyOwner: {
       team: "Identity & Access Management Team",
       teamEmail: "iam@company.com",
@@ -1087,6 +2001,7 @@ export const resolvedQuestions: ResolvedQuestion[] = [
     documentationLink: "/security/policies/removable-media",
     source: "Slack #ask-security channel",
     sourceLink: "https://slack.com/archives/C01234567/p1623456789000400",
+    sourceTool: "Slack",
     policyOwner: {
       team: "Identity & Access Management Team",
       teamEmail: "iam@company.com",

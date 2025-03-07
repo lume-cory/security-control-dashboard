@@ -21,7 +21,8 @@ interface ConfirmedAssociations {
 type SortConfig = {
   key: string;
   direction: 'asc' | 'desc';
-} | null;
+  priority: number;
+}[];
 
 export function QuestionsTable() {
   const [showResolved, setShowResolved] = useState(false)
@@ -29,7 +30,10 @@ export function QuestionsTable() {
   const [response, setResponse] = useState('')
   const [confirmedAssociations, setConfirmedAssociations] = useState<ConfirmedAssociations>({})
   const [selectedTriage, setSelectedTriage] = useState<string>('')
-  const [sortConfig, setSortConfig] = useState<SortConfig>(null)
+  const [sortConfig, setSortConfig] = useState<SortConfig>([
+    { key: 'triage', direction: 'asc', priority: 0 },
+    { key: 'slaStatus', direction: 'desc', priority: 1 }
+  ])
   const [isTeamExpanded, setIsTeamExpanded] = useState(false)
   const [isContactExpanded, setIsContactExpanded] = useState(false)
 
@@ -59,30 +63,24 @@ export function QuestionsTable() {
     console.log(`Document "${docName}" is ${isAssociated ? '' : 'not '}associated with question ${questionId}`)
   }
 
-  const getSourceIcon = (source: string) => {
-    switch (source) {
-      case 'Slack #ask-security channel':
+  const getSourceIcon = (sourceTool: string) => {
+    switch (sourceTool) {
+      case 'Slack':
         return <MessageSquare className="h-4 w-4 mr-2" />
-      case 'Slack #mobile-engineering channel':
-        return <MessageSquare className="h-4 w-4 mr-2" />
-      case 'Email to security-helpdesk alias':
-        return <Mail className="h-4 w-4 mr-2" />  
-      case 'Security review ticket':
-        return <Ticket className="h-4 w-4 mr-2" />
-      case 'Zendesk ticket':
-        return <Ticket className="h-4 w-4 mr-2" />
-      case 'Phishing report button':
-        return <Fish className="h-4 w-4 mr-2" />
-      case 'Emergency hotline':
-        return <Phone className="h-4 w-4 mr-2" />
-      case 'Architecture Review Meeting':
-        return <Mic className="h-4 w-4 mr-2" />
-      case 'DevSecOps Planning Meeting':
-        return <Mic className="h-4 w-4 mr-2" />
-      case 'Architecture Review Ticket':
-        return <Ticket className="h-4 w-4 mr-2" />
-      case 'Code Review':
+      case 'GitHub':
         return <Code className="h-4 w-4 mr-2" />
+      case 'Email':
+        return <Mail className="h-4 w-4 mr-2" />  
+      case 'Abnormal Security':
+        return <Fish className="h-4 w-4 mr-2" />
+      case 'Otter.ai':
+      case 'Google Meet':
+      case 'Microsoft Teams':
+        return <Mic className="h-4 w-4 mr-2" />
+      case 'Zendesk':
+        return <Ticket className="h-4 w-4 mr-2" />
+      case 'Emergency Hotline':
+        return <Phone className="h-4 w-4 mr-2" />
       default:
         return null
     }
@@ -110,64 +108,143 @@ export function QuestionsTable() {
     }
   }
 
+  // Function to format SLA status in days instead of hours
+  const formatSLAStatus = (dueDate: string | undefined) => {
+    if (!dueDate) return "No due date";
+    
+    const now = new Date();
+    const due = new Date(dueDate);
+    const diffTime = due.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays < 0) {
+      return (
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-medium text-red-600">⚠</span>
+          <span className="text-sm text-red-600">
+            {`${Math.abs(diffDays)} days over`}
+          </span>
+        </div>
+      );
+    } else if (diffDays === 0) {
+      return (
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-medium text-yellow-600">⚠</span>
+          <span className="text-sm text-yellow-600">
+            Due today
+          </span>
+        </div>
+      );
+    } else if (diffDays === 1) {
+      return (
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-medium text-green-600">✓</span>
+          <span className="text-sm text-gray-600">
+            Due tomorrow
+          </span>
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-medium text-green-600">✓</span>
+          <span className="text-sm text-gray-600">
+            {`${diffDays} days left`}
+          </span>
+        </div>
+      );
+    }
+  };
+
   const sortQuestions = (questions: (OutstandingQuestion | ResolvedQuestion)[]) => {
-    if (!sortConfig) return questions
+    if (!sortConfig.length) return questions;
 
     return [...questions].sort((a, b) => {
-      if (sortConfig.key === 'triage') {
-        const triageOrder = {
-          urgent: 0,
-          high: 1,
-          medium: 2,
-          low: 3
+      // Sort by each criteria in priority order
+      for (const { key, direction } of sortConfig) {
+        let comparison = 0;
+
+        if (key === 'triage') {
+          const triageOrder = {
+            urgent: 0,
+            high: 1,
+            medium: 2,
+            low: 3
+          };
+          const aValue = triageOrder[a.triage as keyof typeof triageOrder] ?? 4;
+          const bValue = triageOrder[b.triage as keyof typeof triageOrder] ?? 4;
+          
+          comparison = direction === 'asc' 
+            ? aValue - bValue 
+            : bValue - aValue;
         }
-        const aValue = triageOrder[a.triage as keyof typeof triageOrder] ?? 4
-        const bValue = triageOrder[b.triage as keyof typeof triageOrder] ?? 4
-        
-        return sortConfig.direction === 'asc' 
-          ? aValue - bValue 
-          : bValue - aValue
-      }
-
-      if (sortConfig.key === 'slaStatus' && !showResolved) {
-        const aStatus = getSLAStatus(a as OutstandingQuestion)
-        const bStatus = getSLAStatus(b as OutstandingQuestion)
-        
-        // Sort by on track first, then by remaining hours
-        if (aStatus.onTrack !== bStatus.onTrack) {
-          return sortConfig.direction === 'asc'
-            ? (aStatus.onTrack ? -1 : 1)
-            : (aStatus.onTrack ? 1 : -1)
+        else if (key === 'slaStatus' && !showResolved) {
+          // Get due dates
+          const aDueDate = new Date((a as OutstandingQuestion).dueDate);
+          const bDueDate = new Date((b as OutstandingQuestion).dueDate);
+          const now = new Date();
+          
+          // Calculate days remaining
+          const aDaysRemaining = Math.ceil((aDueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+          const bDaysRemaining = Math.ceil((bDueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+          
+          // First prioritize overdue items (negative days)
+          if ((aDaysRemaining < 0) !== (bDaysRemaining < 0)) {
+            comparison = aDaysRemaining < 0 ? -1 : 1;
+          } else {
+            // Then sort by days remaining (ascending = closer due dates first)
+            comparison = aDaysRemaining - bDaysRemaining;
+          }
+          
+          // Reverse if direction is desc
+          if (direction === 'desc') {
+            comparison = -comparison;
+          }
         }
-        
-        return sortConfig.direction === 'asc'
-          ? aStatus.remaining - bStatus.remaining
-          : bStatus.remaining - aStatus.remaining
+        else {
+          // Other fields sorting logic remains the same
+          const aValue = a[key as keyof typeof a];
+          const bValue = b[key as keyof typeof b];
+
+          if (aValue === bValue) {
+            comparison = 0;
+          } else if (aValue === undefined || bValue === undefined) {
+            comparison = aValue === undefined ? 1 : -1;
+          } else {
+            comparison = direction === 'asc'
+              ? (aValue < bValue ? -1 : 1)
+              : (aValue > bValue ? -1 : 1);
+          }
+        }
+
+        if (comparison !== 0) return comparison;
       }
 
-      const aValue = a[sortConfig.key as keyof typeof a]
-      const bValue = b[sortConfig.key as keyof typeof b]
-
-      if (aValue === bValue) return 0
-      
-      if (sortConfig.direction === 'asc') {
-        return (aValue ?? '') < (bValue ?? '') ? -1 : 1
-      } else {
-        return (aValue ?? '') > (bValue ?? '') ? -1 : 1
-      }
-    })
+      return 0;
+    });
   }
 
   const handleSort = (key: string) => {
     setSortConfig(current => {
-      if (!current || current.key !== key) {
-        return { key, direction: 'asc' }
+      const existingSort = current.find(sort => sort.key === key);
+      
+      if (!existingSort) {
+        // Add new sort while maintaining others
+        return [...current, { key, direction: 'asc', priority: current.length }];
       }
-      if (current.direction === 'asc') {
-        return { key, direction: 'desc' }
+
+      if (existingSort.direction === 'asc') {
+        // Update direction to desc
+        return current.map(sort => 
+          sort.key === key ? { ...sort, direction: 'desc' } : sort
+        );
       }
-      return null
-    })
+
+      // Remove this sort criteria and adjust priorities
+      return current
+        .filter(sort => sort.key !== key)
+        .map((sort, index) => ({ ...sort, priority: index }));
+    });
   }
 
   const filterQuestions = (questions: (OutstandingQuestion | ResolvedQuestion)[]) => {
@@ -204,35 +281,55 @@ export function QuestionsTable() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead onClick={() => handleSort('question')} className="cursor-pointer hover:bg-muted">
+            <TableHead onClick={() => handleSort('question')} className="w-[35%] cursor-pointer hover:bg-muted">
               <div className="flex items-center space-x-1">
                 <span>Question</span>
-                {sortConfig?.key === 'question' && (
-                  <ArrowUpDown className="h-4 w-4" />
+                {sortConfig.find(sort => sort.key === 'question') && (
+                  <div className="flex items-center">
+                    <ArrowUpDown className="h-4 w-4" />
+                    <span className="text-xs ml-1">
+                      {sortConfig.findIndex(sort => sort.key === 'question') + 1}
+                    </span>
+                  </div>
                 )}
               </div>
             </TableHead>
             <TableHead onClick={() => handleSort('user')} className="cursor-pointer hover:bg-muted">
               <div className="flex items-center space-x-1">
                 <span>User</span>
-                {sortConfig?.key === 'user' && (
-                  <ArrowUpDown className="h-4 w-4" />
+                {sortConfig.find(sort => sort.key === 'user') && (
+                  <div className="flex items-center">
+                    <ArrowUpDown className="h-4 w-4" />
+                    <span className="text-xs ml-1">
+                      {sortConfig.findIndex(sort => sort.key === 'user') + 1}
+                    </span>
+                  </div>
                 )}
               </div>
             </TableHead>
             <TableHead onClick={() => handleSort('stage')} className="cursor-pointer hover:bg-muted">
               <div className="flex items-center space-x-1">
                 <span>Type</span>
-                {sortConfig?.key === 'stage' && (
-                  <ArrowUpDown className="h-4 w-4" />
+                {sortConfig.find(sort => sort.key === 'stage') && (
+                  <div className="flex items-center">
+                    <ArrowUpDown className="h-4 w-4" />
+                    <span className="text-xs ml-1">
+                      {sortConfig.findIndex(sort => sort.key === 'stage') + 1}
+                    </span>
+                  </div>
                 )}
               </div>
             </TableHead>
             <TableHead onClick={() => handleSort('triage')} className="cursor-pointer hover:bg-muted">
               <div className="flex items-center space-x-1">
                 <span>Triage</span>
-                {sortConfig?.key === 'triage' && (
-                  <ArrowUpDown className="h-4 w-4" />
+                {sortConfig.find(sort => sort.key === 'triage') && (
+                  <div className="flex items-center">
+                    <ArrowUpDown className="h-4 w-4" />
+                    <span className="text-xs ml-1">
+                      {sortConfig.findIndex(sort => sort.key === 'triage') + 1}
+                    </span>
+                  </div>
                 )}
               </div>
             </TableHead>
@@ -240,28 +337,43 @@ export function QuestionsTable() {
               <TableHead onClick={() => handleSort('slaStatus')} className="cursor-pointer hover:bg-muted">
                 <div className="flex items-center space-x-1">
                   <span>SLA Status</span>
-                  {sortConfig?.key === 'slaStatus' && (
-                    <ArrowUpDown className="h-4 w-4" />
+                  {sortConfig.find(sort => sort.key === 'slaStatus') && (
+                    <div className="flex items-center">
+                      <ArrowUpDown className="h-4 w-4" />
+                      <span className="text-xs ml-1">
+                        {sortConfig.findIndex(sort => sort.key === 'slaStatus') + 1}
+                      </span>
+                    </div>
                   )}
                 </div>
               </TableHead>
             )}
-            <TableHead 
+            {/* <TableHead 
               onClick={() => handleSort(showResolved ? 'resolvedDate' : 'dueDate')} 
               className="cursor-pointer hover:bg-muted"
             >
               <div className="flex items-center space-x-1">
                 <span>{showResolved ? 'Resolved Date' : 'Due By'}</span>
-                {sortConfig?.key === (showResolved ? 'resolvedDate' : 'dueDate') && (
-                  <ArrowUpDown className="h-4 w-4" />
+                {sortConfig.find(sort => sort.key === (showResolved ? 'resolvedDate' : 'dueDate')) && (
+                  <div className="flex items-center">
+                    <ArrowUpDown className="h-4 w-4" />
+                    <span className="text-xs ml-1">
+                      {sortConfig.findIndex(sort => sort.key === (showResolved ? 'resolvedDate' : 'dueDate')) + 1}
+                    </span>
+                  </div>
                 )}
               </div>
-            </TableHead>
+            </TableHead> */}
             <TableHead onClick={() => handleSort('source')} className="cursor-pointer hover:bg-muted">
               <div className="flex items-center space-x-1">
                 <span>Source</span>
-                {sortConfig?.key === 'source' && (
-                  <ArrowUpDown className="h-4 w-4" />
+                {sortConfig.find(sort => sort.key === 'source') && (
+                  <div className="flex items-center">
+                    <ArrowUpDown className="h-4 w-4" />
+                    <span className="text-xs ml-1">
+                      {sortConfig.findIndex(sort => sort.key === 'source') + 1}
+                    </span>
+                  </div>
                 )}
               </div>
             </TableHead>
@@ -269,7 +381,7 @@ export function QuestionsTable() {
         </TableHeader>
         <TableBody>
           {sortedQuestions.map((question) => (
-            <TableRow key={question.id} className="cursor-pointer hover:bg-muted" onClick={() => setSelectedQuestion(question)}>
+            <TableRow key={question.id} className="cursor-pointer hover:bg-muted" style={{ height: '4rem' }} onClick={() => setSelectedQuestion(question)}>
               <TableCell>{question.question}</TableCell>
               <TableCell>{question.user}</TableCell>
               <TableCell>{question.stage}</TableCell>
@@ -286,30 +398,17 @@ export function QuestionsTable() {
               </TableCell>
               {!showResolved && 'dueDate' in question && (
                 <TableCell>
-                  {(() => {
-                    const status = getSLAStatus(question as OutstandingQuestion)
-                    return (
-                      <div className="flex items-center space-x-2">
-                        <span className={`text-sm font-medium ${status.onTrack ? 'text-green-600' : 'text-red-600'}`}>
-                          {status.onTrack ? '✓' : '⚠'}
-                        </span>
-                        <span className="text-sm text-gray-600">
-                          {status.onTrack ? 
-                            `${status.remaining}hrs left` : 
-                            `${status.remaining}hrs over`
-                          }
-                        </span>
-                      </div>
-                    )
-                  })()}
+                  {formatSLAStatus(question.dueDate)}
                 </TableCell>
               )}
-              <TableCell>
+              {/* <TableCell>
                 {'resolvedDate' in question ? question.resolvedDate : question.dueDate}
-              </TableCell>
-              <TableCell className="flex items-center">
-                {getSourceIcon(question.source)}
-                {question.source}
+              </TableCell> */}
+              <TableCell>
+                <div className="flex items-center justify-start h-full min-h-[3rem]">
+                  {getSourceIcon(question.sourceTool)}
+                  <span className="align-middle">{question.source}</span>
+                </div>
               </TableCell>
             </TableRow>
           ))}
@@ -373,7 +472,7 @@ export function QuestionsTable() {
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label className="text-right">Source:</Label>
                   <div className="col-span-3 flex items-center">
-                    {getSourceIcon(selectedQuestion.source)}
+                    {getSourceIcon(selectedQuestion.sourceTool)}
                     <a href={selectedQuestion.sourceLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline flex items-center">
                       {selectedQuestion.source}
                       <ExternalLink className="h-4 w-4 ml-1" />
@@ -405,19 +504,7 @@ export function QuestionsTable() {
                       <div className="grid grid-cols-4 items-center gap-4">
                         <Label className="text-right">SLA Status:</Label>
                         <div className="col-span-3">
-                          {(() => {
-                            const status = getSLAStatus(selectedQuestion as OutstandingQuestion)
-                            return (
-                              <div className="flex items-center space-x-2">
-                                <span className={`font-medium ${status.onTrack ? 'text-green-600' : 'text-red-600'}`}>
-                                  {status.onTrack ? '✓ On Track' : '⚠ SLA Missed'}
-                                </span>
-                                <span className="text-gray-600">
-                                  ({status.hours}hr SLA, {status.onTrack ? `${status.remaining}hrs remaining` : `${status.remaining}hrs overdue`})
-                                </span>
-                              </div>
-                            )
-                          })()}
+                          {formatSLAStatus(selectedQuestion.dueDate)}
                         </div>
                       </div>
                     )}

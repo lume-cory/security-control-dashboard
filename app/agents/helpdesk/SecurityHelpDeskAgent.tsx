@@ -14,6 +14,7 @@ import { QuestionsTable } from './components/questions-table'
 import AddIntegrationDialog from "./components/AddIntegrationDialog";
 import { ChatDrawer } from './components/ChatDrawer'
 import { Integration, integrations as defaultIntegrations } from './data/integrations-data'
+import { RequestMetrics } from './components/RequestMetrics';
 
 
 function SecurityHelpDeskAgent() {
@@ -127,121 +128,8 @@ function SecurityHelpDeskAgent() {
               </div>
             </div>
 
-            {/* Metrics and SLAs Section */}
-            <div className="flex w-full flex-wrap items-start gap-4 justify-between">
-              <div className="flex flex-col items-start gap-4 self-stretch rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm">
-                <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color" >
-                  Outstanding questions
-                </span>
-                < div className="flex w-full items-center gap-2" >
-                  <FilterBadge label="Urgent" count="3" selected={false} />
-                  <Badge variant="error" icon="FeatherArrowUp" >
-                    13 %
-                  </Badge>
-                </div>
-                < div className="flex items-center gap-2" >
-                  <FilterBadge label="High" count="2" selected={false} />
-                  <Badge variant="success" icon="FeatherArrowDown" >
-                    5 %
-                  </Badge>
-                </div>
-                < div className="flex items-center gap-2" >
-                  <FilterBadge label="Medium" count="2" selected={false} />
-                  <Badge variant="neutral" icon="FeatherArrowRight" >
-                    0 %
-                  </Badge>
-                </div>
-                < div className="flex items-center gap-2" >
-                  <FilterBadge label="Low" count="1" selected={false} />
-                  <Badge variant="success" icon="FeatherArrowDown" >
-                    25 %
-                  </Badge>
-                </div>
-              </div>
-              < div className="flex grow shrink-0 basis-0 flex-col flex-wrap items-start gap-4" >
-                <div className="flex w-full flex-wrap items-start gap-4" >
-                  <div className="flex grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm" >
-                    <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color" >
-                      Open Missed SLAs
-                    </span>
-                    < div className="flex w-full flex-col items-start gap-2" >
-                      <span className="text-heading-2 font-heading-2 text-default-font" >
-                        4
-                      </span>
-                      < Badge variant="error" icon="FeatherArrowUp" >
-                        25 %
-                      </Badge>
-                    </div>
-                  </div>
-                  < div className="flex grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm" >
-                    <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color" >
-                      Missed SLAs(past - 30 days)
-                    </span>
-                    < div className="flex w-full flex-col items-start gap-2" >
-                      <span className="text-heading-2 font-heading-2 text-default-font" >
-                        9
-                      </span>
-                      < Badge variant="success" icon="FeatherArrowDown" >
-                        33 %
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-                < div className="flex w-full flex-wrap items-start gap-4" >
-                  <div className="flex grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm" >
-                    <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color" >
-                      Average time to resolve(past - 30 days)
-                    </span>
-                    < div className="flex w-full flex-col items-start gap-2" >
-                      <span className="text-heading-2 font-heading-2 text-default-font" >
-                        4.4 days
-                      </span>
-                      < Badge variant="success" icon="FeatherArrowDown" >
-                        25 %
-                      </Badge>
-                    </div>
-                  </div>
-                  < div className="flex grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm" >
-                    <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color" >
-                      Resolved(past - 30 days)
-                    </span>
-                    < div className="flex w-full flex-col items-start gap-2" >
-                      <span className="text-heading-2 font-heading-2 text-default-font" >
-                        75
-                      </span>
-                      < Badge variant="neutral" icon="FeatherArrowUp" >
-                        33 %
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4 shadow-sm h-full">
-                <span className="line-clamp-1 w-full text-caption-bold font-caption-bold text-subtext-color">
-                  Noteworthy Updates
-                </span>
-                <div className="flex w-full flex-col items-start gap-3 flex-grow justify-between">
-                  <div className="w-full">
-                    <div className="flex justify-between items-center w-full mb-4">
-                      <p className="text-sm font-medium text-default-font">Awaiting Response</p>
-                      <p className="text-heading-2 font-heading-2 text-default-font text-amber-600">7</p>
-                    </div>
-                    <div className="flex justify-between items-center w-full mb-4">
-                      <p className="text-sm font-medium text-default-font">Inactive (4+ days)</p>
-                      <p className="text-heading-2 font-heading-2 text-default-font text-amber-600">5</p>
-                    </div>
-                    <div className="flex justify-between items-center w-full mb-4">
-                      <p className="text-sm font-medium text-default-font">Topics identified, but not submitted</p>
-                      <p className="text-heading-2 font-heading-2 text-default-font text-amber-600">4</p>
-                    </div>
-                    <div className="flex justify-between items-center w-full">
-                      <p className="text-sm font-medium text-default-font">Submitted this week</p>
-                      <p className="text-heading-2 font-heading-2 text-default-font text-amber-600">8</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* Use the RequestMetrics component without passing props to use calculated values */}
+            <RequestMetrics />
 
             {/* Questions Table Section */}
             < div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm" >
